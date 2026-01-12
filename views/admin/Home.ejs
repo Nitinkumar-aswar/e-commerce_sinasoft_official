@@ -1,0 +1,31 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Login</title>
+  <link rel="stylesheet" href="/admin_data/css/register.css">
+</head>
+<body>
+
+<div class="main-container">
+  <div class="left-box">
+    <h1>Admin Login</h1>
+    <p>Login with admin credentials</p>
+  </div>
+
+  <div class="right-box">
+    <form action="/admin/login_admin_account" method="post">
+      <label>Admin Email</label>
+      <input type="email" name="email" required>
+
+      <label>Admin Password</label>
+      <input type="password" name="password" required>
+
+      <button type="submit" class="btn-primary">Login</button>
+    </form>
+  </div>
+</div>
+
+</body>
+</html>
