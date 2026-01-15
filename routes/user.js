@@ -6,7 +6,11 @@ var exe= require("./connction")   // ✅ CORRECT
 
 router.get("/",async (req, res) => {
    var sliders = await exe(`SELECT * FROM slider LIMIT 3`);
-    var obj = {"sliders":sliders}
+   // Tractor decoration data
+  var tractorDecorations = await exe(`SELECT * FROM tractor_decoration`);
+    // 3️⃣ Vehicle decorations
+  const vehicleDecorations = await exe(`SELECT * FROM vehicle_dec LIMIT 1`);
+    var obj = {"sliders":sliders, "tractorDecorations": tractorDecorations, vehicleDecorations}
   res.render("user/Home",obj);   // ✅ Correct
 });
 
@@ -64,6 +68,10 @@ if (data.length > 0) {
 
 router.get("/my_profile",function(req,res){
   res.render("user/my-profile.ejs")
+});
+
+router.get("/vechical_decoration_accessories",function(req,res){
+  res.render("user/vechical_decoration_accessories.ejs")
 });
 
 

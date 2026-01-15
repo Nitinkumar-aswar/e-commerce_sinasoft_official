@@ -15,7 +15,7 @@ body {
 
 /* ================= SEARCH BAR ================= */
 .navbar-search {
-    width: 50%;          /* Adjust search width */
+    width: 90%;          /* Adjust search width */
     min-width: 200px;
     border-radius: 2px; 
     padding: 6px 12px;
@@ -102,7 +102,7 @@ body {
     top: 42px;
     left: 50%;
     transform: translateX(-50%) translateY(10px);
-    background: #000;
+     background: #000;
     color: #fff;
     padding: 6px 14px;
     font-size: 12px;
@@ -183,3 +183,513 @@ body {
 
 
 /* slider end  */
+
+/* Vehicle Decoration Accessories start */
+  body {
+      background: #f1f3f6;
+      font-family: Arial, sans-serif;
+    }
+
+    .deal-card {
+      background: #fff;
+      border-radius: 6px;
+      padding: 10px;
+      text-align: center;
+      transition: 0.3s;
+    }
+
+    .deal-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .deal-card img {
+      width: 100%;
+      height: 140px;
+      object-fit: contain;
+    }
+
+    .deal-title {
+      font-weight: 600;
+      margin-top: 8px;
+    }
+
+    .deal-off {
+      color: green;
+      font-weight: bold;
+    }
+
+    .banner {
+      background: #e9efec;
+      border-radius: 8px;
+      padding: 30px;
+      height: 100%;
+    }
+
+    .banner img {
+      width: 260px;
+    }
+
+    .btn-explore {
+      background: #fff;
+      border-radius: 6px;
+      padding: 8px 18px;
+      font-weight: bold;
+      border: none;
+    }
+
+
+
+
+/* PRODUCT CARD */
+.product-card {
+  background: #fff;
+  padding: 12px;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+  height: 100%;
+}
+
+/* FIX IMAGE SIZE */
+.product-card img {
+  width: 100%;
+  height: 140px;          /* 🔑 Same height for all images */
+  object-fit: cover;     /* 🔑 Image crop, no stretch */
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.product-card h6 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.product-card p {
+  color: #2874f0;
+  font-weight: 600;
+  margin: 0;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.15);
+}
+
+
+
+
+
+
+
+    /* LED_Fancy_Decoration start css */
+    /* LED_Fancy_Decoration start css */
+body {
+  background: #f1f3f6;
+}
+
+.custom-banner {
+  display: flex;
+  background: linear-gradient(135deg, #ffffff, #f9fbff);
+  border-radius: 14px;
+  overflow: hidden;
+  min-height: 260px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.custom-banner:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 35px rgba(0,0,0,0.12);
+}
+
+/* LEFT IMAGE 35% */
+.banner-left {
+  width: 35%;
+  overflow: hidden;
+}
+
+.banner-left img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.custom-banner:hover .banner-left img {
+  transform: scale(1.05);
+}
+
+/* RIGHT CONTENT 65% */
+.banner-right {
+  width: 65%;
+  padding: 35px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.banner-right h4 {
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #1f2937;
+}
+
+.banner-right p {
+  color: #555;
+  font-size: 15px;
+  margin-bottom: 18px;
+  line-height: 1.5;
+}
+
+/* BUTTON STYLE ANCHOR */
+.btn-explore {
+  background: linear-gradient(135deg, #2874f0, #0d5bdd);
+  color: #fff;
+  padding: 10px 22px;
+  border-radius: 30px;
+  width: fit-content;
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-explore:hover {
+  background: linear-gradient(135deg, #0d5bdd, #0847b5);
+  color: #fff;
+  transform: translateX(4px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .custom-banner {
+    flex-direction: column;
+  }
+
+  .banner-left,
+  .banner-right {
+    width: 100%;
+  }
+
+  .banner-left img {
+    height: 220px;
+  }
+
+  .banner-right {
+    padding: 25px;
+    text-align: center;
+  }
+
+  .btn-explore {
+    margin: auto;
+  }
+}
+/* LED_Fancy_Decoration end css */
+
+
+
+
+/* box  */
+
+
+
+
+
+
+body{
+  background:#f1f3f6;
+  font-family: Arial, sans-serif;
+}
+
+/* main white box */
+.deal-box{
+  background:#fff;
+  padding:16px;
+  border-radius:6px;
+  height:100%;
+}
+
+/* heading */
+.deal-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:16px;
+}
+
+.deal-header h5{
+  font-weight:600;
+}
+
+/* arrow button */
+.arrow-btn{
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  background:#2874f0;
+  color:#fff;
+  border:none;
+  font-size:20px;
+}
+
+/* product card */
+.product-card{
+  border:1px solid #eee;
+  border-radius:6px;
+  padding:10px;
+  text-align:center;
+  transition:0.3s;
+  cursor:pointer;
+}
+
+.product-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 6px 15px rgba(0,0,0,0.15);
+}
+
+.product-card img{
+  width:100%;
+  height:150px;
+  object-fit:contain;
+}
+
+.product-card h6{
+  font-size:14px;
+  margin:8px 0 2px;
+}
+
+.product-card p{
+  font-size:13px;
+  color:green;
+  font-weight:600;
+}
+
+
+/* box start  */
+
+
+
+
+
+
+
+
+
+    /* COMMON BOX SIZE */
+.deal-box {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 15px;
+  height: 100%;               /* SAME HEIGHT */
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+}
+
+/* HEADER SAME STYLE */
+.deal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.deal-header h5 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #212121;             /* SAME COLOR */
+  margin: 0;
+}
+
+/* ARROW BUTTON SAME */
+.arrow-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: #2874f0;        /* SAME BLUE */
+  color: #fff;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+/* SECTION TITLE SAME */
+.section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #2874f0;             /* SAME COLOR */
+  margin: 14px 0 8px;
+}
+
+/* PRODUCT CARD SAME SIZE */
+.product-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 8px;
+  text-align: center;
+  height: 100%;               /* SAME HEIGHT */
+  transition: 0.3s;
+  background: #fff;
+}
+
+.product-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* IMAGE SAME SIZE */
+.product-card img {
+  width: 100%;
+  height: 140px;              /* 🔥 SAME IMAGE HEIGHT */
+  object-fit: cover;
+  border-radius: 6px;
+  margin-bottom: 6px;
+}
+
+/* TEXT SAME */
+.product-card h6 {
+  font-size: 13px;
+  font-weight: 600;
+  color: #212121;
+  margin: 4px 0 2px;
+}
+
+.product-card p {
+  font-size: 12px;
+  color: #388e3c;             /* SAME GREEN */
+  margin: 0;
+  font-weight: 500;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ================= FOOTER BACKGROUND ================= */
+.footer-dark {
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  color: #ffffff;
+  font-size: 13px;
+}
+
+/* ================= TITLES ================= */
+.footer-title {
+  color: #ffcc00;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ================= LIST ================= */
+.footer-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-list li {
+  margin-bottom: 7px;
+}
+
+.footer-list li a {
+  color: #e0e0e0;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+}
+
+.footer-list li a i {
+  font-size: 15px;
+  color: #00c6ff;
+  transition: all 0.3s ease;
+}
+
+.footer-list li a:hover {
+  color: #ffffff;
+  transform: translateX(4px);
+}
+
+.footer-list li a:hover i {
+  color: #ffcc00;
+  transform: scale(1.2);
+}
+
+/* ================= TEXT ================= */
+.footer-text {
+  font-size: 13px;
+  line-height: 1.7;
+  color: #e6e6e6;
+}
+
+/* ================= BORDER ================= */
+.footer-border {
+  border-left: 1px solid rgba(255,255,255,0.2);
+}
+
+/* ================= HR ================= */
+.footer-hr {
+  border-top: 1px solid rgba(255,255,255,0.2);
+  margin: 25px 0;
+}
+
+/* ================= SOCIAL + PAYMENT ICONS ================= */
+.social-icons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: end;
+  align-items: center;
+  gap: 12px;
+}
+
+.social-icons i {
+  font-size: 22px;
+  cursor: pointer;
+  color: #ffffff;
+  transition: all 0.3s ease;
+}
+
+.social-icons i:hover {
+  color: #ffcc00;
+  transform: translateY(-3px) scale(1.1);
+}
+
+/* Payment icons bigger */
+.social-icons i.fa-brands,
+.social-icons i.fa-solid {
+  font-size: 26px;
+}
+
+/* ================= BOTTOM TEXT ================= */
+.footer-bottom {
+  font-size: 13px;
+  color: #dddddd;
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
+  .social-icons {
+    justify-content: center;
+    margin-top: 10px;
+  }
+}

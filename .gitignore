@@ -1,0 +1,8 @@
+# ignore downloaded html assets
+public/user_cdn/img/Vehicle_Decoration1_files/
+public/user_cdn/img/Vehicle_Decoration1.html
+
+# recommended ignores
+node_modules/
+.env
+public/upload/
