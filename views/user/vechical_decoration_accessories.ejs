@@ -33,7 +33,7 @@ body{
 /* Product Grid */
 .products{
     display:grid;
-    grid-template-columns: repeat(4, 1fr); /* Flipkart style */
+    grid-template-columns: repeat(4, 1fr);
     gap:18px;
 }
 
@@ -81,8 +81,8 @@ body{
     .products{ grid-template-columns: repeat(1,1fr); }
 }
 </style>
-
 </head>
+
 <body>
 
 <div class="header">
@@ -94,53 +94,25 @@ body{
 
     <div class="products">
 
-        <!-- Product 1 -->
-        <div class="card">
-            <img src="https://i.etsystatic.com/25795331/c/2830/2830/133/96/il/89bc05/5908589682/il_765x1020.5908589682_4ut0.jpg">
-            <h4>Tractor LED Head Lights</h4>
-            <p class="desc">High brightness waterproof LED headlights for tractors.</p>
-            <p class="price">₹1200</p>
-        </div>
+        <% if(categories.length == 0){ %>
+            <p>No accessories available</p>
+        <% } %>
 
-        <!-- Product 2 -->
+        <% categories.forEach((c) => { %>
         <div class="card">
-            <img src="https://i.etsystatic.com/23033788/r/il/755d0c/6649850179/il_765x1020.6649850179_1pit.jpg">
-            <h4>Vehicle Decorative Flags</h4>
-            <p class="desc">Colorful flags for tractor and vehicle decoration.</p>
-            <p class="price">₹850</p>
-        </div>
+            <img src="/upload/<%= c.category_img %>" alt="<%= c.category_title %>">
 
-        <!-- Product 3 -->
-        <div class="card">
-            <img src="https://i.etsystatic.com/20513864/r/il/8913b1/5241657611/il_680x540.5241657611_j9et.jpg">
-            <h4>Dashboard Green Plant Decor</h4>
-            <p class="desc">Artificial green plants for dashboard decoration.</p>
-            <p class="price">₹500</p>
-        </div>
+            <h4><%= c.category_title %></h4>
 
-        <!-- Product 4 -->
-        <div class="card">
-            <img src="https://i.etsystatic.com/14947562/r/il/49bca2/6976498165/il_765x1020.6976498165_glsy.jpg">
-            <h4>Round LED Fog Lights</h4>
-            <p class="desc">Stylish round LED fog lights for vehicles.</p>
-            <p class="price">₹950</p>
-        </div>
+            <p class="desc">
+                <%= c.category_desc %>
+            </p>
 
-        <!-- Product 5 -->
-        <div class="card">
-            <img src="https://i.etsystatic.com/33752835/r/il/9ab793/7384165956/il_765x1020.7384165956_d9gj.jpg">
-            <h4>Tractor Body Stickers</h4>
-            <p class="desc">Premium vinyl stickers for tractor body decoration.</p>
-            <p class="price">₹700</p>
+            <p class="price">
+                ₹ <%= c.category_price %>
+            </p>
         </div>
-
-        <!-- Product 6 -->
-        <div class="card">
-            <img src="https://i.etsystatic.com/27618187/r/il/a777b1/6219807416/il_765x1020.6219807416_nss4.jpg">
-            <h4>Decorative Steering Cover</h4>
-            <p class="desc">Stylish steering cover for better grip and look.</p>
-            <p class="price">₹650</p>
-        </div>
+        <% }) %>
 
     </div>
 </div>

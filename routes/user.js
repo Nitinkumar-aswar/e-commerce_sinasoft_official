@@ -70,11 +70,69 @@ router.get("/my_profile",function(req,res){
   res.render("user/my-profile.ejs")
 });
 
-router.get("/vechical_decoration_accessories",function(req,res){
-  res.render("user/vechical_decoration_accessories.ejs")
+
+router.get("/Categories", async function (req, res) {
+
+  // Categories data (Vehicle Decoration Accessories)
+  const categories = await exe(
+    `SELECT * FROM categories WHERE category_status = 1`
+  );
+
+  // object send to EJS
+  var obj = {
+    categories: categories
+  };
+
+  res.render("user/vechical_decoration_accessories.ejs", obj);
 });
 
 
+
+
+
+// /Electronics
+router.get("/Electronics",async function(req,res){
+   var electronics = await exe(`SELECT * FROM electronics`);
+   var obj={"electronics":electronics}
+  res.render("user/Electronics.ejs",obj)
+});
+
+
+
+
+// eletronic end 
+
+
+
+
+
+
+
+
+
+router.get("/Contact_us",function(req,res){
+  res.render("user/Contact_us.ejs")
+})
+
+
+router.get("/WhatsApp_upport",function(req,res){
+  res.render("user/WhatsApp_upport.ejs")
+})
+
+
+
+router.get("/Call_support",function(req,res){
+  res.render("user/Call_support.ejs")
+})
+
+
+router.get("/Location_map",function(req,res){
+  res.render("user/Location_map.ejs")
+})
+
+router.get("/Warranty_service_support",function(req,res){
+  res.render("user/Warranty_service_support.ejs")
+})
 
 
 

@@ -462,12 +462,276 @@ router.post("/edit_vehicle_dec", async (req, res) => {
 
 
 
+// Categories list
+router.get("/categories", async (req, res) => {
+
+  var data = await exe(`SELECT * FROM categories`);
+
+  var obj = { "categories": data };
+
+  res.render("admin/categories.ejs", obj);
+});
 
 
 
 
 
 
+router.post("/save_categories", async (req, res) => {
+
+  let category_img = "";
+
+  if (req.files && req.files.Vehicle_decoration_accessories_img) {
+    const file = req.files.Vehicle_decoration_accessories_img;
+    category_img = Date.now() + "_" + file.name;
+    await file.mv("public/upload/" + category_img);
+  }
+
+  const d = req.body;
+
+  const sql = `
+    INSERT INTO categories
+    (category_title, category_heading, category_desc, category_price, category_img)
+    VALUES
+    ('${d.Vehicle_decoration_accessories_title}',
+     '${d.Vehicle_decoration_accessories_heading}',
+     '${d.Vehicle_decoration_accessories_desc}',
+     '${d.Vehicle_decoration_accessories_price}',
+     '${category_img}')
+  `;
+
+  await exe(sql);
+  res.redirect("/admin/categories");
+});
+
+
+// table madhe tada print 
+
+// Delete Categories
+router.get("/delete_categories/:id", async function (req, res) {
+
+    var id = req.params.id;
+
+    await exe(`DELETE FROM categories WHERE category_id = '${id}'`);
+
+    res.redirect("/admin/categories");
+});
+
+
+
+
+
+
+
+
+
+// Categories Edit (GET)
+router.get("/edit_categories/:id", async function (req, res) {
+
+    var id = req.params.id;
+
+    // select category info by id
+    var category_info = await exe(
+        `SELECT * FROM categories WHERE category_id = '${id}'`
+    );
+
+    // send first record to EJS
+    var obj = { "category_info": category_info[0] };
+
+    res.render("admin/categories_edit.ejs", obj);
+});
+
+
+
+
+
+
+// UPDATE CATEGORIES
+router.post("/update_categories", async (req, res) => {
+  try {
+
+    const d = req.body;
+    let category_img = d.old_img; // hidden input (old image)
+
+    // ✅ new image uploaded?
+    if (req.files && req.files.Category_Img) {
+      category_img = Date.now() + "_" + req.files.Category_Img.name;
+      await req.files.Category_Img.mv("public/upload/" + category_img);
+    }
+
+    // ✅ SQL UPDATE query
+    const sql = `
+      UPDATE categories
+      SET category_title   = '${d.Category_Title}',
+          category_heading = '${d.Category_Heading}',
+          category_desc    = '${d.Category_Desc}',
+          category_price   = '${d.Category_Price}',
+          category_img     = '${category_img}'
+      WHERE category_id = '${d.category_id}'
+    `;
+
+    await exe(sql);
+
+    res.redirect("/admin/categories");
+
+  } catch (err) {
+    console.error(err);
+    res.send("Error updating category");
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+// Electronics session start 
+router.get("/Electronics", async (req, res) => {
+
+ 
+    // DB मधून सर्व Electronics fetch करा
+        var data = await exe(`SELECT * FROM electronics`);
+
+        // EJS template ला object पाठवा
+        var obj = { "electronics": data };
+  res.render("admin/Electronics.ejs",obj);
+});
+
+
+
+
+
+router.post("/save_electronics", async (req, res) => {
+
+  let electronics_img = "";
+
+  // file upload handle
+  if (req.files && req.files.electronics_img) {
+    const file = req.files.electronics_img;
+    electronics_img = Date.now() + "_" + file.name;
+    await file.mv("public/upload/" + electronics_img);
+  }
+
+  const d = req.body;
+
+  const sql = `
+    INSERT INTO electronics
+    (title, brand, description, price, img)
+    VALUES
+    ('${d.electronics_title}',
+     '${d.electronics_brand}',
+     '${d.electronics_desc}',
+     '${d.electronics_price}',
+     '${electronics_img}')
+  `;
+
+  try {
+    await exe(sql);
+    res.redirect("/admin/Electronics");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
+  }
+});
+
+
+// run hot nahi 
+
+router.get("/delete_electronics/:id", async function (req, res) {
+  try {
+    const id = req.params.id;
+
+    // Correct SQL with template literal
+    await exe(`DELETE FROM electronics WHERE id='${id}'`);
+
+    // Redirect to electronics list
+    res.redirect("/admin/Electronics");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
+  }
+});
+
+
+
+// edite sati 
+
+
+
+
+
+
+
+// Electronics Edit (GET)
+router.get("/edit_electronics/:id", async function (req, res) {
+    try {
+        const id = req.params.id;
+
+        // select electronics info by id
+        const electronics_info = await exe(
+            `SELECT * FROM electronics WHERE id = '${id}'`
+        );
+
+        if (electronics_info.length === 0) {
+            return res.status(404).send("Electronics record not found");
+        }
+
+        // send first record to EJS
+        const obj = { electronics_info: electronics_info[0] };
+
+        res.render("admin/electronics_edit.ejs", obj);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Server Error");
+    }
+});
+
+router.post("/edit_electronics", async (req, res) => {
+  try {
+    console.log("BODY 👉", req.body); // DEBUG
+
+    const d = req.body;
+    let electronics_img = d.old_img;
+
+    if (req.files && req.files.electronics_img) {
+      const img = req.files.electronics_img;
+      electronics_img = Date.now() + "_" + img.name;
+      await img.mv("public/upload/" + electronics_img);
+    }
+
+    const sql = `
+      UPDATE electronics SET
+      title = ?,
+      brand = ?,
+      description = ?,
+      price = ?,
+      img = ?
+      WHERE id = ?
+    `;
+
+    const result = await exe(sql, [
+      d.electronics_title,
+      d.electronics_brand,
+      d.electronics_desc,
+      d.electronics_price,
+      electronics_img,
+      d.id
+    ]);
+
+    console.log("RESULT 👉", result);
+
+    res.redirect("/admin/electronics");
+
+  } catch (err) {
+    console.log("❌ UPDATE ERROR 👉", err);
+    res.send(err.sqlMessage || err.message);
+  }
+});
 
 
 
