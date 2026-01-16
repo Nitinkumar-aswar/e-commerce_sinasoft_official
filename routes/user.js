@@ -110,10 +110,19 @@ router.get("/Electronics",async function(req,res){
 
 
 
-router.get("/Contact_us",function(req,res){
-  res.render("user/Contact_us.ejs")
-})
 
+// /Contact_us
+router.get("/Contact_us", async function (req, res) {
+
+  // DB मधून Contact Us data fetch
+  var contact_us = await exe(`SELECT * FROM contact_us`);
+
+  // object तयार करा
+  var obj = { "contact_us": contact_us };
+
+  // EJS render करा
+  res.render("user/Contact_us.ejs", obj);
+});
 
 router.get("/WhatsApp_upport",function(req,res){
   res.render("user/WhatsApp_upport.ejs")
@@ -133,6 +142,19 @@ router.get("/Location_map",function(req,res){
 router.get("/Warranty_service_support",function(req,res){
   res.render("user/Warranty_service_support.ejs")
 })
+
+
+
+
+
+
+
+router.get("/Tractor_decoration_gallery",async function(req,res){
+   var tractorDecorations = await exe(`SELECT * FROM tractor_decoration`);
+    var obj = { "tractorDecorations": tractorDecorations}
+  res.render("user/Tractor_decoration_gallery.ejs",obj)
+})
+
 
 
 

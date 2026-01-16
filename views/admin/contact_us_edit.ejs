@@ -1,0 +1,65 @@
+<%- include("navbar.ejs") %>
+
+<form action="/admin/update_contact_us" method="POST" class="w-100">
+  <div class="container-fluid bg-white p-3">
+
+    <div class="row">
+      <div class="col-12 mb-3">
+        <h1>Edit Contact Us</h1>
+      </div>
+    </div>
+
+    <!-- hidden id -->
+    <input type="hidden"
+           name="contact_id"
+           value="<%= contact_info.contact_id %>">
+
+    <div class="row">
+
+      <!-- Address -->
+      <div class="col-md-12 mb-3">
+        <label>Address</label>
+        <textarea name="contact_address"
+                  class="form-control"
+                  rows="3"><%= contact_info.address %></textarea>
+      </div>
+
+      <!-- Phone -->
+      <div class="col-md-6 mb-3">
+        <label>Phone</label>
+        <input type="text"
+               name="contact_phone"
+               class="form-control"
+               value="<%= contact_info.phone %>">
+      </div>
+
+      <!-- Email -->
+      <div class="col-md-6 mb-3">
+        <label>Email</label>
+        <input type="email"
+               name="contact_email"
+               class="form-control"
+               value="<%= contact_info.email %>">
+      </div>
+
+      <!-- Working Hours -->
+      <div class="col-md-12 mb-3">
+        <label>Working Hours</label>
+        <input type="text"
+               name="contact_working_hours"
+               class="form-control"
+               value="<%= contact_info.working_hours %>">
+      </div>
+
+      <!-- Submit -->
+      <div class="col-12 text-end">
+        <button type="submit" class="btn btn-primary">
+          Update Contact Us
+        </button>
+      </div>
+
+    </div>
+  </div>
+</form>
+
+<%- include("footer.ejs") %>

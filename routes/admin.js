@@ -734,6 +734,117 @@ router.post("/edit_electronics", async (req, res) => {
 });
 
 
+//Contact_us start session
+router.get("/contact_us", async (req, res) => {
+  var data = await exe(`SELECT * FROM contact_us`);
+  var obj = { contact_us: data };
+  res.render("admin/contact_us.ejs", obj);
+});
+
+
+
+
+router.post("/save_contact_us", async (req, res) => {
+
+  const d = req.body;
+
+  const sql = `
+    INSERT INTO contact_us
+    (address, phone, email, working_hours)
+    VALUES
+    ('${d.contact_address}',
+     '${d.contact_phone}',
+     '${d.contact_email}',
+     '${d.contact_working_hours}')
+  `;
+
+  try {
+    await exe(sql);
+    res.redirect("/admin/contact_us");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
+  }
+
+});
+
+
+
+
+
+// edit start 
+// Contact Us Edit (GET)
+router.get("/edit_contact_us/:id", async function (req, res) {
+  try {
+    const id = req.params.id;
+
+    // select contact_us info by id
+    const contact_info = await exe(
+      `SELECT * FROM contact_us WHERE contact_id = '${id}'`
+    );
+
+    if (contact_info.length === 0) {
+      return res.status(404).send("Contact record not found");
+    }
+
+    // send first record to EJS
+    const obj = { contact_info: contact_info[0] };
+
+    res.render("admin/contact_us_edit.ejs", obj);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
+  }
+});
+
+
+
+
+// update sathi ahe 
+router.post("/update_contact_us", async (req, res) => {
+  const d = req.body;
+
+  await exe(`
+    UPDATE contact_us SET
+      address='${d.contact_address}',
+      phone='${d.contact_phone}',
+      email='${d.contact_email}',
+      working_hours='${d.contact_working_hours}'
+    WHERE contact_id='${d.contact_id}'
+  `);
+
+  res.redirect("/admin/contact_us");
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Contact Us Delete
+router.get("/delete_contact_us/:id", async function (req, res) {
+  try {
+    const id = req.params.id;
+
+    // delete contact_us record by id
+    await exe(`DELETE FROM contact_us WHERE contact_id='${id}'`);
+
+    // redirect to contact us list
+    res.redirect("/admin/contact_us");
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
+  }
+});
 
 
 
