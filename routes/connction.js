@@ -1,5 +1,7 @@
 var mysql = require("mysql");
 var util = require("util");
+var adminAuth = require("../middleware/adminAuth");
+
 
 var conn = mysql.createConnection({
   host: "localhost",

@@ -20,7 +20,24 @@
 <!-- serch bar  -->
  <!-- js link  -->
   <script src="/user_cdn/js/script.js"></script>
+<style>
+  .tractor-title a{
+  text-decoration: none;
+  color: #222;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
 
+.tractor-title a:hover{
+  color: #0d6efd; /* blue */
+  /* text-decoration: underline; */
+
+}
+
+
+
+
+</style>
  
 </head>
 <body>
@@ -178,13 +195,13 @@
           </ul>
         </li>
 
-        <!-- CATEGORIES -->
+        <!-- CATEGORIES
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Categories</a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="/Categories">Vehicle Decoration Accessories</a></li>
-            <li><a class="dropdown-item">LED & Fancy Decoration Lights</a></li>
-            <li><a class="dropdown-item">Decoration Stickers & Decals</a></li>
+            <li><a class="dropdown-item" href="/LED_Fancy_Decoration_Lights">LED & Fancy Decoration Lights</a></li>
+            <li><a class="dropdown-item" href="/Decoration_Stickers_Decals">Decoration Stickers & Decals</a></li>
             <li><a class="dropdown-item">Decoration Tape & Reflective Rolls</a></li>
             <li><a class="dropdown-item">Chrome / Steel Accessories</a></li>
             <li><a class="dropdown-item">Interior Decoration Accessories</a></li>
@@ -193,7 +210,27 @@
             <li><a class="dropdown-item">Electrical Decoration Items</a></li>
             <li><a class="dropdown-item">Safety & Warning Items</a></li>
           </ul>
+        </li> -->
+
+
+  <!-- CATEGORIES -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Categories</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item"href ="/vehical_dec_acc">Vehicle Decoration Accessories</a></li>
+            <li><a class="dropdown-item"href ="/led_light">LED & Fancy Decoration Lights</a></li>
+            <li><a class="dropdown-item"href ="/stickers">Decoration Stickers & Decals</a></li>
+            <li><a class="dropdown-item"href ="/dec_tape">Decoration Tape & Reflective Rolls</a></li>
+            <li><a class="dropdown-item"href ="/steel">Chrome / Steel Accessories</a></li>
+            <li><a class="dropdown-item"href ="/interior">Interior Decoration Accessories</a></li>
+            <li><a class="dropdown-item"href ="/exterior">Exterior Decoration Accessories</a></li>
+            <li><a class="dropdown-item"href ="/horn">Horn & Siren Items</a></li>
+            <li><a class="dropdown-item"href ="/electrical">Electrical Decoration Items</a></li>
+            <li><a class="dropdown-item"href ="/safety">Safety & Warning Items</a></li>
+          </ul>
         </li>
+
+
 
         <!-- ELECTRONICS -->
         <li class="nav-item dropdown">
@@ -280,6 +317,13 @@
 </nav>
 <!-- ================= CATEGORY NAVBAR END ================= -->
 
+
+
+
+
+
+
+
 <!-- ================= SLIDER START ================= -->
 <div id="mainCarousel" class="carousel slide container" data-bs-ride="carousel">
   <div class="carousel-inner">
@@ -302,6 +346,27 @@
   </button>
 </div>
 <!-- ================= SLIDER END ================= -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <!-- ================= TRACTOR DECORATION PRODUCTS START ================= -->
 <div class="container my-5">
   
@@ -317,7 +382,10 @@
           <img src="/upload/<%= i.tractor_dec_img %>" 
                alt="<%= i.tractor_dec_title %>" 
                class="img-fluid">
-          <h6><%= i.tractor_dec_title %></h6>
+        <h6 class="tractor-title">
+  <a href="/all_tractor_dec"><%= i.tractor_dec_title %></a>
+</h6>
+
           <p>₹ <%= i.tractor_dec_price %></p>
         </div>
       </div>
@@ -368,374 +436,14 @@
 
 
 
-<!-- Decorative LED Lights for Home end  -->
-<!-- Eletronic session start  -->
-<!-- Electronics section start -->
-<div class="container my-4">
 
-  <!-- SECTION TITLE -->
-  <div class="text-center mb-4">
-    <h3 class="fw-bold">Electronics & Vehicle Accessories</h3>
-    <p class="text-muted mb-0">
-      Premium AC Systems, LED Decoration, Sound & Safety Solutions for All Vehicles
-    </p>
-  </div>
 
-  <div class="row g-3">
 
-    <!-- COLUMN 1 -->
-    <div class="col-lg-4 col-md-6 col-12">
-      <div class="deal-box">
+<!-- <h1>welcone</h1> -->
 
-        <div class="deal-header">
-          <h5>JCB AC System</h5>
-          <button class="arrow-btn">›</button>
-        </div>
 
-        <p class="text-muted small mb-2">
-          Heavy-duty cooling solutions specially designed for JCB machines.
-        </p>
 
-        <div class="row g-3">
-          <div class="col-6">
-            <div class="product-card">
-              <img src="https://i.ytimg.com/vi/aCz0E3HdFzQ/maxresdefault.jpg">
-              <h6>JCB AC Unit</h6>
-              <p>Min. 70% Off</p>
-            </div>
-          </div>
-
-          <div class="col-6">
-            <div class="product-card">
-              <img src="https://5.imimg.com/data5/ANDROID/Default/2024/12/472007340/ET/HY/FT/202633073/product-jpeg-500x500.jpg">
-              <h6>Cooling Fan</h6>
-              <p>Top Deals</p>
-            </div>
-          </div>
-        </div>
-
-        <h5 class="section-title mt-3">Truck Cabin AC</h5>
-        <p class="text-muted small mb-2">
-          Powerful AC systems for long-distance truck drivers.
-        </p>
-
-        <div class="row g-3">
-          <div class="col-6">
-            <div class="product-card">
-              <img src="https://5.imimg.com/data5/SELLER/Default/2021/8/VH/AO/DG/3872502/truck-cabin-ac.jpeg">
-              <h6>Truck AC</h6>
-              <p>Min. 60% Off</p>
-            </div>
-          </div>
-
-          <div class="col-6">
-            <div class="product-card">
-              <img src="https://images-cdn.ubuy.co.in/664b611a5bab764db91559e9-12-volt-dc-air-conditioner-split.jpg">
-              <h6>Cabin Cooler</h6>
-              <p>Best Seller</p>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- COLUMN 2 -->
-    <div class="col-lg-4 col-md-6 col-12">
-      <div class="deal-box">
-
-        <div class="deal-header">
-          <h5>Pickup & Tractor AC</h5>
-          <button class="arrow-btn">›</button>
-        </div>
-
-        <p class="text-muted small mb-2">
-          Compact and efficient AC solutions for pickup and tractor cabins.
-        </p>
-
-        <div class="row g-3">
-          <div class="col-6">
-            <div class="product-card">
-              <img src="https://5.imimg.com/data5/SELLER/Default/2023/7/324343028/KK/XV/FN/143711723/bolero-pik-up-ac-1000x1000.png">
-              <h6>Pickup AC</h6>
-              <p>Top Rated</p>
-            </div>
-          </div>
-
-          <div class="col-6">
-            <div class="product-card">
-              <img src="https://images-cdn.ubuy.co.in/6489dd9ad364ff11ac74ebf3-nekpokka-12-volt-dc-air-conditioner-rv.jpg">
-              <h6>DC AC Unit</h6>
-              <p>Min. 50% Off</p>
-            </div>
-          </div>
-        </div>
-
-        <h5 class="section-title mt-3">Tractor Cabin AC</h5>
-        <p class="text-muted small mb-2">
-          Reliable cooling kits designed for farming vehicles.
-        </p>
-
-        <div class="row g-3">
-          <div class="col-6">
-            <div class="product-card">
-              <img src="https://cdn.tractorsdekho.com/in/john-deere/5060-e/john-deere-5060-e-23136.jpg">
-              <h6>Tractor AC</h6>
-              <p>New Arrival</p>
-            </div>
-          </div>
-
-          <div class="col-6">
-            <div class="product-card">
-              <img src="https://www.cmv360.com/_next/image?url=https%3A%2F%2Fd1odgbsvvxl2qd.cloudfront.net%2Fsmall_mahindra_arjun_gal_img3_500_867ce0238e.jpg&w=3840&q=100">
-              <h6>Cabin AC Kit</h6>
-              <p>Min. 40% Off</p>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- COLUMN 3 -->
-    <div class="col-lg-4 col-md-12 col-12">
-      <div class="deal-box">
-
-        <div class="deal-header">
-          <h5>Lighting, Sound & Safety</h5>
-          <button class="arrow-btn">›</button>
-        </div>
-
-        <p class="text-muted small mb-2">
-          Decorative lighting, powerful sound systems and safety accessories.
-        </p>
-
-        <div class="row g-3">
-          <div class="col-6">
-            <div class="product-card">
-              <img src="https://www.jiomart.com/images/product/original/rvdfmycaml/crownswood-series-lights-rgb-toran-light-for-decoration-diwali-ganpati-navratri-wire-electric-toran-multicolour-100-ft-long-copper-led-pack-of-1-product-images-orvdfmycaml-p608966406-0-202405111202.jpg">
-              <h6>LED Toran</h6>
-              <p>Festival Offer</p>
-            </div>
-          </div>
-
-          <div class="col-6">
-            <div class="product-card">
-              <img src="https://m.media-amazon.com/images/I/81NbmbSqUgL._AC_UF894,1000_QL80_.jpg">
-              <h6>RGB Strip</h6>
-              <p>Min. 50% Off</p>
-            </div>
-          </div>
-        </div>
-
-        <h5 class="section-title mt-3">Sound & Safety</h5>
-        <p class="text-muted small mb-2">
-          Enhance driving experience with premium audio & safety devices.
-        </p>
-
-        <div class="row g-3">
-          <div class="col-6">
-            <div class="product-card">
-              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThduUV3GU0VdTHjFRk9xRlf0m72T9aQpdsWg&s">
-              <h6>Music System</h6>
-              <p>Top Seller</p>
-            </div>
-          </div>
-
-          <div class="col-6">
-            <div class="product-card">
-              <img src="https://image.made-in-china.com/318f0j00VQvYoZItslcp/EM036-mp4.webp">
-              <h6>Reverse Camera</h6>
-              <p>Safety First</p>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-  </div>
-</div>
-<!-- Electronics section end -->
-
-
-<!-- second Eletronic -->
-<div class="container my-4">
-  <!-- MAIN TITLE -->
-
-  <div class="row g-3">
-
-    <!-- COLUMN 4 -->
-    <div class="col-lg-4 col-md-6 col-12">
-      <div class="deal-box">
-
-        <div class="deal-header">
-          <h5>Music System</h5>
-          <button class="arrow-btn">›</button>
-        </div>
-        <p class="text-muted small mb-2">High quality sound systems for all vehicles</p>
-
-        <div class="row g-3">
-          <div class="col-6">
-            <div class="product-card">
-              <img src="https://5.imimg.com/data5/SELLER/Default/2021/5/GV/DL/RT/79211075/bis-registration-of-electronic-musical-system-with-input-power-below-200-watts-500x500.jpg">
-              <h6>Music Head Unit</h6>
-              <p>Min. 70% Off</p>
-            </div>
-          </div>
-
-          <div class="col-6">
-            <div class="product-card">
-              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsuqpEwi1JA70Qy7z-00e_x68ACM8vKMJxIA&s">
-              <h6>Bluetooth Player</h6>
-              <p>Top Deals</p>
-            </div>
-          </div>
-        </div>
-
-        <h5 class="section-title mt-3">Speakers</h5>
-        <p class="text-muted small mb-2">Clear bass & powerful audio output</p>
-
-        <div class="row g-3">
-          <div class="col-6">
-            <div class="product-card">
-              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdOToTW1eJRU6Zv5mGB9vdfAW8DParCmYZiQ&s">
-              <h6>Door Speakers</h6>
-              <p>Min. 60% Off</p>
-            </div>
-          </div>
-
-          <div class="col-6">
-            <div class="product-card">
-              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTE548VLd0k-9jmHkO_NPhclPSRwYN8UCN8KA&s">
-              <h6>Subwoofer</h6>
-              <p>Best Seller</p>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- COLUMN 5 -->
-    <div class="col-lg-4 col-md-6 col-12">
-      <div class="deal-box">
-
-        <div class="deal-header">
-          <h5>Amplifier</h5>
-          <button class="arrow-btn">›</button>
-        </div>
-        <p class="text-muted small mb-2">Boost your sound performance</p>
-
-        <div class="row g-3">
-          <div class="col-6">
-            <div class="product-card">
-              <img src="https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcQd-MsIMNCALS5rxRJ5GGef2nhWptq7iapD_1jPz6e1Qy3fpKJM0g3npir9CUjYiKEhhTHKIPXuvX0yqt5rfAvi50ROHBGl1hWXR3vQEx-kbe3nVYHRfPGgs3yhfXOmmmRO&usqp=CAc">
-              <h6>Power Amplifier</h6>
-              <p>Top Rated</p>
-            </div>
-          </div>
-
-          <div class="col-6">
-            <div class="product-card">
-              <img src="https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcSzmPBoOwqkctirNoHqMZmBqv3sJ14c4ZRYaqEaPyMNv8wNLcz9k8qAKYicfl2UE8tEryt4qX7N2t_QSycYxX7utiW5xApDAIPOKMlN1vVS04mDhGM7Wd26Q_4maaW-Y-ys&usqp=CAc">
-              <h6>Mono Amplifier</h6>
-              <p>Min. 50% Off</p>
-            </div>
-          </div>
-        </div>
-
-        <h5 class="section-title mt-3">Reverse Camera</h5>
-        <p class="text-muted small mb-2">Drive safely with clear rear view</p>
-
-        <div class="row g-3">
-          <div class="col-6">
-            <div class="product-card">
-              <img src="https://az-ci-afde-prd-arena-01-e7fmh3dxacbgeyh5.z01.azurefd.net/-/media/marutigeniuneaccessories_27112019/old_20210309/r7/990j0m99909-150_3.jpg">
-              <h6>HD Camera</h6>
-              <p>New Arrival</p>
-            </div>
-          </div>
-
-          <div class="col-6">
-            <div class="product-card">
-              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVPwBfV3bc3Ny_vyM0IRk0dJKA_zn9LjP2Rg&s">
-              <h6>Night Vision</h6>
-              <p>Min. 40% Off</p>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- COLUMN 6 -->
-    <div class="col-lg-4 col-md-12 col-12">
-      <div class="deal-box">
-
-        <div class="deal-header">
-          <h5>Parking Sensor</h5>
-          <button class="arrow-btn">›</button>
-        </div>
-        <p class="text-muted small mb-2">Accurate distance detection system</p>
-
-        <div class="row g-3">
-          <div class="col-6">
-            <div class="product-card">
-              <img src="https://static1.proxel.com/images/eps-en/models/front/invisible-front-electromagnetic-parking-sensors-proxel-eps-front-4-0-with-Display.jpg">
-              <h6>Front Sensor</h6>
-              <p>Festival Offer</p>
-            </div>
-          </div>
-
-          <div class="col-6">
-            <div class="product-card">
-              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnDtwh2TrlZ976CQ4sOSXo7QCVJf9YRtXyNQ&s">
-              <h6>Rear Sensor</h6>
-              <p>Min. 50% Off</p>
-            </div>
-          </div>
-        </div>
-
-        <h5 class="section-title mt-3">GPS Systems</h5>
-        <p class="text-muted small mb-2">Live tracking & route monitoring</p>
-
-        <div class="row g-3">
-          <div class="col-6">
-            <div class="product-card">
-              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEUrtFOPIIzKFdRaWVnmjSMOYPVfamekA8gw&s">
-              <h6>Vehicle GPS</h6>
-              <p>Top Seller</p>
-            </div>
-          </div>
-
-          <div class="col-6">
-            <div class="product-card">
-              <img src="https://rytmap.com/wp-content/uploads/2018/06/AIS140-Government-Approved-GPS-Tracking-Device2.jpg">
-              <h6>AIS 140 GPS</h6>
-              <p>Safety First</p>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-  </div>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
+<!-- footer session start  -->
 
 <footer class="footer-dark mt-5">
   <div class="container py-5">

@@ -45,9 +45,28 @@ var data= await exe(sql);
 
 // // Login start  error 
 
-router.get("/user_login",function(req,res){
+router.get("/user_login", function(req,res){
+
+
+
   res.render("user/user_login.ejs")
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 router.post("/login_Flipkart_account",async function(req,res){
@@ -65,10 +84,86 @@ if (data.length > 0) {
 
 });
 
+router.post("/user_login", async (req, res) => {
 
-router.get("/my_profile",function(req,res){
-  res.render("user/my-profile.ejs")
+  let user = await exe(`
+    SELECT * FROM user_create_account
+    WHERE user_email='${req.body.user_email}'
+    AND user_password='${req.body.user_password}'
+  `);
+
+  if (user.length > 0) {
+    req.session.user_id = user[0].user_id;
+
+    console.log("SESSION USER ID:", req.session.user_id); // 🔴 CHECK
+
+    res.redirect("/my_profile");
+  } else {
+    res.send("Invalid Login");
+  }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+router.get("/my_profile",async function(req,res){
+
+
+
+
+  // add kelela 
+
+    // DB मधून सर्व Electronics fetch करा
+        var data = await exe(`SELECT * FROM user_create_account`);
+
+        // EJS template ला object पाठवा
+        var obj = { "user_create_account": data };
+// navin ahe 
+
+  res.render("user/my-profile.ejs",obj)
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 router.get("/Categories", async function (req, res) {
@@ -154,6 +249,144 @@ router.get("/Tractor_decoration_gallery",async function(req,res){
     var obj = { "tractorDecorations": tractorDecorations}
   res.render("user/Tractor_decoration_gallery.ejs",obj)
 })
+
+
+router.get("/all_tractor_dec",function(req,res){
+  res.send("user/Warranty_service_support.ejs")
+})
+
+
+
+router.get("/LED_Fancy_Decoration_Lights",function(req,res){
+  res.send("user/LED_Fancy_Decoration_Lights.ejs")
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ================= CATEGORY PAGES =================
+
+// Vehicle Decoration
+router.get("/vehical_dec_acc", async (req, res) => {
+   var vehicle_decoration = await exe(`SELECT * FROM vehicle_decoration`);
+    var obj = { "vehicle_decoration": vehicle_decoration}
+  res.render("user/vehical_dec_acc.ejs",obj);
+});
+// LED Lights
+router.get("/led_light", async (req, res) => {
+     var led_lights = await exe(`SELECT * FROM led_lights`);
+    var obj = { "led_lights": led_lights}
+  res.render("user/led_lights.ejs",obj);
+});
+
+
+// Stickers
+router.get("/stickers", async (req, res) => {
+     var stickers_decals = await exe(`SELECT * FROM stickers_decals`);
+    var obj = { "stickers_decals": stickers_decals}
+  res.render("user/dec_stickers",obj);
+});
+// Decoration Tape
+router.get("/dec_tape", async (req, res) => {
+     var decoration_tape = await exe(`SELECT * FROM decoration_tape`);
+    var obj = { "decoration_tape": decoration_tape}
+  res.render("user/dec_tape",obj);
+});
+
+
+
+
+
+
+
+// Chrome / Steel
+router.get("/steel", async (req, res) => {
+
+    var chrome_steel = await exe(`SELECT * FROM chrome_steel`);
+    var obj = { "chrome_steel": chrome_steel}
+  res.render("user/chrome_steel",obj);
+});
+
+
+
+
+// Interior
+router.get("/interior", async (req, res) => {
+ 
+  res.render("user/interior");
+});
+
+// Exterior
+router.get("/exterior", async (req, res) => {
+ 
+  res.render("user/exterior");
+});
+
+// Horn
+router.get("/horn", async (req, res) => {
+ 
+  res.render("user/horn");
+});
+
+// Electrical
+router.get("/electrical", async (req, res) => {
+ 
+  res.render("user/electrical");
+});
+
+// Safety
+router.get("/safety", async (req, res) => {
+ 
+  res.render("user/safety");
+});
+
+
+
+
+
+
+// eletronic end 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

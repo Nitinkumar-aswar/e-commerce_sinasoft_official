@@ -17,6 +17,20 @@
 
     <title>AdminKit Demo - Bootstrap 5 Admin Template</title>
 
+
+
+    <style>
+    .sidebar-dropdown .sidebar-link {
+  padding-left: 45px;
+  font-size: 14px;
+}
+
+
+
+</style>
+
+
+
     <link href="/admin_data/css/app.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link href="https://fonts.googoleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -61,12 +75,114 @@
                                 class="align-middle">Vehicle_Dec</span>
                         </a>
                     </li>
-                      <li class="sidebar-item active">
-                        <a class="sidebar-link" href="/admin/Categories">
-                            <i class="align-middle" data-feather="sliders"></i> <span
-                                class="align-middle">Categories</span>
-                        </a>
-                    </li>
+
+
+
+
+
+
+
+
+
+
+<li class="sidebar-item active">
+  <a
+    class="sidebar-link"
+    data-bs-toggle="collapse"
+    href="#categoriesSubMenu"
+    role="button"
+    aria-expanded="true"
+  >
+    <i class="align-middle" data-feather="sliders"></i>
+    <span class="align-middle">Categories</span>
+  </a>
+
+  <!-- 🔽 Sub Sessions -->
+  <ul class="collapse show sidebar-dropdown list-unstyled" id="categoriesSubMenu">
+
+    <li class="sidebar-item">
+      <a class="sidebar-link" href="/admin/categories/vehicle-decoration">
+        Vehicle Decoration Accessories
+      </a>
+    </li>
+
+    <li class="sidebar-item">
+      <a class="sidebar-link" href="/admin/categories/led-lights">
+        LED & Fancy Decoration Lights
+      </a>
+    </li>
+
+    <li class="sidebar-item">
+      <a class="sidebar-link" href="/admin/categories/stickers-decals">
+        Decoration Stickers & Decals
+      </a>
+    </li>
+
+    <li class="sidebar-item">
+      <a class="sidebar-link" href="/admin/categories/decoration-tape">
+        Decoration Tape & Reflective Rolls
+      </a>
+    </li>
+
+    <li class="sidebar-item">
+      <a class="sidebar-link" href="/admin/categories/chrome-steel">
+        Chrome / Steel Accessories
+      </a>
+    </li>
+
+    <li class="sidebar-item">
+      <a class="sidebar-link" href="/admin/categories/interior">
+        Interior Decoration Accessories
+      </a>
+    </li>
+
+    <li class="sidebar-item">
+      <a class="sidebar-link" href="/admin/categories/exterior">
+        Exterior Decoration Accessories
+      </a>
+    </li>
+
+    <li class="sidebar-item">
+      <a class="sidebar-link" href="/admin/categories/horn-siren">
+        Horn & Siren Items
+      </a>
+    </li>
+
+    <li class="sidebar-item">
+      <a class="sidebar-link" href="/admin/categories/electrical">
+        Electrical Decoration Items
+      </a>
+    </li>
+
+    <li class="sidebar-item">
+      <a class="sidebar-link" href="/admin/categories/safety-warning">
+        Safety & Warning Items
+      </a>
+    </li>
+
+  </ul>
+</li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                           </li>
                       <li class="sidebar-item active">
                         <a class="sidebar-link" href="/admin/Electronics">

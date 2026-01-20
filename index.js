@@ -1,7 +1,10 @@
+ require("dotenv").config();
 var express = require("express");
 var bodyparser = require("body-parser");
 var session=require("express-session");
 var fileUpload = require("express-fileupload");
+
+
 const path = require("path");
 // ROUTES
 var userroute = require("./routes/user");
@@ -25,14 +28,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.use(session({
-    secret:"admin_secret_key",
+    secret: "process.env.SESSION_SECRET",
     resave:false,
-    saveUninitialized:true
+    saveUninitialized:false
 }))
 
 app.use("/", userroute);
 app.use("/admin", adminroute);
 
+
+// app.use("/admin", adminAuth, adminRoute);
 // my profile page start 
 
 

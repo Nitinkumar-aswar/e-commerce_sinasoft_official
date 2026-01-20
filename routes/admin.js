@@ -1,99 +1,50 @@
-var express = require("express");
-var router = express.Router();
-var exe =require("./connction")
+const express = require("express");
+const router = express.Router();
 
+// Import middleware first
+const adminAuth = require("../middleware/adminAuth");
+const exe = require("./connction");
 
-// ADMIN HOME PAGE start
+// --- PUBLIC ROUTES ---
 router.get("/", function (req, res) {
-  res.render("admin/Home.ejs");
-  
+  res.render("admin/Home.ejs"); // login page
 });
 
-
+// login API or form POST
 router.post("/login_admin_account", async (req, res) => {
   const { email, password } = req.body;
-
-  const sql = "SELECT * FROM admin WHERE email=? AND password=?";
-  const data = await exe(sql, [email, password]);
+  const data = await exe("SELECT * FROM admin WHERE email=? AND password=?", [email, password]);
 
   if (data.length > 0) {
-    req.session.admin = data[0];   // ✅ session set
-    res.redirect("/admin");
+    req.session.admin = data[0];
+    res.redirect("/admin/slider");
   } else {
     res.send("Invalid email or password");
   }
 });
 
+// --- PROTECTED ROUTES ---
 
 
+// gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggghhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
 
 
-// // 🔐 Middleware
-// function checkAdminLogin(req, res, next) {
-//   if (req.session.admin) {
-//     next();
-//   } else {
-//     res.redirect("/admin");
-//   }
-// }
+// router.use(adminAuth);
 
-// // 🟢 Login page
-// router.get("/", (req, res) => {
-//   res.render("admin/Home", { msg: "" });
-// });
-
-// // 🟢 Login POST
-// router.post("/login_admin_account", async (req, res) => {
-//   try {
-//     const { email, password } = req.body;
-
-//     const sql = "SELECT * FROM admin WHERE email=? AND password=?";
-//     const result = await exe(sql, [email, password]);   // ✅ CORRECT
-
-//     if (result.length > 0) {
-//       req.session.admin = result[0];
-//       res.redirect("/admin/slider");
-//     } else {
-//       res.render("admin/Home", { msg: "Invalid Email or Password" });
-//     }
-
-//   } catch (err) {
-//     console.log(err);
-//     res.send("Database Error");
-//   }
-// });
-
-// // 🟢 Slider Panel
-// router.get("/slider", checkAdminLogin, (req, res) => {
-//   res.render("admin/slider");
-// });
-
-// // 🟢 Logout
-// router.get("/logout", (req, res) => {
-//   req.session.destroy();
-//   res.redirect("/admin");
-// });
-
-
-
-
-
-// Admin end 
-
-
-
-
-// Admin Slider page 
-router.get("/slider",async function (req, res)
- {
-var data=await exe(`SELECT * FROM slider`);
-  var obj={"sliders":data};
-
-
-
-  res.render("admin/slider.ejs",obj);
-  
+router.get("/slider", async (req, res) => {
+  const sliders = await exe("SELECT * FROM slider");
+  res.render("admin/Slider.ejs", { sliders });
 });
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -462,6 +413,19 @@ router.post("/edit_vehicle_dec", async (req, res) => {
 
 
 
+
+
+
+
+
+
+
+// tushar
+
+
+
+
+
 // Categories list
 router.get("/categories", async (req, res) => {
 
@@ -582,7 +546,7 @@ router.post("/update_categories", async (req, res) => {
 
 
 
-
+// tushar end 
 
 
 
@@ -845,6 +809,401 @@ router.get("/delete_contact_us/:id", async function (req, res) {
     res.status(500).send("Server Error");
   }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+// categress sub menu start session 
+
+
+
+router.get("/categories/vehicle-decoration", async (req, res) => {
+
+   var data = await exe(`SELECT * FROM vehicle_decoration`);
+  var obj = { vehicle_decoration: data };
+
+  res.render("admin/categories/vehicle-decoration.ejs",obj);
+});
+
+
+// save data 
+// SAVE VEHICLE DECORATION
+router.post("/save_vehicle_decoration", async function (req, res) {
+  try {
+    let file_vehicle = "";
+
+    // Corrected file upload
+    if (req.files && req.files.file_vehicle) {
+      file_vehicle = new Date().getTime() + "_" + req.files.file_vehicle.name;
+      await req.files.file_vehicle.mv("public/upload/" + file_vehicle);
+    }
+
+    let d = req.body;
+
+    let sql = `
+      INSERT INTO vehicle_decoration 
+      (vehicle_title, vehicle_heading, file_vehicle)
+      VALUES 
+      ('${d.vehicle_title}', '${d.vehicle_heading}', '${file_vehicle}')
+    `;
+
+    let data = await exe(sql);
+
+    // Redirect or render
+    res.redirect("/admin/categories/vehicle-decoration"); // or use render()
+    // res.send(data)
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error saving vehicle decoration.");
+  }
+});
+
+
+
+
+
+// Vehicle Decoration Delete
+router.get("/delete_vehicle_decoration/:id", async function (req, res) {
+  try {
+    const id = req.params.id;
+
+    await exe(
+      "DELETE FROM vehicle_decoration WHERE vehicle_id = ?",
+      [id]
+    );
+
+    res.redirect("/admin/categories/vehicle-decoration");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
+  }
+});
+
+
+
+// edit baki ahe update session baki ahe 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+router.get("/categories/led-lights", async (req, res) => {
+    try {
+        const data = await exe("SELECT * FROM led_lights"); // replace with your table name
+        res.render("admin/categories/led-lights", { led_lights: data });
+    } catch (err) {
+        console.error(err);
+        res.send("Error loading LED Lights page");
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+router.post("/save_led_lights", async function (req, res) {
+  try {
+    console.log("BODY =>", req.body);
+    console.log("FILES =>", req.files);
+
+    let led_image = "";
+
+    if (req.files && req.files.led_image) {
+      led_image = Date.now() + "_" + req.files.led_image.name;
+      await req.files.led_image.mv("public/upload/" + led_image);
+    }
+
+    let d = req.body;
+
+    let sql = `
+      INSERT INTO led_lights
+      (led_title, led_heading, price, led_image)
+      VALUES
+      ('${d.led_title}', '${d.led_heading}', '${d.price}', '${led_image}')
+    `;
+
+    await exe(sql);
+
+    res.redirect("/admin/categories/led-lights");
+
+  } catch (err) {
+    console.log("🔥 REAL ERROR =>", err);
+    res.send(err.message);
+  }
+});
+
+
+
+// table madhe data print 
+
+
+// delete session start 
+
+// Delete LED Item
+router.get("/delete_led/:id", async function (req, res) {
+  try {
+    const id = req.params.id;
+
+    // Delete the LED record from the database
+    await exe("DELETE FROM led_lights WHERE led_id = ?", [id]);
+
+    // Redirect back to the LED list page
+    res.redirect("/admin/categories/led-lights");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
+  }
+});
+//  edit session baki ahet 
+
+
+
+
+
+
+
+
+
+router.get("/categories/stickers-decals", async (req, res) => {
+  
+       var data = await exe(`SELECT * FROM stickers_decals`);
+  var obj = { stickers_decals: data };
+        res.render("admin/categories/stickers-decals",obj);
+    
+});
+
+
+
+
+// save data 
+// Route to save Stickers & Decals
+router.post("/save_stickers_decals", async function (req, res) {
+  try {
+    console.log("BODY =>", req.body);
+    console.log("FILES =>", req.files);
+
+    let stickers_image = "";
+
+    // Handle file upload
+    if (req.files && req.files.stickers_image) {
+      stickers_image = Date.now() + "_" + req.files.stickers_image.name;
+      await req.files.stickers_image.mv("public/upload/" + stickers_image);
+    }
+
+    let d = req.body;
+
+    // Insert into database
+    let sql = `
+      INSERT INTO stickers_decals
+      (title, heading, price, image, category)
+      VALUES
+      ('${d.stickers_title}', '${d.stickers_heading}', '${d.price || 0}', '${stickers_image}', '${d.category}')
+    `;
+
+    await exe(sql); // assuming exe() executes your SQL query
+
+    // Redirect after save
+    res.redirect("/admin/categories/stickers-decals");
+
+  } catch (err) {
+    console.log("🔥 REAL ERROR =>", err);
+    res.send(err.message);
+  }
+});
+
+
+// Delete Stickers & Decals
+router.get("/delete_stickers_decals/:id", async function (req, res) {
+  try {
+    const id = req.params.id;
+
+    // Delete the sticker/decal record from the database
+    await exe("DELETE FROM stickers_decals WHERE id = ?", [id]);
+
+    // Redirect back to the stickers & decals list page
+    res.redirect("/admin/categories/stickers-decals");
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
+  }
+});
+
+
+// edite ch baki ahe 
+
+
+
+router.get("/categories/decoration-tape", async (req, res) => {
+      var data = await exe(`SELECT * FROM decoration_tape`);
+      var obj = { decoration_tape: data };
+   
+        res.render("admin/categories/decoration-tape.ejs",obj);
+    
+});
+
+
+
+
+
+
+
+router.post("/save_decoration_tape", async function (req, res) {
+  try {
+    console.log("BODY =>", req.body);
+    console.log("FILES =>", req.files);
+
+    let tape_image = "";
+
+    // Handle file upload
+    if (req.files && req.files.tape_image) {
+      tape_image = Date.now() + "_" + req.files.tape_image.name;
+      await req.files.tape_image.mv("public/upload/" + tape_image);
+    }
+
+    let d = req.body;
+
+    // Insert into database
+    let sql = `
+      INSERT INTO decoration_tape
+      (tape_title, tape_heading, price, tape_image, category)
+      VALUES
+      ('${d.tape_title}', '${d.tape_heading}', '${d.price || 0}', '${tape_image}', '${d.category}')
+    `;
+
+    await exe(sql);
+
+    // Redirect after save
+    res.redirect("/admin/categories/decoration-tape");
+    // res.send(data)
+
+  } catch (err) {
+    console.log("🔥 REAL ERROR =>", err);
+    res.send(err.message);
+  }
+});
+
+
+
+
+// delete session start 
+router.get("/delete_decoration_tape/:id", async (req, res) => {
+  try {
+    let id = req.params.id;
+
+    await exe("DELETE FROM decoration_tape WHERE tape_id = ?", [id]);
+
+    res.redirect("/admin/categories/decoration-tape");
+  } catch (err) {
+    console.log(err);
+    res.send("Delete error");
+  }
+});
+
+
+
+// edit ch baki ahe 
+
+// /categories/chrome-steel start session
+
+
+router.get("/categories/chrome-steel", async (req, res) => {
+     
+     var data = await exe(`SELECT * FROM chrome_steel`);
+      var obj = { chrome_steel: data };
+        res.render("admin/categories/chrome-steel.ejs",obj);
+    
+});
+
+
+
+
+
+
+
+router.post("/save_chrome_steel", async function (req, res) {
+  try {
+    console.log("BODY =>", req.body);
+    console.log("FILES =>", req.files);
+
+    let chrome_image = "";
+
+    // Handle file upload
+    if (req.files && req.files.chrome_image) {
+      chrome_image = Date.now() + "_" + req.files.chrome_image.name;
+      await req.files.chrome_image.mv("public/upload/" + chrome_image);
+    }
+
+    let d = req.body;
+
+    // Insert into chrome_steel table
+    let sql = `
+      INSERT INTO chrome_steel
+      (chrome_title, chrome_heading, price, chrome_image)
+      VALUES
+      ('${d.chrome_title}', '${d.chrome_heading}', '${d.price || 0}', '${chrome_image}')
+    `;
+
+    await exe(sql);
+
+    // Redirect to chrome steel list page
+    res.redirect("/admin/categories/chrome-steel");
+
+  } catch (err) {
+    console.log("🔥 REAL ERROR =>", err);
+    res.send(err.message);
+  }
+});
+
+
+
+
+
+
+// delete chrome steel
+router.get("/delete_chrome_steel/:id", async (req, res) => {
+  try {
+    let id = req.params.id;
+
+    await exe(
+      "DELETE FROM chrome_steel WHERE chrome_id = ?",
+      [id]
+    );
+
+    res.redirect("/admin/categories/chrome-steel");
+  } catch (err) {
+    console.log("DELETE ERROR =>", err);
+    res.send("Chrome Steel delete error");
+  }
+});
+
+
+
+// end delete 
 
 
 
