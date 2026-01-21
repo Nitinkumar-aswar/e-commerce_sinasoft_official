@@ -24,32 +24,14 @@ router.post("/login_admin_account", async (req, res) => {
 });
 
 // --- PROTECTED ROUTES ---
-
-
 // gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggghhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
-
-
 // router.use(adminAuth);
+// tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
 
 router.get("/slider", async (req, res) => {
   const sliders = await exe("SELECT * FROM slider");
   res.render("admin/Slider.ejs", { sliders });
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 router.post("/save_slider",async function(req,res){
 
   
@@ -62,24 +44,15 @@ router.post("/save_slider",async function(req,res){
     var file_name="";
    }
 
-
    var d=req.body;
-
     var sql = `INSERT INTO slider (Slider_title, Slider_heading, Slider_img)
     VALUES ('${d.Slider_title}', '${d.Slider_heading}', '${file_name}')`;
   var data =await exe(sql)
 //  res.send(data);
-res.redirect("/admin/slider");
-
-  
+res.redirect("/admin/slider"); 
 });
-
 // error yet nahi all clear ahe 
-
 // edit slider 
-
-
-
 router.get("/edit_slider/:id", async function (req, res) {
 
     var id = req.params.id;
@@ -88,9 +61,6 @@ router.get("/edit_slider/:id", async function (req, res) {
     res.render("admin/edit_slider.ejs", obj);
 
 });
-
-
-// // update slider 
 // UPDATE SLIDER
 router.post("/update_slider", async function (req, res) {
 
@@ -115,12 +85,7 @@ router.post("/update_slider", async function (req, res) {
     var data = await exe(sql);
     res.redirect("/admin/slider");
 });
-
-
-
-
 // delete slider start 
-
 router.get("/delete_slider/:id", async function (req, res) {
     var id = req.params.id;
     var data = await exe(`DELETE FROM slider WHERE slider_id = '${id}'`)
@@ -129,9 +94,6 @@ router.get("/delete_slider/:id", async function (req, res) {
  
 
 });
-
-
-
 // Tractor Start 
 router.get("/Tractor", async function (req, res) {
   var data = await exe(`SELECT * FROM tractor_decoration`);
@@ -139,17 +101,6 @@ router.get("/Tractor", async function (req, res) {
 
   res.render("admin/Tractor_dec.ejs", obj)
 });
-
-
-
-
-
-
-
-
-
-
-
 // Tractor Decoration Save (POST)
 router.post("/save_tractor_dec", async (req, res) => {
 
@@ -179,34 +130,7 @@ router.post("/save_tractor_dec", async (req, res) => {
   // ✅ redirect after save
   res.redirect("/admin/Tractor");
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// data save  Tractor
-
 // edit Tractor 
-
-
 router.get("/edit_tractor_dec/:id", async function (req, res) {
 
     var id = req.params.id;
@@ -215,12 +139,6 @@ router.get("/edit_tractor_dec/:id", async function (req, res) {
     res.render("admin/Tractor_dec_edit.ejs", obj);
 
 });
-
-
-
-// update 
-
-
 // UPDATE SLIDER
 // UPDATE TRACTOR DECORATION
 router.post("/edit_tractor_dec", async function (req, res) {
@@ -245,14 +163,8 @@ router.post("/edit_tractor_dec", async function (req, res) {
     await exe(sql);
     res.redirect("/admin/Tractor");
 });
-
-
-
-
 // edit tractor end 
-
 // delete Tractor dec 
-
 router.get("/delete_tractor_dec/:id", async function (req, res) {
     var id = req.params.id;
     var data = await exe(`DELETE FROM tractor_decoration WHERE id = '${id}'`)
@@ -261,9 +173,6 @@ router.get("/delete_tractor_dec/:id", async function (req, res) {
  
 
 });
-
-
-
 // Vehicle start admin page 
 
 router.get("/Vehicle", async function (req, res) {
@@ -273,8 +182,6 @@ router.get("/Vehicle", async function (req, res) {
 
   res.render("admin/Vehicle_dec.ejs", obj);
 });
-
-
 
 router.post("/save_Vehicle_dec", async (req, res) => {
 
@@ -291,7 +198,7 @@ router.post("/save_Vehicle_dec", async (req, res) => {
 
   const d = req.body;
 
-  // ✅ SQL query (Vehicle Decoration)
+// ✅ SQL query (Vehicle Decoration)
 const sql = `
 INSERT INTO vehicle_dec 
 (vehicle_dec_title, vehicle_dec_heading, vehicle_dec_desc, vehicle_dec_img)
@@ -304,14 +211,8 @@ VALUES
   // ✅ redirect after save
   res.redirect("/admin/Vehicle");
 });
-//  ok error yet nahi 
-
-
-// table madhe data print 
-
 
 // delete Vehicle decoration
-
 router.get("/delete_vehicle_dec/:id", async function (req, res) {
 
     var id = req.params.id;
@@ -320,14 +221,7 @@ router.get("/delete_vehicle_dec/:id", async function (req, res) {
 
     res.redirect("/admin/Vehicle");
 });
-
-
 // edit sathi  desc la pr ahe 
-
-
-
-
-
 // Vehicle Decoration Edit (GET)
 router.get("/edit_vehicle_dec/:id", async function (req, res) {
     var id = req.params.id;
@@ -340,44 +234,6 @@ router.get("/edit_vehicle_dec/:id", async function (req, res) {
 
     res.render("admin/Vehicle_dec_edit.ejs", obj);
 });
-
-
-
-
-
-// // update 
-// // UPDATE VEHICLE DECORATION
-// router.post("/edit_vehicle_dec", async (req, res) => {
-//     try {
-//         const d = req.body;
-//         let file_name = d.old_img; // hidden input field for old image
-
-//         // ✅ Check if a new image is uploaded
-//         if (req.files && req.files.Vehicle_Dec_Img) {
-//             file_name = Date.now() + "_" + req.files.Vehicle_Dec_Img.name;
-//             await req.files.Vehicle_Dec_Img.mv("public/upload/" + file_name);
-//         }
-
-//         // ✅ Correct SQL query
-//         const sql = `
-//             UPDATE vehicle_dec
-//             SET vehicle_dec_title = '${d.Vehicle_Dec_Title}',
-//                 vehicle_dec_heading = '${d.Vehicle_Dec_Heading}',
-//                 vehicle_dec_desc = '${d.Vehicle_Dec_Desc}',
-//                 vehicle_dec_img = '${file_name}'
-//             WHERE vehicle_dec_id = '${d.vehicle_dec_id}'
-//         `;
-
-//         await exe(sql);
-
-//         res.redirect("/admin/vehicle_dec"); // redirect to vehicle decoration list page
-
-//     } catch (err) {
-//         console.error(err);
-//         res.send("Error updating vehicle decoration");
-//     }
-// });
-
 
 // UPDATE VEHICLE DECORATION
 router.post("/edit_vehicle_dec", async (req, res) => {
@@ -410,22 +266,7 @@ router.post("/edit_vehicle_dec", async (req, res) => {
         res.send("Error updating vehicle decoration");
     }
 });
-
-
-
-
-
-
-
-
-
-
 // tushar
-
-
-
-
-
 // Categories list
 router.get("/categories", async (req, res) => {
 
@@ -435,12 +276,6 @@ router.get("/categories", async (req, res) => {
 
   res.render("admin/categories.ejs", obj);
 });
-
-
-
-
-
-
 router.post("/save_categories", async (req, res) => {
 
   let category_img = "";
@@ -467,10 +302,7 @@ router.post("/save_categories", async (req, res) => {
   await exe(sql);
   res.redirect("/admin/categories");
 });
-
-
 // table madhe tada print 
-
 // Delete Categories
 router.get("/delete_categories/:id", async function (req, res) {
 
@@ -480,15 +312,6 @@ router.get("/delete_categories/:id", async function (req, res) {
 
     res.redirect("/admin/categories");
 });
-
-
-
-
-
-
-
-
-
 // Categories Edit (GET)
 router.get("/edit_categories/:id", async function (req, res) {
 
@@ -504,12 +327,6 @@ router.get("/edit_categories/:id", async function (req, res) {
 
     res.render("admin/categories_edit.ejs", obj);
 });
-
-
-
-
-
-
 // UPDATE CATEGORIES
 router.post("/update_categories", async (req, res) => {
   try {
@@ -543,17 +360,7 @@ router.post("/update_categories", async (req, res) => {
     res.send("Error updating category");
   }
 });
-
-
-
 // tushar end 
-
-
-
-
-
-
-
 // Electronics session start 
 router.get("/Electronics", async (req, res) => {
 
@@ -565,11 +372,6 @@ router.get("/Electronics", async (req, res) => {
         var obj = { "electronics": data };
   res.render("admin/Electronics.ejs",obj);
 });
-
-
-
-
-
 router.post("/save_electronics", async (req, res) => {
 
   let electronics_img = "";
@@ -602,10 +404,7 @@ router.post("/save_electronics", async (req, res) => {
     res.status(500).send("Server Error");
   }
 });
-
-
 // run hot nahi 
-
 router.get("/delete_electronics/:id", async function (req, res) {
   try {
     const id = req.params.id;
@@ -620,17 +419,7 @@ router.get("/delete_electronics/:id", async function (req, res) {
     res.status(500).send("Server Error");
   }
 });
-
-
-
 // edite sati 
-
-
-
-
-
-
-
 // Electronics Edit (GET)
 router.get("/edit_electronics/:id", async function (req, res) {
     try {
@@ -696,18 +485,12 @@ router.post("/edit_electronics", async (req, res) => {
     res.send(err.sqlMessage || err.message);
   }
 });
-
-
 //Contact_us start session
 router.get("/contact_us", async (req, res) => {
   var data = await exe(`SELECT * FROM contact_us`);
   var obj = { contact_us: data };
   res.render("admin/contact_us.ejs", obj);
 });
-
-
-
-
 router.post("/save_contact_us", async (req, res) => {
 
   const d = req.body;
@@ -731,11 +514,6 @@ router.post("/save_contact_us", async (req, res) => {
   }
 
 });
-
-
-
-
-
 // edit start 
 // Contact Us Edit (GET)
 router.get("/edit_contact_us/:id", async function (req, res) {
@@ -761,10 +539,6 @@ router.get("/edit_contact_us/:id", async function (req, res) {
     res.status(500).send("Server Error");
   }
 });
-
-
-
-
 // update sathi ahe 
 router.post("/update_contact_us", async (req, res) => {
   const d = req.body;
@@ -780,19 +554,6 @@ router.post("/update_contact_us", async (req, res) => {
 
   res.redirect("/admin/contact_us");
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
 // Contact Us Delete
 router.get("/delete_contact_us/:id", async function (req, res) {
   try {
@@ -809,22 +570,7 @@ router.get("/delete_contact_us/:id", async function (req, res) {
     res.status(500).send("Server Error");
   }
 });
-
-
-
-
-
-
-
-
-
-
-
-
 // categress sub menu start session 
-
-
-
 router.get("/categories/vehicle-decoration", async (req, res) => {
 
    var data = await exe(`SELECT * FROM vehicle_decoration`);
@@ -832,8 +578,6 @@ router.get("/categories/vehicle-decoration", async (req, res) => {
 
   res.render("admin/categories/vehicle-decoration.ejs",obj);
 });
-
-
 // save data 
 // SAVE VEHICLE DECORATION
 router.post("/save_vehicle_decoration", async function (req, res) {
@@ -865,11 +609,6 @@ router.post("/save_vehicle_decoration", async function (req, res) {
     res.status(500).send("Error saving vehicle decoration.");
   }
 });
-
-
-
-
-
 // Vehicle Decoration Delete
 router.get("/delete_vehicle_decoration/:id", async function (req, res) {
   try {
@@ -886,25 +625,7 @@ router.get("/delete_vehicle_decoration/:id", async function (req, res) {
     res.status(500).send("Server Error");
   }
 });
-
-
-
 // edit baki ahe update session baki ahe 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 router.get("/categories/led-lights", async (req, res) => {
     try {
         const data = await exe("SELECT * FROM led_lights"); // replace with your table name
@@ -914,17 +635,6 @@ router.get("/categories/led-lights", async (req, res) => {
         res.send("Error loading LED Lights page");
     }
 });
-
-
-
-
-
-
-
-
-
-
-
 router.post("/save_led_lights", async function (req, res) {
   try {
     console.log("BODY =>", req.body);
@@ -955,14 +665,8 @@ router.post("/save_led_lights", async function (req, res) {
     res.send(err.message);
   }
 });
-
-
-
 // table madhe data print 
-
-
 // delete session start 
-
 // Delete LED Item
 router.get("/delete_led/:id", async function (req, res) {
   try {
@@ -979,15 +683,6 @@ router.get("/delete_led/:id", async function (req, res) {
   }
 });
 //  edit session baki ahet 
-
-
-
-
-
-
-
-
-
 router.get("/categories/stickers-decals", async (req, res) => {
   
        var data = await exe(`SELECT * FROM stickers_decals`);
@@ -995,10 +690,6 @@ router.get("/categories/stickers-decals", async (req, res) => {
         res.render("admin/categories/stickers-decals",obj);
     
 });
-
-
-
-
 // save data 
 // Route to save Stickers & Decals
 router.post("/save_stickers_decals", async function (req, res) {
@@ -1034,8 +725,6 @@ router.post("/save_stickers_decals", async function (req, res) {
     res.send(err.message);
   }
 });
-
-
 // Delete Stickers & Decals
 router.get("/delete_stickers_decals/:id", async function (req, res) {
   try {
@@ -1052,12 +741,7 @@ router.get("/delete_stickers_decals/:id", async function (req, res) {
     res.status(500).send("Server Error");
   }
 });
-
-
 // edite ch baki ahe 
-
-
-
 router.get("/categories/decoration-tape", async (req, res) => {
       var data = await exe(`SELECT * FROM decoration_tape`);
       var obj = { decoration_tape: data };
@@ -1065,13 +749,6 @@ router.get("/categories/decoration-tape", async (req, res) => {
         res.render("admin/categories/decoration-tape.ejs",obj);
     
 });
-
-
-
-
-
-
-
 router.post("/save_decoration_tape", async function (req, res) {
   try {
     console.log("BODY =>", req.body);
@@ -1106,10 +783,6 @@ router.post("/save_decoration_tape", async function (req, res) {
     res.send(err.message);
   }
 });
-
-
-
-
 // delete session start 
 router.get("/delete_decoration_tape/:id", async (req, res) => {
   try {
@@ -1123,14 +796,8 @@ router.get("/delete_decoration_tape/:id", async (req, res) => {
     res.send("Delete error");
   }
 });
-
-
-
 // edit ch baki ahe 
-
 // /categories/chrome-steel start session
-
-
 router.get("/categories/chrome-steel", async (req, res) => {
      
      var data = await exe(`SELECT * FROM chrome_steel`);
@@ -1138,13 +805,6 @@ router.get("/categories/chrome-steel", async (req, res) => {
         res.render("admin/categories/chrome-steel.ejs",obj);
     
 });
-
-
-
-
-
-
-
 router.post("/save_chrome_steel", async function (req, res) {
   try {
     console.log("BODY =>", req.body);
@@ -1178,12 +838,6 @@ router.post("/save_chrome_steel", async function (req, res) {
     res.send(err.message);
   }
 });
-
-
-
-
-
-
 // delete chrome steel
 router.get("/delete_chrome_steel/:id", async (req, res) => {
   try {
@@ -1200,15 +854,252 @@ router.get("/delete_chrome_steel/:id", async (req, res) => {
     res.send("Chrome Steel delete error");
   }
 });
-
-
-
 // end delete 
+// /categories/interior session start 
+router.get("/categories/interior", async (req, res) => {
+
+    var data = await exe(`SELECT * FROM interior_decoration`);
+      var obj = { interior_decoration: data };
+   
+  res.render("admin/categories/interior",obj);
+});
+// save data 
+router.post("/save_interior", async (req, res) => {
+  try {
+    let interior_image = "";
+
+    if (req.files && req.files.interior_image) {
+      interior_image = Date.now() + "_" + req.files.interior_image.name;
+      await req.files.interior_image.mv(
+        "public/upload/" + interior_image
+      );
+    }
+
+    let d = req.body;
+
+    let sql = `
+      INSERT INTO interior_decoration
+      (interior_title, interior_heading, price, interior_image, category)
+      VALUES
+      ('${d.interior_title}',
+       '${d.interior_heading}',
+       '${d.price}',
+       '${interior_image}',
+       '${d.category}')
+    `;
+
+    await exe(sql);
+
+    res.redirect("/admin/categories/interior");
+
+  } catch (err) {
+    console.log("ERROR =>", err);
+    res.send(err.message);
+  }
+});
+// table madhe data print 
+// delete interior decoration
+router.get("/delete_interior/:id", async (req, res) => {
+  try {
+    let id = req.params.id;
+
+    await exe(
+      "DELETE FROM interior_decoration WHERE id = ?",
+      [id]
+    );
+
+    res.redirect("/admin/categories/interior");
+
+  } catch (err) {
+    console.log("DELETE ERROR =>", err);
+    res.send("Interior delete error");
+  }
+});
+// /admin/categories/exterior session start 
+// Exterior Category Page
+router.get("/categories/exterior", async (req, res) => {
+
+  let exterior = await exe(
+    "SELECT * FROM exterior_decoration"
+  );
+
+  res.render("admin/categories/exterior", {
+    exterior: exterior   // 👈 हे खूप IMPORTANT
+  });
+
+});
+// save data 
+router.post("/save_exterior", async (req, res) => {
+  try {
+    let exterior_image = "";
+
+    if (req.files && req.files.exterior_image) {
+      exterior_image = Date.now() + "_" + req.files.exterior_image.name;
+      await req.files.exterior_image.mv(
+        "public/upload/" + exterior_image
+      );
+    }
+
+    let d = req.body;
+
+    await exe(`
+      INSERT INTO exterior_decoration
+      (exterior_title, exterior_heading, price, exterior_image)
+      VALUES
+      ('${d.exterior_title}', '${d.exterior_heading}', '${d.price}', '${exterior_image}')
+    `);
+
+    res.redirect("/admin/categories/exterior");
+
+  } catch (err) {
+    console.log(err);
+    res.send(err.message);
+  }
+});
+// delete session start 
+
+// delete exterior decoration
+router.get("/delete_exterior/:id", async (req, res) => {
+  try {
+    let id = req.params.id;
+
+    // Delete the item from DB
+    await exe(
+      "DELETE FROM exterior_decoration WHERE exterior_id = ?",
+      [id]
+    );
+
+    // Redirect back to exterior list
+    res.redirect("/admin/categories/exterior");
+
+  } catch (err) {
+    console.log("DELETE ERROR =>", err);
+    res.send("Exterior delete error");
+  }
+});
+// Cannot GET /admin/categories/horn-siren session start 
+// horn-siren category page
+router.get("/categories/horn-siren", async (req, res) => {
+        var data = await exe(`SELECT * FROM horn_siren`);
+      var obj = { horn_siren: data };
+   
+    res.render("admin/categories/horn_siren",obj);
+ 
+});
+
+// save data 
+
+// save Horn/Siren
+router.post("/save_horn_siren", async (req, res) => {
+  try {
+    let horn_image = "";
+
+    if (req.files && req.files.horn_image) {
+      horn_image = Date.now() + "_" + req.files.horn_image.name;
+      await req.files.horn_image.mv("public/upload/" + horn_image);
+    }
+
+    let d = req.body;
+
+    let sql = `
+      INSERT INTO horn_siren
+      (horn_title, horn_heading, price, horn_image)
+      VALUES
+      ('${d.horn_title}', '${d.horn_heading}', '${d.price}', '${horn_image}')
+    `;
+
+    await exe(sql);
+
+    res.redirect("/admin/categories/horn-siren");
+
+  } catch (err) {
+    console.log("SAVE HORN/SIREN ERROR =>", err);
+    res.send(err.message);
+  }
+});
+
+// Delete Horn / Siren
+router.get("/delete_horn_siren/:id", async (req, res) => {
+  try {
+    let id = req.params.id;
+
+    // Delete from database
+    await exe(
+      "DELETE FROM horn_siren WHERE id = ?",
+      [id]
+    );
+
+    // Redirect back to Horn/Siren list
+    res.redirect("/admin/categories/horn-siren");
+
+  } catch (err) {
+    console.log("DELETE HORN/SIREN ERROR =>", err);
+    res.send("Horn / Siren delete error");
+  }
+});
+// Cannot GET /admin/categories/electrical  session start 
+// Electrical category page
+router.get("/categories/electrical", async (req, res) => {
+  try {
+    const electrical = await exe("SELECT * FROM electrical");
+
+    res.render("admin/categories/electrical", { electrical });
+  } catch (err) {
+    console.log("ELECTRICAL CATEGORY ERROR =>", err);
+    res.send("Electrical category page error");
+  }
+});
+// save data 
+// Save Electrical item
+router.post("/save_electrical", async (req, res) => {
+  try {
+    let electrical_image = "";
+
+    if (req.files && req.files.electrical_image) {
+      electrical_image = Date.now() + "_" + req.files.electrical_image.name;
+      await req.files.electrical_image.mv("public/upload/" + electrical_image);
+    }
+
+    let d = req.body;
+
+    let sql = `
+      INSERT INTO electrical
+      (electrical_title, electrical_heading, price, electrical_image)
+      VALUES
+      ('${d.electrical_title}', '${d.electrical_heading}', '${d.price}', '${electrical_image}')
+    `;
+
+    await exe(sql);
+
+    res.redirect("/admin/categories/electrical");
+
+  } catch (err) {
+    console.log("SAVE ELECTRICAL ERROR =>", err);
+    res.send(err.message);
+  }
+});
+// delete session start 
+// Delete Electrical Item
+router.get("/delete_electrical/:id", async (req, res) => {
+  try {
+    let id = req.params.id;
+
+    // Delete from database
+    await exe(
+      "DELETE FROM electrical WHERE id = ?",
+      [id]
+    );
+
+    // Redirect back to Electrical list
+    res.redirect("/admin/categories/electrical");
+
+  } catch (err) {
+    console.log("DELETE ELECTRICAL ERROR =>", err);
+    res.send("Electrical delete error");
+  }
+});
+
 
 
 
 module.exports = router;
-
-
-
-  

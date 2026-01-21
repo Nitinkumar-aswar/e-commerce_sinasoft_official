@@ -52,23 +52,6 @@ router.get("/user_login", function(req,res){
   res.render("user/user_login.ejs")
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 router.post("/login_Flipkart_account",async function(req,res){
   var d=req.body;
   var sql = `SELECT * FROM user_create_account WHERE user_user_name = '${d.user_user_name}'AND user_password='${d.user_password}'`;
@@ -104,25 +87,6 @@ router.post("/user_login", async (req, res) => {
 });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 router.get("/my_profile",async function(req,res){
 
 
@@ -141,31 +105,6 @@ router.get("/my_profile",async function(req,res){
 });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 router.get("/Categories", async function (req, res) {
 
   // Categories data (Vehicle Decoration Accessories)
@@ -181,31 +120,13 @@ router.get("/Categories", async function (req, res) {
   res.render("user/vechical_decoration_accessories.ejs", obj);
 });
 
-
-
-
-
 // /Electronics
 router.get("/Electronics",async function(req,res){
    var electronics = await exe(`SELECT * FROM electronics`);
    var obj={"electronics":electronics}
   res.render("user/Electronics.ejs",obj)
 });
-
-
-
-
 // eletronic end 
-
-
-
-
-
-
-
-
-
-
 // /Contact_us
 router.get("/Contact_us", async function (req, res) {
 
@@ -237,13 +158,6 @@ router.get("/Location_map",function(req,res){
 router.get("/Warranty_service_support",function(req,res){
   res.render("user/Warranty_service_support.ejs")
 })
-
-
-
-
-
-
-
 router.get("/Tractor_decoration_gallery",async function(req,res){
    var tractorDecorations = await exe(`SELECT * FROM tractor_decoration`);
     var obj = { "tractorDecorations": tractorDecorations}
@@ -260,29 +174,6 @@ router.get("/all_tractor_dec",function(req,res){
 router.get("/LED_Fancy_Decoration_Lights",function(req,res){
   res.send("user/LED_Fancy_Decoration_Lights.ejs")
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // ================= CATEGORY PAGES =================
 
 // Vehicle Decoration
@@ -311,13 +202,6 @@ router.get("/dec_tape", async (req, res) => {
     var obj = { "decoration_tape": decoration_tape}
   res.render("user/dec_tape",obj);
 });
-
-
-
-
-
-
-
 // Chrome / Steel
 router.get("/steel", async (req, res) => {
 
@@ -325,32 +209,31 @@ router.get("/steel", async (req, res) => {
     var obj = { "chrome_steel": chrome_steel}
   res.render("user/chrome_steel",obj);
 });
-
-
-
-
 // Interior
 router.get("/interior", async (req, res) => {
- 
-  res.render("user/interior");
+   var interior_decoration = await exe(`SELECT * FROM interior_decoration`);
+    var obj = { "interior_decoration": interior_decoration}
+  res.render("user/interior",obj);
 });
 
 // Exterior
 router.get("/exterior", async (req, res) => {
- 
-  res.render("user/exterior");
+       var exterior_decoration = await exe(`SELECT * FROM exterior_decoration`);
+    var obj = { "exterior_decoration": exterior_decoration}
+  res.render("user/exterior",obj);
 });
 
 // Horn
 router.get("/horn", async (req, res) => {
- 
-  res.render("user/horn");
+        var horn_siren = await exe(`SELECT * FROM horn_siren`);
+    var obj = { "horn_siren": horn_siren}
+  res.render("user/horn",obj);
 });
-
 // Electrical
 router.get("/electrical", async (req, res) => {
- 
-  res.render("user/electrical");
+  var electrical = await exe(`SELECT * FROM electrical`);
+    var obj = { "electrical": electrical}
+  res.render("user/electrical",obj);
 });
 
 // Safety
@@ -358,12 +241,6 @@ router.get("/safety", async (req, res) => {
  
   res.render("user/safety");
 });
-
-
-
-
-
-
 // eletronic end 
 
 

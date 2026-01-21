@@ -1,6 +1,6 @@
 <%- include("../navbar.ejs") %>
 
-<form action="/admin/save_chrome_steel"
+<form action="/admin/save_interior"
       method="POST"
       enctype="multipart/form-data"
       class="w-100">
@@ -9,14 +9,14 @@
 
     <div class="row">
       <div class="col-12 mb-3">
-        <h1>Add Chrome / Steel Accessories</h1>
+        <h1>Add Interior Decoration Accessories</h1>
       </div>
 
       <!-- Title -->
       <div class="col-md-6 mb-3">
         <label>Title</label>
         <input type="text"
-               name="chrome_title"
+               name="interior_title"
                class="form-control"
                placeholder="Enter title"
                required>
@@ -26,7 +26,7 @@
       <div class="col-md-6 mb-3">
         <label>Heading</label>
         <input type="text"
-               name="chrome_heading"
+               name="interior_heading"
                class="form-control"
                placeholder="Enter short heading"
                required>
@@ -38,7 +38,6 @@
         <input type="number"
                name="price"
                class="form-control"
-               step="0.01"
                placeholder="Enter price"
                required>
       </div>
@@ -47,19 +46,19 @@
       <div class="col-md-6 mb-3">
         <label>Image</label>
         <input type="file"
-               name="chrome_image"
-               accept="image/*"
+               name="interior_image"
                class="form-control"
+               accept="image/*"
                required>
       </div>
 
       <!-- Hidden Category -->
-      <input type="hidden" name="category" value="chrome-steel">
+      <input type="hidden" name="category" value="interior-decoration">
 
       <!-- Button -->
       <div class="col-12 text-end">
         <button class="btn btn-primary">
-          Save Chrome / Steel
+          Save Interior Decoration
         </button>
       </div>
 
@@ -69,69 +68,65 @@
 
 
 
-
-
 <div class="container-fluid bg-white p-3">
   <div class="row mb-3">
     <div class="col-6">
-      <h3>Chrome Steel Accessories</h3>
-    </div>
-    <div class="col-6 text-end">
-     
+      <h3>Interior Decoration Accessories</h3>
     </div>
   </div>
 
   <table class="table table-bordered table-hover align-middle">
-    <thead class="table-white">
+    <thead class="table-dark">
       <tr>
-        
         <th width="160">Action</th>
         <th>Sr.No</th>
         <th>Title</th>
         <th>Heading</th>
         <th>Price</th>
+         <th>Category</th>
         <th>Image</th>
       </tr>
     </thead>
 
     <tbody>
-      <% if(chrome_steel.length > 0){ %>
-        <% chrome_steel.forEach((i, index) => { %>
+      <% if (typeof interior_decoration !== "undefined" && interior_decoration.length > 0) { %>
+        <% interior_decoration.forEach((i, index) => { %>
           <tr>
-           
 
-            <!-- ACTION FIRST -->
+            <!-- ACTION -->
             <td>
-              <a href="/admin/edit_chrome_steel/<%= i.chrome_id %>"
+              <a href="/admin/edit_interior/<%= i.id %>"
                  class="btn btn-sm btn-primary mb-1">
                 <i class="fa-solid fa-pen-to-square"></i>
               </a>
 
-              <a href="/admin/delete_chrome_steel/<%= i.chrome_id %>"
+              <a href="/admin/delete_interior/<%= i.id %>"
                  onclick="return confirm('Delete this item?')"
                  class="btn btn-sm btn-danger">
-                 <i class="fa-solid fa-trash"></i>
+                <i class="fa-solid fa-trash"></i>
               </a>
             </td>
-            <td><%= index + 1 %></td>
-            <td><%= i.chrome_title %></td>
-            <td><%= i.chrome_heading %></td>
-            <td>₹ <%= i.price %></td>
 
-            <!-- IMAGE LAST -->
+            <td><%= index + 1 %></td>
+            <td><%= i.interior_title %></td>
+            <td><%= i.interior_heading %></td>
+            <td>₹ <%= i.price %></td>
+            <td> <%= i.category %></td>
+
             <td>
-              <% if(i.chrome_image){ %>
-                <img src="/upload/<%= i.chrome_image %>" width="60">
+              <% if (i.interior_image) { %>
+                <img src="/upload/<%= i.interior_image %>" width="60">
               <% } else { %>
                 No Image
               <% } %>
             </td>
+
           </tr>
         <% }) %>
       <% } else { %>
         <tr>
           <td colspan="6" class="text-center text-danger">
-            No Chrome Steel Items Found
+            No Interior Decoration Items Found
           </td>
         </tr>
       <% } %>
