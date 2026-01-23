@@ -34,7 +34,7 @@ app.set("views", path.join(__dirname, "src/views"));
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "",
+  password: "mac@4562B",
   database: "autokart_db"
 });
 
