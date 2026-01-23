@@ -177,13 +177,36 @@
     
 
     .modal-box {
-      background: #fff;
-      width: 600px;
-      margin: 60px auto;
-      padding: 20px;
-      border-radius: 6px;
-    }
-    
+  background: #fff;
+  width: 600px;
+  margin: 60px auto;
+  padding: 20px;
+  border-radius: 6px;
+
+  /* 👇 ADD ONLY THIS */
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+.toast-success {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+
+  background: #2e7d32;
+  color: #fff;
+
+  padding: 14px 22px;
+  border-radius: 6px;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  display: none;
+  z-index: 9999;
+
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
 
   </style>
 </head>
@@ -245,6 +268,12 @@
             <label>Product Image</label>
             <input type="file" name="product_image" required>
           </div>
+            <div>
+  <label>Gallery Images (Max 5)</label>
+<input type="file" name="gallery_images[]" multiple accept="image/*">
+
+
+</div>
 
           <div>
             <label>Product Description</label>
@@ -374,6 +403,10 @@
       <input type="file" name="product_image">
 
       <br><br>
+     <label>Gallery Images (Max 5)</label>
+<input type="file" name="gallery_images[]" multiple>
+
+<br><br>
 
       <button type="submit">Update</button>
       <button type="button" onclick="closeEditModal()">Cancel</button>
@@ -531,6 +564,22 @@
 
   renderTable();
 </script>
+<% if (successMessage) { %>
+<script>
+  const toast = document.getElementById("successToast");
+  toast.style.display = "block";
+
+  setTimeout(() => {
+    toast.style.display = "none";
+  }, 3000);
+</script>
+<% } %>
+
+
+<!-- SUCCESS TOAST -->
+<div id="successToast" class="toast-success">
+  ✅ Product added successfully
+</div>
 
 </body>
 </html>

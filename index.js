@@ -1,11 +1,19 @@
 const express = require("express");
 const path = require("path");
 const mysql = require("mysql2");
+const session = require("express-session");
 
 const adminRoutes = require("./src/routes/admin");
 
 const app = express();
 const PORT = 3000;
+app.use(
+  session({
+    secret: "autokart-secret",
+    resave: false,
+    saveUninitialized: true
+  })
+);
 
 /* =========================
    MIDDLEWARE
@@ -226,14 +234,10 @@ app.get("/sub-section/:slug", (req, res) => {
 
 /* PRODUCT DETAILS */
 app.get("/product/:slug", (req, res) => {
-  const db = req.db;
   const slug = req.params.slug;
 
   const query = `
-    SELECT 
-      p.*, 
-      s.name AS section_name, 
-      ss.name AS sub_section_name
+    SELECT p.*, s.name AS section_name, ss.name AS sub_section_name
     FROM products p
     JOIN sections s ON p.section_id = s.id
     LEFT JOIN sub_sections ss ON p.sub_section_id = ss.id
@@ -251,11 +255,27 @@ app.get("/product/:slug", (req, res) => {
       return res.send("Product not found");
     }
 
-    res.render("user/product-details", {
-      product: result[0]
-    });
+    const product = result[0];
+
+    // 👉 FETCH GALLERY IMAGES
+    db.query(
+      "SELECT image FROM product_images WHERE product_id = ?",
+      [product.id],
+      (imgErr, images) => {
+        if (imgErr) {
+          console.error("❌ IMAGE FETCH ERROR:", imgErr);
+          return res.send("Error loading images");
+        }
+
+        res.render("user/product-details", {
+          product,
+          images
+        });
+      }
+    );
   });
 });
+
 
 /* =========================
    ADMIN ROUTES
