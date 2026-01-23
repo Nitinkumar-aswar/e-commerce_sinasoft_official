@@ -33,27 +33,78 @@
 ================================ */
 
 .search-box {
-  flex: 1;
+  flex: 1;                     /* keeps it wide */
+  max-width: 750px;            /* Flipkart-like width */
   display: flex;
-  margin: 0 40px;
+  position: relative;
+
+  margin-left: -200px;          /* 👈 MOVE LEFT (adjust value) */
 }
 
 .search-box input {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-right: none;
-  outline: none;
+  height: 40px;
+  padding: 0 50px 0 15px;
   font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 2px;
+  outline: none;
 }
 
 .search-box button {
-  padding: 0 18px;
-  border: 1px solid #28a745;
-  background-color: #28a745;
-  color: white;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 60px;
+  height: 100%;
+  border: none;
+  background: #2874f0;         /* Flipkart blue */
+  color: #fff;
   cursor: pointer;
 }
+
+.search-dropdown {
+  position: absolute;
+  top: 45px;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  display: none;
+  z-index: 9999;
+}
+
+.search-item {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  text-decoration: none;
+  color: #000;
+}
+
+.search-item img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+}
+
+.search-item:hover {
+  background: #f1f3f6;
+}
+
+
+.search-item .name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #212121;
+}
+
+.search-item .price {
+  font-size: 13px;
+  color: #388e3c;
+}
+
 
 /* ===============================
    ACTIONS
@@ -198,4 +249,20 @@
 
 .mega-column a:hover {
   color: #2874f0;
+}
+
+
+/* ===============================
+   CART
+================================ */
+.cart-link,
+.cart-link:visited,
+.cart-link:hover,
+.cart-link:active {
+  color: #000000; /* keep your cart color */
+  text-decoration: none;
+}
+
+.cart-link i {
+  color: inherit;
 }

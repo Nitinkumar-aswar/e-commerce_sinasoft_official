@@ -39,36 +39,39 @@
       object-fit: contain;
     }
 
-    .action-buttons {
-      display: flex;
-      gap: 15px;
-      margin-top: 20px;
-    }
+   .action-buttons {
+  margin-top: 16px;
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
 
-    .add-cart-btn {
-      flex: 1;
-      background: #ff9f00;
-      color: #fff;
-      border: none;
-      padding: 14px;
-      font-size: 16px;
-      font-weight: 600;
-      border-radius: 4px;
-      cursor: pointer;
-    }
+.add-cart-btn,
+.buy-now-btn {
+  width: 160px;
+  height: 44px;
 
-    .buy-now-btn {
-      flex: 1;
-      background: #fb641b;
-      color: #fff;
-      border: none;
-      padding: 14px;
-      font-size: 16px;
-      font-weight: 600;
-      border-radius: 4px;
-      cursor: pointer;
-    }
+  border: none;
+  border-radius: 4px;
 
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+
+  box-sizing: border-box;
+}
+
+.add-cart-btn {
+  background: #ff9f00;
+  color: #fff;
+}
+
+.buy-now-btn {
+  background: #fb641b;
+  color: #fff;
+}
+
+    
     /* RIGHT SIDE */
     .product-right {
       width: 60%;
@@ -209,74 +212,83 @@
 <body>
 
 <%- include('partials/header') %>
-  <div class="product-page">
+  
+<div class="product-page">
 
-    <!-- LEFT -->
-    <div class="product-left">
-      <div class="image-gallery">
+  <!-- LEFT SIDE -->
+  <div class="product-left">
 
-  <!-- LEFT: 5 SMALL BOXES -->
-  <div class="thumbnail-column">
-    <% for (let i = 0; i < 5; i++) { %>
-      <% if (images && images[i]) { %>
-        <img
-          src="/uploads/<%= images[i].image %>"
-          onclick="changeImage('/uploads/<%= images[i].image %>')"
-        >
-      <% } else { %>
-        <div class="thumbnail-placeholder"></div>
-      <% } %>
-    <% } %>
-  </div>
+    <!-- IMAGE GALLERY -->
+    <div class="image-gallery">
 
-  <!-- RIGHT: MAIN IMAGE WITH ZOOM -->
-<div class="image-zoom-container">
-
-  <div class="image-wrapper" id="imageWrapper">
-    <img
-      id="mainImage"
-      src="/uploads/<%= product.image %>"
-      alt="<%= product.product_name %>"
-    >
-    <div id="lens"></div>
-  </div>
-
-  <div class="zoom-preview" id="zoomPreview"></div>
-
-</div>
-
-
-</div>
-
-
-      <div class="action-buttons">
-        <button class="add-cart-btn">ADD TO CART</button>
-        <button class="buy-now-btn">BUY NOW</button>
-      </div>
-    </div>
-
-    <!-- RIGHT -->
-    <div class="product-right">
-
-      <div class="product-title">
-        <%= product.product_name %>
+      <!-- THUMBNAILS -->
+      <div class="thumbnail-column">
+        <% for (let i = 0; i < 5; i++) { %>
+          <% if (images && images[i]) { %>
+            <img
+              src="/uploads/<%= images[i].image %>"
+              onclick="changeImage('/uploads/<%= images[i].image %>')"
+            >
+          <% } else { %>
+            <div class="thumbnail-placeholder"></div>
+          <% } %>
+        <% } %>
       </div>
 
-      <div class="product-price">
-        ₹ <%= product.price %>
-      </div>
-
-      <div class="product-description-title">
-        Description
-      </div>
-
-      <div class="product-description">
-        <%= product.product_description || "No description available." %>
+      <!-- MAIN IMAGE -->
+      <div class="image-zoom-container">
+        <div class="image-wrapper">
+          <img
+            id="mainImage"
+            src="/uploads/<%= product.image %>"
+            alt="<%= product.product_name %>"
+          >
+          <div id="lens"></div>
+        </div>
+        <div class="zoom-preview" id="zoomPreview"></div>
       </div>
 
     </div>
 
+    <!-- BUTTONS -->
+    <div class="action-buttons">
+      <button
+        class="add-cart-btn"
+        data-product-id="<%= product.id %>"
+      >
+        ADD TO CART
+      </button>
+
+      <button class="buy-now-btn">
+        BUY NOW
+      </button>
+    </div>
+
   </div>
+
+  <!-- RIGHT SIDE -->
+  <div class="product-right">
+
+    <div class="product-title">
+      <%= product.product_name %>
+    </div>
+
+    <div class="product-price">
+      ₹ <%= product.price %>
+    </div>
+
+    <div class="product-description-title">
+      Description
+    </div>
+
+    <div class="product-description">
+      <%= product.product_description || "No description available." %>
+    </div>
+
+  </div>
+
+</div>
+
 
   <script>
 const mainImage = document.getElementById("mainImage");
@@ -338,6 +350,30 @@ function changeImage(src) {
   zoomPreview.style.backgroundImage = `url(${src})`;
 }
 </script>
+
+<script>
+document.querySelector(".add-cart-btn").addEventListener("click", function () {
+  const productId = this.dataset.productId;
+
+  fetch("/add-to-cart", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ productId, qty: 1 })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      alert("Added to cart");
+    } else {
+      alert("Failed to add to cart");
+    }
+  })
+  .catch(err => console.error(err));
+});
+</script>
+
+
+
 
 
 </body>
