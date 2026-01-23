@@ -185,19 +185,37 @@ router.get("/products", (req, res) => {
     db.query(productQuery, (err, products) => {
       if (err) return res.send("Error loading products");
 
-      res.render("admin/products", {
-        sections,
-        products
+      const successMessage = req.session.successMessage;
+req.session.successMessage = null;
+
+res.render("admin/products", {
+  sections,
+  products,
+  successMessage
+});
+
+
+req.session.successMessage = null; // clear after use
+
       });
     });
   });
-});
+
 
 /* =========================
    SAVE PRODUCT
 ========================= */
 
-router.post("/products", upload.single("product_image"), (req, res) => {
+router.post(
+  "/products",
+  upload.fields([
+    { name: "product_image", maxCount: 1 },
+    { name: "gallery_images[]", maxCount: 5 }
+  ]),
+
+  
+  (req, res) => {
+
   const db = req.db;
   console.log("REQ BODY:", req.body);
 
@@ -215,7 +233,9 @@ router.post("/products", upload.single("product_image"), (req, res) => {
     return res.send("Product name is required");
   if (!quantity || isNaN(quantity))
     return res.send("Quantity is required");
-  if (!req.file) return res.send("Image upload failed");
+  if (!req.files || !req.files.product_image)
+  return res.send("Image upload failed");
+
 
   const slugBase = product_name
     .toLowerCase()
@@ -244,26 +264,47 @@ router.post("/products", upload.single("product_image"), (req, res) => {
     price || null,
     Number(quantity),
     product_description || null,
-    req.file.filename,
+    req.files.product_image[0].filename,
+
     displaySlug
   ];
 
-  db.query(query, values, err => {
-    if (err) {
-      console.error("❌ INSERT ERROR:", err.sqlMessage || err);
-      return res.send("Save failed");
-    }
-    res.redirect("/admin/products");
+db.query(query, values, (err, result) => {
+  if (err) {
+    console.error("❌ INSERT ERROR:", err.sqlMessage || err);
+    return res.send("Save failed");
+  }
+
+  const productId = result.insertId;
+
+
+ // 👉 SAVE GALLERY IMAGES
+if (req.files["gallery_images[]"]) {
+  req.files["gallery_images[]"].forEach(file => {
+    db.query(
+      "INSERT INTO product_images (product_id, image) VALUES (?, ?)",
+      [productId, file.filename]
+    );
   });
+}
+
+req.session.successMessage = "Product added successfully";
+res.redirect("/admin/products");
+
+    
 });
+  }
+);
 
 /* =========================
    UPDATE PRODUCT
 ========================= */
-
 router.post(
   "/products/edit/:id",
-  upload.single("product_image"),
+  upload.fields([
+    { name: "product_image", maxCount: 1 },
+    { name: "gallery_images[]", maxCount: 5 }
+  ]),
   (req, res) => {
     const db = req.db;
     const productId = req.params.id;
@@ -274,7 +315,8 @@ router.post(
       product_name,
       price,
       quantity,
-      product_description
+      product_description,
+      delete_images
     } = req.body;
 
     const safeSubSectionId =
@@ -284,7 +326,7 @@ router.post(
 
     let query, values;
 
-    if (req.file) {
+    if (req.files && req.files.product_image) {
       query = `
         UPDATE products SET
           section_id = ?,
@@ -303,7 +345,7 @@ router.post(
         price,
         quantity,
         product_description,
-        req.file.filename,
+        req.files.product_image[0].filename,
         productId
       ];
     } else {
@@ -330,13 +372,54 @@ router.post(
 
     db.query(query, values, err => {
       if (err) {
-        console.error("❌ UPDATE ERROR:", err.sqlMessage || err);
+        console.error("❌ UPDATE ERROR:", err);
         return res.send("Update failed");
       }
-      res.redirect("/admin/products");
+
+      // DELETE SELECTED GALLERY IMAGES
+      if (delete_images) {
+        const ids = Array.isArray(delete_images)
+          ? delete_images
+          : [delete_images];
+
+        db.query(
+          "DELETE FROM product_images WHERE id IN (?)",
+          [ids]
+        );
+      }
+
+      // 👉 REPLACE GALLERY IMAGES (NOT APPEND)
+if (req.files && req.files["gallery_images[]"]) {
+
+  // 1️⃣ DELETE OLD GALLERY IMAGES
+  db.query(
+    "DELETE FROM product_images WHERE product_id = ?",
+    [productId],
+    err => {
+      if (err) {
+        console.error("❌ GALLERY DELETE ERROR:", err);
+      }
+
+      // 2️⃣ INSERT NEW GALLERY IMAGES
+      req.files["gallery_images[]"].forEach(file => {
+        db.query(
+          "INSERT INTO product_images (product_id, image) VALUES (?, ?)",
+          [productId, file.filename]
+        );
+      });
+    }
+  );
+}
+req.session.successMessage = "Product Edited successfully";
+res.redirect("/admin/products");
+
+
+
+
     });
   }
 );
+
 
 /* =========================
    DELETE PRODUCT
