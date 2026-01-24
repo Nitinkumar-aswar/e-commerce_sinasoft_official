@@ -3,7 +3,58 @@
   rel="stylesheet"
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
 />
+<style>
+  body {
+    font-family: Arial, sans-serif;
+}
 
+.top-actions {
+    position: relative;
+ left: 140px;
+    display: inline-block;
+}
+
+.action-item {
+    cursor: pointer;
+    padding: 1px;
+  
+    color: black;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    user-select: none;
+}
+
+.action-item:hover {
+    
+}
+
+/* Dropdown menu styling */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    min-width: 150px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    border-radius: 5px;
+    overflow: hidden;
+    z-index: 100;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 10px 15px;
+    color: #333;
+    text-decoration: none;
+}
+
+.dropdown-menu a:hover {
+    background: #f0f0f0;
+}
+</style>
 
 <!-- TOP NAVBAR -->
 <div class="top-navbar">
@@ -30,12 +81,17 @@
 
 
 
-
-  <div class="top-actions">
-    <div class="action-item">
-      <i class="fa fa-user"></i>
-      <span>Login</span>
+<div class="top-actions">
+    <div class="action-item" id="loginBtn">
+        <i class="fa fa-user"></i>
+        <span>Login</span>
+        <i class="fa fa-caret-down" style="margin-left:5px;"></i>
     </div>
+    <div class="dropdown-menu" id="loginDropdown">
+        <a href="/admin/customer_login">Customer Login</a>
+        <a href="/my_profile">My Profile</a>
+    </div>
+</div>
 
     <div class="action-item">
   <a href="/cart" class="cart-link">
@@ -103,8 +159,31 @@
   </ul>
 </div>
 
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const loginBtn = document.getElementById('loginBtn');
+    const dropdown = document.getElementById('loginDropdown');
+
+    loginBtn.addEventListener('click', () => {
+        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!loginBtn.contains(e.target) && !dropdown.contains(e.target)) {
+            dropdown.style.display = 'none';
+        }
+    });
+});
+</script>
 
 <script>
+
+
+
+
+
+
+
   console.log("SEARCH JS LOADED");
 
 const input = document.getElementById("searchInput");
