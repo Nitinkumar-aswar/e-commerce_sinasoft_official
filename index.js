@@ -7,6 +7,45 @@ const adminRoutes = require("./src/routes/admin");
 
 const app = express();
 const PORT = 3000;
+
+
+/* =========================
+   SESSION DATABASE (FIRST)
+========================= */
+
+const sessionDB = mysql.createPool({
+  host: "localhost",
+  user: "root",
+  password: "mac@4562B",
+  database: "autokart_db"
+});
+
+/* =========================
+   SESSION STORE (SECOND)
+========================= */
+
+const sessionStore = new MySQLStore(
+  {
+    expiration: 1000 * 60 * 60 * 24 * 7, // 7 days
+    clearExpired: true,
+    checkExpirationInterval: 900000, // 15 mins
+    schema: {
+      tableName: "sessions",
+      columnNames: {
+        session_id: "session_id",
+        expires: "expires",
+        data: "data"
+      }
+    }
+  },
+  sessionDB
+);
+
+/* =========================
+   SESSION MIDDLEWARE
+========================= */
+
+
 app.use(
   session({
     secret: "autokart-secret",
