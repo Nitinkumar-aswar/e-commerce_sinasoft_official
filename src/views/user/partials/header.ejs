@@ -54,16 +54,21 @@
 .dropdown-menu a:hover {
     background: #f0f0f0;
 }
+.logo img {
+  height: 60px;
+  object-fit: contain;
+}
 </style>
 
 <!-- TOP NAVBAR -->
 <div class="top-navbar">
 
   <div class="logo">
-    <a href="/" style="text-decoration:none;color:inherit;">
-      AutoKart
-    </a>
-  </div>
+  <a href="/">
+    <img src="/uploads/autokart_logo.jpeg" alt="Autokart Logo" style="height: 60px; object-fit: contain;">
+  </a>
+</div>
+
 
 <div class="search-box">
   <input
@@ -89,7 +94,7 @@
     </div>
     <div class="dropdown-menu" id="loginDropdown">
         <a href="/admin/customer_login">Customer Login</a>
-        <a href="/my_profile">My Profile</a>
+        <a href="/admin/my_profile">My Profile</a>
     </div>
 </div>
 
