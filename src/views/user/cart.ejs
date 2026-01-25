@@ -273,7 +273,12 @@
       <span>₹ <%= totalPrice %></span>
     </div>
 
-    <button class="checkout-btn">PLACE ORDER</button>
+   <form action="/checkout" method="GET">
+  <input type="hidden" name="type" value="cart">
+  <button type="submit" class="checkout-btn">PLACE ORDER</button>
+</form>
+
+
 
   </div>
 

@@ -342,4 +342,133 @@ router.post("/add-to-cart", (req, res) => {
 });
 
 
+/* =========================
+   CHECKOUT (BUY NOW + CART)
+========================= */
+
+router.get("/checkout", (req, res) => {
+  const type = req.query.type;
+  const sessionId = req.sessionID;
+
+  const address = {
+    name: "Darshan Yadav",
+    address: "17 Kartikeyan Boys Hostel, Tathawade",
+    city: "Pimpri Chinchwad",
+    state: "Maharashtra",
+    pincode: "411033"
+  };
+
+  // 🟠 BUY NOW FLOW
+  if (type === "buy-now") {
+    const productId = req.query.productId;
+
+    if (!productId) {
+      return res.send("Product missing");
+    }
+
+    const sql = `
+      SELECT id, product_name, price, image
+      FROM products
+      WHERE id = ?
+      LIMIT 1
+    `;
+
+    req.db.query(sql, [productId], (err, result) => {
+      if (err || !result.length) {
+        return res.send("Product not found");
+      }
+
+      return res.render("user/checkout", {
+        mode: "buy-now",
+        product: result[0],
+        cart: [],
+        address
+      });
+    });
+
+    return;
+  }
+
+  // 🔵 CART FLOW (DEFAULT)
+  const cartSql = `
+    SELECT 
+      p.id,
+      p.product_name,
+      p.price,
+      p.image,
+      c.quantity
+    FROM cart c
+    JOIN products p ON p.id = c.product_id
+    WHERE c.session_id = ?
+  `;
+
+  req.db.query(cartSql, [sessionId], (err, cart) => {
+    if (err) {
+      return res.send("Cart error");
+    }
+
+    return res.render("user/checkout", {
+      mode: "cart",
+      product: null,
+      cart,
+      address
+    });
+  });
+});
+
+/* =========================
+   PAY (CHECKOUT FLOW)
+========================= */
+
+router.post("/pay", (req, res) => {
+  const { productId, paymentMethod } = req.body;
+
+  // 🔒 Basic validation
+  if (!paymentMethod) {
+    return res.status(400).send("Payment method is required");
+  }
+
+  console.log("PAY REQUEST RECEIVED");
+  console.log("Payment Method:", paymentMethod);
+
+  // 🟠 BUY NOW FLOW
+  if (productId) {
+    console.log("Checkout Type: BUY NOW");
+    console.log("Product ID:", productId);
+  }
+
+  // 🔵 CART FLOW
+  else {
+    console.log("Checkout Type: CART");
+  }
+
+  // 🚚 CASH ON DELIVERY → instant success
+  if (paymentMethod === "cod") {
+    return res.redirect("/payment-success?method=cod");
+  }
+
+  /*
+    💳 ONLINE PAYMENTS (SIMULATED)
+    --------------------------------
+    Card / UPI / Net Banking
+    Payment gateway will be integrated later
+  */
+
+  return res.redirect(`/payment-success?method=${paymentMethod}`);
+});
+
+
+/* =========================
+   PAYMENT SUCCESS (TEMP)
+========================= */
+
+router.get("/payment-success", (req, res) => {
+  const method = req.query.method || "unknown";
+
+  res.render("user/payment-success", {
+    method
+  });
+});
+
+
 module.exports = router;

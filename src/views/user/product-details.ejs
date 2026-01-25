@@ -48,18 +48,30 @@
 
 .add-cart-btn,
 .buy-now-btn {
+  display: inline-flex;          /* 🔥 behaves like button */
+  align-items: center;
+  justify-content: center;
+
   width: 160px;
   height: 44px;
+
+  background: #fb641b;
+  color: #fff;
 
   border: none;
   border-radius: 4px;
 
   font-size: 14px;
   font-weight: 600;
-  cursor: pointer;
 
-  box-sizing: border-box;
+  cursor: pointer;
+  text-decoration: none;         /* 🔥 removes underline */
 }
+
+.buy-now-btn:hover {
+  background: #e85c17;
+}
+
 
 .add-cart-btn {
   background: #ff9f00;
@@ -259,9 +271,12 @@
         ADD TO CART
       </button>
 
-      <button class="buy-now-btn">
-        BUY NOW
-      </button>
+      <a href="/checkout?type=buy-now&productId=<%= product.id %>" class="buy-now-btn">
+
+             BUY NOW
+           </a>
+                
+
     </div>
 
   </div>
