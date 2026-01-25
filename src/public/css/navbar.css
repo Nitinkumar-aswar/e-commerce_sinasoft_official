@@ -13,7 +13,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 40px;
+  padding: 0px 25px;
   background-color: #ffffff;
   border-bottom: 1px solid #ddd;
 
@@ -23,7 +23,7 @@
 }
 
 .logo {
-  font-size: 22px;
+  font-size: 32px;
   font-weight: bold;
   color: #2874f0;
 }
@@ -112,7 +112,7 @@
 
 .top-actions {
   display: flex;
-  gap: 25px;
+  gap: 20px;
 }
 
 .action-item {
