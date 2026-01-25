@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Verify OTP</title>
+  <link rel="stylesheet" href="/css/login.css">
+</head>
+<body>
+  <div class="card">
+    <h2>Verify OTP</h2>
+    <p>Please enter the 6-digit OTP sent to your mobile number</p>
+
+    <form action="/user/verify-otp" method="POST">
+      <input
+        type="text"
+        name="otp"
+        placeholder="Enter OTP"
+        class="otp-input"
+        maxlength="6"
+        required
+      >
+      <button type="submit">Verify & Login</button>
+    </form>
+  </div>
+</body>
+</html>

@@ -1,0 +1,87 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Full screen */
+body {
+  min-height: 100vh;
+  background: #f1f3f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* EXTRA BIG CARD */
+.card {
+  width: 650px;                /* ⬅️ VERY BIG WIDTH */
+  min-height: 420px;           /* ⬅️ MORE HEIGHT */
+  background: #ffffff;
+  padding: 70px 65px;          /* ⬅️ LOTS OF SPACE */
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+}
+
+/* BIG HEADING */
+.card h2 {
+  font-size: 38px;             /* ⬅️ VERY BIG TEXT */
+  color: #212121;
+  margin-bottom: 18px;
+}
+
+/* BIG SUBTEXT */
+.card p {
+  font-size: 20px;             /* ⬅️ BIGGER TEXT */
+  color: #878787;
+  margin-bottom: 45px;
+}
+
+/* HUGE INPUT */
+.card input {
+  width: 100%;
+  padding: 22px;               /* ⬅️ HUGE INPUT */
+  font-size: 20px;
+  border: 1px solid #cfcfcf;
+  border-radius: 6px;
+  margin-bottom: 40px;
+  outline: none;
+}
+
+.card input:focus {
+  border-color: #2874f0;
+}
+
+/* HUGE BUTTON */
+.card button {
+  width: 100%;
+  padding: 22px;               /* ⬅️ HUGE BUTTON */
+  font-size: 20px;
+  font-weight: bold;
+  background: #fb641b;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.card button:hover {
+  background: #e65c1a;
+}
+
+/* Responsive (mobile) */
+@media (max-width: 768px) {
+  .card {
+    width: 92%;
+    padding: 50px 35px;
+  }
+
+  .card h2 {
+    font-size: 30px;
+  }
+
+  .card p {
+    font-size: 17px;
+  }
+}

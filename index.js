@@ -4,6 +4,7 @@ const mysql = require("mysql2");
 const session = require("express-session");
 
 const adminRoutes = require("./src/routes/admin");
+const userRoutes = require("./src/routes/user.routes");
 
 const app = express();
 const PORT = 3000;
@@ -34,8 +35,8 @@ app.set("views", path.join(__dirname, "src/views"));
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "",
-  database: "autokart_db"
+  password: "Aswar1212",
+  database: "autokart_db1"
 });
 
 db.connect(err => {
@@ -282,6 +283,7 @@ app.get("/product/:slug", (req, res) => {
 ========================= */
 
 app.use("/admin", adminRoutes);
+app.use("/user", userRoutes);
 
 /* =========================
    SERVER
