@@ -14,6 +14,7 @@
     display: inline-block;
 }
 
+
 .action-item {
     cursor: pointer;
     padding: 1px;
@@ -43,6 +44,11 @@
     overflow: hidden;
     z-index: 100;
 }
+.search-box {
+  flex: 1;
+  max-width: 650px;
+  margin-right: 0px;   /* 🔥 SEARCH LEFT SHIFT */
+}
 
 .dropdown-menu a {
     display: block;
@@ -58,6 +64,119 @@
   height: 60px;
   object-fit: contain;
 }
+
+/* =========================
+   MOBILE RESPONSIVE FIX
+========================= */
+@media (max-width: 768px) {
+
+  /* TOP NAVBAR STACK */
+  .top-navbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+  }
+
+  /* LOGO CENTER */
+  .logo {
+    width: 100%;
+    text-align: center;
+  }
+
+  .logo img {
+    height: 45px;
+  }
+
+  /* SEARCH FULL WIDTH */
+  .search-box {
+    width: 100%;
+    margin: 9px 0;
+  }
+
+  .search-box input {
+    width: 100%;
+    
+  }
+
+  /* LOGIN + CART ROW */
+  .top-actions {
+    position: static;   /* 🔥 IMPORTANT */
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .action-item {
+    padding: 6px 10px;
+    font-size: 14px;
+  }
+
+  /* LOGIN DROPDOWN FULL WIDTH */
+  .dropdown-menu {
+    width: 100%;
+    left: 0;
+    right: 0;
+  }
+
+  /* MENU NAVBAR SCROLL */
+  .menu-navbar ul {
+    display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .menu-navbar li {
+    flex-shrink: 0;
+  }
+}/* ==============================
+   MOBILE MENU – ONE LINE FIX
+============================== */
+@media (max-width: 768px) {
+
+  /* MENU SCROLLABLE */
+  .menu-navbar {
+    overflow-x: auto;                  /* horizontal scroll enable */
+    overflow-y: hidden;                /* vertical scroll बंद फक्त menu साठी */
+    -webkit-overflow-scrolling: touch; /* smooth scroll for iOS */
+    scrollbar-width: none;             /* Firefox scrollbar hide */
+  }
+
+  .menu-navbar::-webkit-scrollbar {
+    display: none;                     /* Chrome, Safari scrollbar hide */
+  }
+
+  .menu-navbar ul {
+    display: flex;
+    flex-wrap: nowrap;                 /* एकाच line मध्ये */
+    justify-content: flex-start;       /* left align */
+    align-items: center;
+    padding: 0;
+    margin: 0;
+    gap: 0;
+  }
+
+  .menu-navbar li {
+    flex: 0 0 auto;                    /* scroll enabled, fixed width based on content */
+    text-align: center;
+    margin: 0;
+    padding: 0;
+  }
+
+  .menu-navbar li a {
+    display: block;
+    font-size: 10px;
+    padding: 4px 6px;
+    white-space: nowrap;
+    line-height: 1.2;
+  }
+
+  /* body किंवा main content vertical scroll नेमके तसेच राहील */
+}
+
 </style>
 
 <!-- TOP NAVBAR -->
@@ -70,7 +189,7 @@
 </div>
 
 
-<div class="search-box">
+<div class="search-box" >
   <input
     id="searchInput"
     type="text"

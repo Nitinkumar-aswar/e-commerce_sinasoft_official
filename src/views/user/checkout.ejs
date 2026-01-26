@@ -164,6 +164,81 @@
   line-height: 1.4;
 }
 
+/* MOBILE ≤480px */
+@media (max-width: 480px) {
+  .page-wrapper {
+    flex-direction: column;
+    padding: 10px;
+    gap: 15px;
+    align-items: center;
+  }
+
+  .checkout-left, .checkout-right {
+    width: 100%;
+    padding: 15px;
+  }
+
+  select, input[type="text"] {
+    width: 100%;
+  }
+
+  .payment-method {
+    font-size: 14px;
+  }
+
+  .place-btn {
+    font-size: 13px;
+  }
+
+  .mini-cart-item {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+/* TABLET 481px – 768px */
+@media (min-width: 481px) and (max-width: 768px) {
+  .page-wrapper {
+    flex-direction: column;
+    padding: 15px;
+    align-items: center;
+  }
+
+  .checkout-left, .checkout-right {
+    width: 100%;
+    padding: 20px;
+  }
+
+  select, input[type="text"] {
+    width: 100%;
+  }
+
+  .place-btn { font-size: 14px; }
+}
+
+/* LAPTOP 769px – 1024px */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .page-wrapper {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .checkout-left { flex: 2.5; }
+  .checkout-right { flex: 1; }
+}
+
+/* DESKTOP ≥1025px */
+@media (min-width: 1025px) {
+  .page-wrapper {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .checkout-left { flex: 3; }
+  .checkout-right { flex: 1.2; }
+}
+
+
   </style>
 </head>
 

@@ -492,55 +492,55 @@ router.get("/api/subsections/:sectionId", (req, res) => {
 
 
 router.get("/customer_login", (req, res) => {
-  res.render("admin/customer_login");
+  res.render("admin/login_mobileotp.ejs");
 });
 
-router.post("/save_autokart_account", async (req, res) => {
-  try {
-    const d = req.body;
+// router.post("/save_autokart_account", async (req, res) => {
+//   try {
+//     const d = req.body;
 
-    // Validation
-    if (!d.user_first_name || !d.user_last_name || !d.user_user_name || !d.user_mobile || !d.user_email || !d.user_password) {
-      return res.send("Please fill all fields");
-    }
+//     // Validation
+//     if (!d.user_first_name || !d.user_last_name || !d.user_user_name || !d.user_mobile || !d.user_email || !d.user_password) {
+//       return res.send("Please fill all fields");
+//     }
 
-    // Check if username already exists
-    const checkQuery = "SELECT * FROM user_create_account WHERE user_user_name = ?";
-    req.db.query(checkQuery, [d.user_user_name], async (err, results) => {
-      if (err) {
-        console.log(err);
-        return res.send("Database error");
-      }
+//     // Check if username already exists
+//     const checkQuery = "SELECT * FROM user_create_account WHERE user_user_name = ?";
+//     req.db.query(checkQuery, [d.user_user_name], async (err, results) => {
+//       if (err) {
+//         console.log(err);
+//         return res.send("Database error");
+//       }
 
-      if (results.length > 0) {
-        return res.send("Username already exists");
-      }
+//       if (results.length > 0) {
+//         return res.send("Username already exists");
+//       }
 
-      // Insert new user
-      const insertQuery = `
-        INSERT INTO user_create_account
-        (user_first_name, user_last_name, user_user_name, user_mobile, user_email, user_password)
-        VALUES (?, ?, ?, ?, ?, ?)
-      `;
+//       // Insert new user
+//       const insertQuery = `
+//         INSERT INTO user_create_account
+//         (user_first_name, user_last_name, user_user_name, user_mobile, user_email, user_password)
+//         VALUES (?, ?, ?, ?, ?, ?)
+//       `;
 
-      req.db.query(
-        insertQuery,
-        [d.user_first_name, d.user_last_name, d.user_user_name, d.user_mobile, d.user_email, d.user_password],
-        (err2, result2) => {
-          if (err2) {
-            console.log(err2);
-            return res.send("Failed to save account");
-          }
+//       req.db.query(
+//         insertQuery,
+//         [d.user_first_name, d.user_last_name, d.user_user_name, d.user_mobile, d.user_email, d.user_password],
+//         (err2, result2) => {
+//           if (err2) {
+//             console.log(err2);
+//             return res.send("Failed to save account");
+//           }
 
-          res.redirect("/admin/register"); // success – redirect back to register page
-        }
-      );
-    });
-  } catch (error) {
-    console.log(error);
-    res.send("Something went wrong");
-  }
-});
+//           res.redirect("/admin/register"); // success – redirect back to register page
+//         }
+//       );
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     res.send("Something went wrong");
+//   }
+// });
 
 
 
@@ -580,39 +580,39 @@ router.get("/register", (req, res) => {
 
 
 
-router.post("/login_autokart_account", (req, res) => {
-  const { user_user_name, user_password } = req.body;
+// router.post("/login_autokart_account", (req, res) => {
+//   const { user_user_name, user_password } = req.body;
 
-  if (!user_user_name || !user_password) {
-    return res.send("Please enter username and password");
-  }
+//   if (!user_user_name || !user_password) {
+//     return res.send("Please enter username and password");
+//   }
 
-  // Query database
-  const query = `
-    SELECT * FROM user_create_account 
-    WHERE user_user_name = ? AND user_password = ?
-  `;
+//   // Query database
+//   const query = `
+//     SELECT * FROM user_create_account 
+//     WHERE user_user_name = ? AND user_password = ?
+//   `;
 
-  req.db.query(query, [user_user_name, user_password], (err, results) => {
-    if (err) {
-      console.log(err);
-      return res.send("Database error");
-    }
+//   req.db.query(query, [user_user_name, user_password], (err, results) => {
+//     if (err) {
+//       console.log(err);
+//       return res.send("Database error");
+//     }
 
-    if (results.length > 0) {
-      // Save session
-      req.session.user = {
-        id: results[0].id,
-        username: results[0].user_user_name
-      };
+//     if (results.length > 0) {
+//       // Save session
+//       req.session.user = {
+//         id: results[0].id,
+//         username: results[0].user_user_name
+//       };
 
-      // Redirect to dashboard or kart page
-      return res.redirect("/");
-    } else {
-      return res.send("Login Failed: Invalid credentials");
-    }
-  });
-});
+//       // Redirect to dashboard or kart page
+//       return res.redirect("/");
+//     } else {
+//       return res.send("Login Failed: Invalid credentials");
+//     }
+//   });
+// });
 
 
 
