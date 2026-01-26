@@ -266,3 +266,164 @@
 .cart-link i {
   color: inherit;
 }
+/* ==================================================
+   MOBILE HEADER FIX – AMAZON STYLE
+   (DESKTOP COMPLETELY SAFE)
+================================================== */
+@media (max-width: 768px) {
+
+  /* TOP NAVBAR → TWO ROW SYSTEM */
+  .top-navbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 8px 10px;
+  }
+
+  /* LOGO → LEFT (ROW 1) */
+  .logo {
+    flex: 0 0 auto;
+  }
+
+  .logo img {
+    height: 36px;
+  }
+
+  /* LOGIN + CART → RIGHT (ROW 1) */
+  .top-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: static;
+  }
+
+  /* ICON ONLY (LIKE AMAZON) */
+  .action-item span {
+    display: none;
+  }
+
+  .action-item i {
+    font-size: 18px;
+  }
+
+  /* SEARCH → FORCE BELOW (ROW 2) */
+  .search-box {
+    flex-basis: 100%;        /* 🔥 NEW ROW */
+    width: 100%;
+    margin-left: 0 !important;  /* 🔥 KILLS -200px ONLY ON MOBILE */
+    margin-top: 8px;
+  }
+
+  .search-box input {
+    width: 100%;
+  }
+
+  /* SEARCH DROPDOWN SAFE */
+  .search-dropdown {
+    top: 45px;
+  }
+
+  /* MENU BAR SCROLL SAFE */
+  .menu-navbar {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .menu-navbar ul {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+  }
+
+  .menu-navbar li {
+    flex: 0 0 auto;
+  }
+
+  .menu-navbar li a {
+    font-size: 10px;
+    padding: 4px 6px;
+    white-space: nowrap;
+  }
+}
+/* ==================================================
+   FINAL MOBILE HEADER ORDER FIX (AMAZON STYLE)
+   DESKTOP SAFE – NO HTML CHANGES
+================================================== */
+@media (max-width: 768px) {
+
+  /* TOP NAVBAR */
+  .top-navbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 8px 10px;
+  }
+
+  /* ===== ROW 1 ===== */
+
+  /* LOGO → LEFT */
+  .logo {
+    order: 1;
+    flex: 0 0 auto;
+  }
+
+  .logo img {
+    height: 36px;
+  }
+
+  /* LOGIN + CART → RIGHT (ABOVE SEARCH) */
+  .top-actions {
+    order: 2;                 /* 🔥 FORCE ABOVE SEARCH */
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: static;
+  }
+
+  /* ICON ONLY */
+  .action-item span {
+    display: none;
+  }
+
+  .action-item i {
+    font-size: 18px;
+  }
+
+  /* ===== ROW 2 ===== */
+
+  /* SEARCH → ALWAYS BELOW */
+  .search-box {
+    order: 3;                 /* 🔥 FORCE BELOW LOGIN/CART */
+    flex-basis: 100%;
+    width: 100%;
+    margin-left: 0 !important; /* kill desktop negative margin */
+    margin-top: 8px;
+  }
+
+  .search-box input {
+    width: 100%;
+  }
+
+  /* SEARCH DROPDOWN POSITION SAFE */
+  .search-dropdown {
+    top: 45px;
+  }
+}
+/* =========================
+   MOBILE LOGO HEIGHT FIX
+========================= */
+@media (max-width: 768px) {
+
+  .logo img {
+    height: 45px;        /* 🔽 reduce height */
+    max-height: 45px;
+  }
+
+  /* reduce extra vertical gap if any */
+  .top-navbar {
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+}

@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Checkout | AutoKart</title>
 
 
@@ -238,6 +240,63 @@
   .checkout-right { flex: 1.2; }
 }
 
+/* ===========================
+   MOBILE CHECKOUT NORMAL FIX
+=========================== */
+@media (max-width: 768px) {
+
+  body {
+    background: #f1f3f6;
+  }
+
+  .page-wrapper {
+    max-width: 100%;
+    padding: 10px;
+    gap: 12px;
+  }
+
+  .checkout-left,
+  .checkout-right {
+    width: 100%;
+    padding: 15px;
+    border-radius: 6px;
+  }
+
+  .section h2 {
+    font-size: 16px;
+  }
+
+  .address-box {
+    font-size: 13px;
+  }
+
+  .payment-method {
+    font-size: 13px;
+    padding: 12px;
+  }
+
+  select,
+  input[type="text"] {
+    width: 100%;
+  }
+
+  .place-btn {
+    font-size: 14px;
+    padding: 12px;
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+  }
+
+  .mini-cart-item img {
+    width: 60px;
+    height: 60px;
+  }
+
+  .mini-cart-info {
+    font-size: 12px;
+  }
+}
 
   </style>
 </head>

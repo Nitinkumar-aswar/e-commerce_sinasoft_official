@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title><%= section.name %> | AutoKart</title>
 
   <!-- NAVBAR CSS -->
@@ -98,6 +100,26 @@
         grid-template-columns: repeat(2, 1fr);
       }
     }
+
+    /* =========================
+   MOBILE: HEADER ALIGN FIX
+========================= */
+@media (max-width: 768px) {
+
+  body {
+    padding-top: 0 !important;
+  }
+
+  .page-container {
+    padding: 10px !important;   /* tighter like home */
+  }
+
+  h2 {
+    font-size: 18px;
+    margin: 12px 0;
+  }
+}
+
   </style>
 </head>
 

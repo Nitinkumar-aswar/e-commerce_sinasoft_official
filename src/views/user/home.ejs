@@ -711,6 +711,335 @@
   }
 }
 
+/* =========================
+   MOBILE: 2 PRODUCTS PER ROW
+========================= */
+@media (max-width: 576px) {
+
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 🔥 2 in a row */
+    gap: 10px;                              /* space between cards */
+    padding: 0 10px;                       /* side spacing */
+  }
+
+  .product-card {
+    width: 100%;
+  }
+}
+/* =====================================
+   MOBILE FIX – TOP SLIDER (CENTERED)
+===================================== */
+@media (max-width: 768px) {
+
+  /* SLIDER CONTAINER */
+  .fk-slider {
+    width: 100%;
+    height: 190px;
+    margin: 0;
+    border-radius: 0;
+    overflow: hidden;
+  }
+
+  /* CENTER SLIDE CONTENT */
+  .fk-slide {
+    display: flex;
+    align-items: center;      /* 🔥 vertical center */
+    justify-content: center;  /* 🔥 horizontal center */
+  }
+
+  /* SLIDE IMAGE */
+ .fk-slide img {
+  width: 100%;
+  height: 80%;
+  object-fit: cover;          /* 🔥 zoom effect */
+  object-position: center;    /* 🔥 keep centered */
+  background: #ffffff;
+  transform: scale(1.08);     /* 🔥 slight zoom (adjustable) */
+}
+
+
+  /* HIDE ARROWS */
+  .fk-nav {
+    display: none;
+  }
+
+  /* DOTS */
+  .fk-dots {
+    bottom: 6px;
+  }
+
+  .fk-dots .dot {
+    width: 6px;
+    height: 6px;
+  }
+}
+
+/* EXTRA SMALL DEVICES */
+@media (max-width: 480px) {
+  .fk-slider {
+    height: 160px;
+  }
+}
+/* =====================================
+   MOBILE FIX: REDUCE GAP (SLIDER → SHOP)
+===================================== */
+@media (max-width: 768px) {
+
+  /* reduce space below top slider */
+  .fk-slider {
+    margin-bottom: 8px;   /* 🔥 reduce gap */
+  }
+
+  /* reduce space above shop section */
+  .home-section {
+    margin-top: 10px;     /* 🔥 was 40px */
+    padding-top: 12px;   /* tighten inside spacing */
+  }
+
+}
+/* =====================================
+   MOBILE FIX: NORMALIZE PURPLE SHOP SIZE
+===================================== */
+@media (max-width: 768px) {
+
+  /* shrink purple section */
+  .home-section {
+    margin: 12px 0;        /* 🔥 reduce vertical gap */
+    padding: 12px 10px;   /* 🔥 thinner purple area */
+  }
+
+  /* reduce gap above heading */
+  .shop-products-header {
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+  }
+
+  /* tighten heading */
+  .shop-products-header h2 {
+    font-size: 18px;
+    margin: 6px 0;
+  }
+
+}
+/* =====================================
+   MOBILE: WIDER SHOP BANNER + PRODUCTS
+===================================== */
+@media (max-width: 576px) {
+
+  /* Purple section wider */
+  .home-section {
+    padding: 8px 4px;          /* 🔥 reduce side padding */
+  }
+
+  /* Remove inner gaps */
+  .shop-wrapper {
+    padding: 0;
+    margin: 0;
+  }
+
+  /* Banner should feel full width */
+  .shop-banner-left {
+    width: 100%;
+    margin: 0 0 10px 0;
+    padding: 0;
+    border: none;
+  }
+
+  .shop-banner-left img {
+    width: 100%;
+    border-radius: 6px;
+  }
+}
+/* =====================================
+   MOBILE: 2 PRODUCTS PER ROW (SHOP)
+===================================== */
+@media (max-width: 576px) {
+
+  .shop-products-right {
+    width: 100%;
+  }
+
+  .shop-product-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 🔥 2 in one row */
+    gap: 10px;
+  }
+
+  .shop-product-card {
+    height: auto;              /* 🔥 remove tall cards */
+    padding: 8px;
+  }
+
+  .shop-product-card img {
+    height: 140px;             /* 🔥 compact image */
+    object-fit: contain;
+  }
+
+  .shop-product-card h4 {
+    font-size: 13px;
+    line-height: 16px;
+    height: 32px;
+    margin: 6px 0;
+  }
+
+  .shop-product-card p {
+    font-size: 14px;
+  }
+}
+
+/* =====================================
+   MOBILE: PROMO SLIDER – FULL IMAGE VISIBLE
+===================================== */
+@media (max-width: 768px) {
+
+  .home-slider {
+    position: relative;
+    height: 120px;          /* slightly better height */
+    margin: 10px 0;
+    overflow: hidden;
+    background: #fff;       /* no black flash */
+  }
+
+  .home-slider .slide {
+    position: absolute;
+    inset: 0;
+  }
+
+  .home-slider .slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;      /* 🔥 fills screen */
+    object-position: center;
+  }
+}
+/* =========================
+   MOBILE: CATEGORIES – 2 PER ROW (SMALLER)
+========================= */
+@media (max-width: 768px) {
+
+  .meesho-categories {
+    grid-template-columns: repeat(2, 1fr); /* 🔥 2 in one row */
+    gap: 12px;
+    padding: 0 10px;
+  }
+
+  .meesho-card {
+    padding-top: 12px;
+    border-radius: 12px;
+  }
+
+  .meesho-card img {
+    width: 120px;          /* 🔥 smaller image */
+    height: 140px;
+    margin-bottom: 10px;
+  }
+
+  .meesho-card span {
+    font-size: 13px;       /* 🔥 smaller text */
+    padding: 8px 0;        /* 🔥 reduce purple height */
+    border-radius: 0 0 12px 12px;
+  }
+}
+
+/* EXTRA SMALL PHONES */
+@media (max-width: 480px) {
+
+  .meesho-card img {
+    width: 110px;
+    height: 130px;
+  }
+
+  .meesho-card span {
+    font-size: 12px;
+    padding: 7px 0;
+  }
+}
+/* =========================
+   MOBILE: MEESHO BRAND BOXES – COMPACT
+========================= */
+@media (max-width: 768px) {
+
+  .brand-section {
+    padding: 12px 0;
+  }
+
+  .brand-box {
+    width: 120px;          /* 🔥 smaller width */
+    height: 55px;          /* 🔥 smaller height */
+    margin-right: 10px;
+    border-radius: 8px;
+  }
+
+  .brand-box img {
+    max-width: 80%;
+    max-height: 35px;      /* 🔥 scale logo properly */
+  }
+}
+
+/* EXTRA SMALL PHONES */
+@media (max-width: 480px) {
+
+  .brand-box {
+    width: 105px;
+    height: 50px;
+  }
+
+  .brand-box img {
+    max-height: 30px;
+  }
+}
+/* =========================
+   MOBILE: ELECTRONICS PROMO – COMPACT
+========================= */
+@media (max-width: 768px) {
+
+  /* Outer electronics card */
+  .home-section > div[style*="electronics-banner"] {
+    padding: 16px !important;     /* 🔥 reduce padding */
+    gap: 18px !important;
+    border-radius: 12px;
+  }
+
+  /* Banner image */
+  .home-section img[src*="electronics-banner"] {
+    height: 180px !important;     /* 🔥 smaller image */
+    object-fit: cover;
+    border-radius: 12px;
+  }
+
+  /* Heading */
+  .home-section h2 {
+    font-size: 18px;
+    line-height: 1.3;
+  }
+
+  /* Description text */
+  .home-section p {
+    font-size: 13px;
+    margin: 10px 0;
+  }
+
+  /* Button */
+  .home-section a {
+    padding: 10px 20px !important;
+    font-size: 14px;
+  }
+}
+
+/* EXTRA SMALL PHONES */
+@media (max-width: 480px) {
+
+  .home-section img[src*="electronics-banner"] {
+    height: 160px !important;
+  }
+
+  .home-section h2 {
+    font-size: 16px;
+  }
+}
+
+
 
   </style>
 

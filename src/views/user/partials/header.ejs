@@ -61,121 +61,104 @@
     background: #f0f0f0;
 }
 .logo img {
-  height: 60px;
+  height: 50px;
   object-fit: contain;
 }
 
 /* =========================
-   MOBILE RESPONSIVE FIX
+   AMAZON STYLE MOBILE HEADER (FIXED)
 ========================= */
 @media (max-width: 768px) {
 
-  /* TOP NAVBAR STACK */
+  /* TOP NAVBAR */
   .top-navbar {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 8px;
-    padding: 8px;
+    padding: 8px 10px;
   }
 
-  /* LOGO CENTER */
+  /* ===== ROW 1 ===== */
+
+  /* LOGO LEFT */
   .logo {
-    width: 100%;
-    text-align: center;
+    flex: 0 0 auto;
   }
 
   .logo img {
-    height: 45px;
+    height: 36px;
   }
 
-  /* SEARCH FULL WIDTH */
+  /* LOGIN + CART RIGHT */
+  .top-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-left: auto;
+    position: static;
+  }
+
+  /* ICON ONLY */
+  .action-item span {
+    display: none;
+  }
+
+  .action-item i {
+    font-size: 18px;
+  }
+
+  /* ===== ROW 2 ===== */
+
+  /* SEARCH FULL WIDTH BELOW */
   .search-box {
+    flex-basis: 100%;     /* 🔥 FORCE NEW ROW */
     width: 100%;
-    margin: 9px 0;
+    margin-top: 8px;
   }
 
   .search-box input {
     width: 100%;
-    
   }
 
-  /* LOGIN + CART ROW */
-  .top-actions {
-    position: static;   /* 🔥 IMPORTANT */
-    left: 0;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-  }
-
-  .action-item {
-    padding: 6px 10px;
-    font-size: 14px;
-  }
-
-  /* LOGIN DROPDOWN FULL WIDTH */
+  /* LOGIN DROPDOWN */
   .dropdown-menu {
     width: 100%;
     left: 0;
     right: 0;
   }
 
-  /* MENU NAVBAR SCROLL */
-  .menu-navbar ul {
-    display: flex;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
+  /* ===== MENU SCROLL ===== */
 
-  .menu-navbar li {
-    flex-shrink: 0;
-  }
-}/* ==============================
-   MOBILE MENU – ONE LINE FIX
-============================== */
-@media (max-width: 768px) {
-
-  /* MENU SCROLLABLE */
   .menu-navbar {
-    overflow-x: auto;                  /* horizontal scroll enable */
-    overflow-y: hidden;                /* vertical scroll बंद फक्त menu साठी */
-    -webkit-overflow-scrolling: touch; /* smooth scroll for iOS */
-    scrollbar-width: none;             /* Firefox scrollbar hide */
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
   }
 
   .menu-navbar::-webkit-scrollbar {
-    display: none;                     /* Chrome, Safari scrollbar hide */
+    display: none;
   }
 
   .menu-navbar ul {
     display: flex;
-    flex-wrap: nowrap;                 /* एकाच line मध्ये */
-    justify-content: flex-start;       /* left align */
+    flex-wrap: nowrap;
     align-items: center;
     padding: 0;
     margin: 0;
-    gap: 0;
   }
 
   .menu-navbar li {
-    flex: 0 0 auto;                    /* scroll enabled, fixed width based on content */
-    text-align: center;
-    margin: 0;
-    padding: 0;
+    flex: 0 0 auto;
   }
 
   .menu-navbar li a {
-    display: block;
     font-size: 10px;
     padding: 4px 6px;
     white-space: nowrap;
-    line-height: 1.2;
   }
-
-  /* body किंवा main content vertical scroll नेमके तसेच राहील */
 }
+
 
 </style>
 
@@ -206,23 +189,29 @@
 
 
 <div class="top-actions">
-    <div class="action-item" id="loginBtn">
-        <i class="fa fa-user"></i>
-        <span>Login</span>
-        <i class="fa fa-caret-down" style="margin-left:5px;"></i>
-    </div>
-    <div class="dropdown-menu" id="loginDropdown">
-        <a href="/admin/customer_login">Customer Login</a>
-        <a href="/admin/my_profile">My Profile</a>
-    </div>
+
+  <!-- LOGIN -->
+  <div class="action-item" id="loginBtn">
+    <i class="fa fa-user"></i>
+    <span>Login</span>
+    <i class="fa fa-caret-down"></i>
+  </div>
+
+  <!-- CART -->
+  <div class="action-item">
+    <a href="/cart" class="cart-link">
+      <i class="fa fa-shopping-cart"></i>
+      <span>Cart</span>
+    </a>
+  </div>
+
+  <div class="dropdown-menu" id="loginDropdown">
+    <a href="/admin/customer_login">Customer Login</a>
+    <a href="/admin/my_profile">My Profile</a>
+  </div>
+
 </div>
 
-    <div class="action-item">
-  <a href="/cart" class="cart-link">
-    <i class="fa fa-shopping-cart"></i>
-    <span>Cart</span>
-  </a>
-</div>
 
     </div>
   </div>
