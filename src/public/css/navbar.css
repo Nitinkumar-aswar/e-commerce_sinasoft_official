@@ -12,33 +12,42 @@
 .top-navbar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0px 25px;
+  gap: 100px;
+
+  padding: 2px 20px;          /* 🔥 VERY SMALL padding */
+  height: 60px;               /* 🔥 FIXED COMPACT HEIGHT */
+
   background-color: #ffffff;
   border-bottom: 1px solid #ddd;
 
-  /* important for global header */
   position: relative;
   z-index: 5000;
 }
 
+
+
 .logo {
-  font-size: 32px;
-  font-weight: bold;
-  color: #2874f0;
+  display: flex;
+  align-items: center;
+  height: 100%;
 }
+
+.logo img {
+  height: 35px;        /* 🔥 controlled height */
+  display: block;      /* 🔥 removes inline gap */
+}
+
 
 /* ===============================
    SEARCH
 ================================ */
 
 .search-box {
-  flex: 1;                     /* keeps it wide */
-  max-width: 750px;            /* Flipkart-like width */
+  flex: 1;
+  max-width: 650px;     /* 🔥 CONTROLLED WIDTH */
+  
   display: flex;
   position: relative;
-
-  margin-left: -200px;          /* 👈 MOVE LEFT (adjust value) */
 }
 
 .search-box input {
@@ -111,9 +120,12 @@
 ================================ */
 
 .top-actions {
+  margin-left: auto;     /* 🔥 THIS pushes it to the right edge */
   display: flex;
-  gap: 20px;
+  align-items: center;
+  gap: 18px;
 }
+
 
 .action-item {
   display: flex;
@@ -267,163 +279,78 @@
   color: inherit;
 }
 /* ==================================================
-   MOBILE HEADER FIX – AMAZON STYLE
-   (DESKTOP COMPLETELY SAFE)
+   AMAZON-STYLE MOBILE HEADER (FINAL & CLEAN)
 ================================================== */
 @media (max-width: 768px) {
 
-  /* TOP NAVBAR → TWO ROW SYSTEM */
+  /* ---------- TOP HEADER ---------- */
   .top-navbar {
-    display: flex;
     flex-wrap: wrap;
-    align-items: center;
-    padding: 8px 10px;
+    height: auto;          /* override desktop */
+    gap: 0;                /* remove desktop gap */
+    padding: 6px 15px;
   }
 
-  /* LOGO → LEFT (ROW 1) */
-  .logo {
-    flex: 0 0 auto;
-  }
-
-  .logo img {
-    height: 36px;
-  }
-
-  /* LOGIN + CART → RIGHT (ROW 1) */
-  .top-actions {
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    position: static;
-  }
-
-  /* ICON ONLY (LIKE AMAZON) */
-  .action-item span {
-    display: none;
-  }
-
-  .action-item i {
-    font-size: 18px;
-  }
-
-  /* SEARCH → FORCE BELOW (ROW 2) */
-  .search-box {
-    flex-basis: 100%;        /* 🔥 NEW ROW */
-    width: 100%;
-    margin-left: 0 !important;  /* 🔥 KILLS -200px ONLY ON MOBILE */
-    margin-top: 8px;
-  }
-
-  .search-box input {
-    width: 100%;
-  }
-
-  /* SEARCH DROPDOWN SAFE */
-  .search-dropdown {
-    top: 45px;
-  }
-
-  /* MENU BAR SCROLL SAFE */
-  .menu-navbar {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .menu-navbar ul {
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-  }
-
-  .menu-navbar li {
-    flex: 0 0 auto;
-  }
-
-  .menu-navbar li a {
-    font-size: 10px;
-    padding: 4px 6px;
-    white-space: nowrap;
-  }
-}
-/* ==================================================
-   FINAL MOBILE HEADER ORDER FIX (AMAZON STYLE)
-   DESKTOP SAFE – NO HTML CHANGES
-================================================== */
-@media (max-width: 768px) {
-
-  /* TOP NAVBAR */
-  .top-navbar {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    padding: 8px 10px;
-  }
-
-  /* ===== ROW 1 ===== */
-
-  /* LOGO → LEFT */
+  /* ROW 1 */
   .logo {
     order: 1;
-    flex: 0 0 auto;
   }
 
   .logo img {
-    height: 36px;
+    height: 26px;
   }
 
-  /* LOGIN + CART → RIGHT (ABOVE SEARCH) */
   .top-actions {
-    order: 2;                 /* 🔥 FORCE ABOVE SEARCH */
+    order: 2;
     margin-left: auto;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    position: static;
   }
 
-  /* ICON ONLY */
   .action-item span {
-    display: none;
+    display: none;         /* icons only */
   }
 
-  .action-item i {
-    font-size: 18px;
-  }
-
-  /* ===== ROW 2 ===== */
-
-  /* SEARCH → ALWAYS BELOW */
-  .search-box {
-    order: 3;                 /* 🔥 FORCE BELOW LOGIN/CART */
-    flex-basis: 100%;
-    width: 100%;
-    margin-left: 0 !important; /* kill desktop negative margin */
-    margin-top: 8px;
-  }
+  /* ROW 2 — SEARCH */
+ .search-box {
+  order: 3;
+  flex-basis: 100%;     /* 🔥 FORCE NEW ROW */
+  max-width: 100%;      /* 🔥 REMOVE DESKTOP LIMIT */
+  margin-top: 6px;
+}
 
   .search-box input {
+    height: 38px;
     width: 100%;
   }
 
-  /* SEARCH DROPDOWN POSITION SAFE */
-  .search-dropdown {
-    top: 45px;
-  }
+  /* ===== MOBILE MENU – COMPACT & CLEAN ===== */
+.menu-navbar {
+  height: 40px;                 /* 🔥 FIX HEIGHT */
+  overflow-x: auto;
+  overflow-y: hidden;
 }
-/* =========================
-   MOBILE LOGO HEIGHT FIX
-========================= */
-@media (max-width: 768px) {
 
-  .logo img {
-    height: 45px;        /* 🔽 reduce height */
-    max-height: 45px;
-  }
+.menu-navbar ul {
+  height: 100%;
+  display: flex;
+  align-items: center;          /* 🔥 vertically center text */
+  justify-content: flex-start;  /* 🔥 start from Home */
+  padding: 0 6px;
+  margin: 0;
+}
 
-  /* reduce extra vertical gap if any */
-  .top-navbar {
-    padding-top: 6px;
-    padding-bottom: 6px;
-  }
+.menu-navbar ul li {
+  height: 100%;
+  padding: 0 10px;              /* 🔥 remove vertical padding */
+  display: flex;
+  align-items: center;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.menu-navbar ul li a {
+  padding: 0;
+  line-height: 1;
+}
+
+
 }

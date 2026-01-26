@@ -157,39 +157,45 @@
       padding: 1px;
     }
 
-    .vehicle-product-grid {
+   .vehicle-product-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, fr);   /* 🔥 forces equal height */
-  gap: 1px;
-  height: 10%;                         /* 🔥 fills left box */
+  grid-template-rows: repeat(2, 1fr); /* ✅ FIX */
+  gap: 7px;
 }
+
 
    .vehicle-product-card {
-  border: 1px solid #ffffff;
   background: #ffffff;
-  display: flex;              /* 🔥 */
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;               /* 🔥 */
-  padding: 5px;
+  border: 1px solid #e0e0e0;
+  padding: 10px;
   box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+
+  height: 100%;              /* ✅ makes all boxes equal */
 }
 
-    .vehicle-product-card img {
+
+   .vehicle-product-card img {
   width: 100%;
-  flex: 1;                     /* 🔥 fills available space */
+  height: 150px;             /* ✅ FIXED HEIGHT */
   object-fit: contain;
+  margin-bottom: 8px;
 }
 
 
-   .vehicle-product-card h4 {
+
+  .vehicle-product-card h4 {
   font-size: 14px;
-  margin: 30px 1 30px;
-  line-height: 1;
-  height: 50px;
+  margin: 6px 0;
+  line-height: 18px;
+  height: 36px;              /* ✅ SAME HEIGHT FOR ALL */
   overflow: hidden;
+  color: #212121;
 }
+
 
 .vehicle-product-card p {
   font-size: 14px;
@@ -235,43 +241,43 @@
 /* PRODUCT CARD */
 .shop-product-card {
   background: #ffffff;
-  border: 1px solid #fdfdfd;
-  padding: 8px;
+  border: 1px solid #e0e0e0;
+  padding: 10px;
   text-align: center;
-
-  display: flex;                /* 🔥 */
-  flex-direction: column;       /* 🔥 */
-  justify-content: space-between;
-
-  height: 320px;                /* 🔥 FIXED CARD HEIGHT */
+  transition: box-shadow 0.2s ease;
   box-sizing: border-box;
 }
 
-
-.shop-product-card img {
-  width: 100%;
-  height: 210px;        /* 🔥 INCREASE IMAGE SIZE */
-  object-fit: contain;
-  margin-bottom: 8px;
+.shop-product-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
+/* IMAGE — FIXED HEIGHT */
+.shop-product-card img {
+  width: 100%;
+  height: 230px;              /* ✅ SAME AS SECTION PAGE */
+  object-fit: cover;
+  margin-bottom: 10px;
+  background: #f9f9f9;
+}
 
-
+/* TITLE — FIXED HEIGHT */
 .shop-product-card h4 {
-  font-size: 15px;
-  margin: 12px 0;
-  line-height: 20px;
-  height: 40px;        /* 2 lines max */
+  font-size: 14px;
+  font-weight: 500;
+  margin: 6px 0;
+  color: #212121;
+  height: 38px;               /* ✅ SAME */
   overflow: hidden;
 }
 
-
+/* PRICE */
 .shop-product-card p {
+  font-size: 15px;
   font-weight: bold;
   color: #388e3c;
-  margin-top: auto;             /* 🔥 PUSH DOWN */
+  margin: 0;
 }
-
 
 /* =========================
    SHOP – IMAGE LEFT + PRODUCTS RIGHT
