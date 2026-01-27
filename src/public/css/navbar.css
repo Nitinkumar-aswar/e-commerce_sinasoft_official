@@ -199,12 +199,31 @@
   white-space: normal;
 }
 
-.dropdown-menu a {
-  padding: 10px 15px;
-  color: #333;
+/* ===== LOGIN DROPDOWN ITEMS FIX ===== */
+.top-actions .dropdown-menu a {
+  display: block;              /* 🔥 one below another */
+  width: 100%;
+
+  padding: 10px 16px;
+
+  text-decoration: none;       /* 🔥 remove underline */
+  color: #212121;
   font-size: 14px;
-  white-space: nowrap;
+  font-weight: 500;
+
+  border-bottom: 1px solid #eee;
 }
+
+/* remove last line */
+.top-actions .dropdown-menu a:last-child {
+  border-bottom: none;
+}
+
+/* hover effect like Amazon */
+.top-actions .dropdown-menu a:hover {
+  background-color: #f1f3f6;
+}
+
 
 .dropdown-menu a:hover {
   background: #f1f1f1;
@@ -353,4 +372,33 @@
 }
 
 
+}
+/* ======================================
+   LOGIN DROPDOWN — FINAL FIX
+====================================== */
+
+/* anchor login dropdown */
+.top-actions .dropdown {
+  position: relative;
+}
+
+/* override generic dropdown-menu */
+.top-actions .dropdown-menu {
+  left: auto !important;   /* 🔥 cancel global left:0 */
+  right: 0;                /* 🔥 align under Login */
+
+  top: 100%;
+  min-width: 180px;
+
+  display: none;
+  flex-direction: column;
+
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 10000;
+}
+
+/* show on hover */
+.top-actions .dropdown:hover > .dropdown-menu {
+  display: flex;
 }
