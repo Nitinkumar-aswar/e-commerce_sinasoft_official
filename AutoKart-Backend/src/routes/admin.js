@@ -478,23 +478,6 @@ router.get("/api/subsections/:sectionId", (req, res) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-router.get("/customer_login", (req, res) => {
-  res.render("admin/login_mobileotp.ejs");
-});
-
 // router.post("/save_autokart_account", async (req, res) => {
 //   try {
 //     const d = req.body;
@@ -544,39 +527,9 @@ router.get("/customer_login", (req, res) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* =========================
-   REGISTER PAGE
-========================= */
-router.get("/register", (req, res) => {
-  res.render("admin/register"); // views/admin/register.ejs
-});
-
-
-
-
-
-
 /* =========================
    SAVE AUTOKART ACCOUNT
 ========================= */
-
-
 
 
 
@@ -615,53 +568,7 @@ router.get("/register", (req, res) => {
 // });
 
 
-
-
-
 // login session completed 
-
-
-
-
-// type error yet ahe 
-router.get("/my_profile", (req, res) => {
-
-  if (!req.session.user) {
-    return res.redirect("/customer_login");
-  }
-
-  const username = req.session.user.username;
-
-  console.log("USERNAME FROM SESSION 👉", username);
-
-  req.db.query(
-    "SELECT * FROM user_create_account WHERE user_user_name = ?",
-    [username],
-    (err, result) => {
-
-      console.log("DB RESULT 👉", result);
-
-      if (err) {
-        console.log(err);
-        return res.send("Database error");
-      }
-
-      if (result.length === 0) {
-        return res.send("User not found");
-      }
-
-      res.render("admin/my_profile", {
-        user: result[0]
-      });
-    }
-  );
-});
-
-
-
-
-
-
 // user logout session start 
 // LOGOUT ROUTE
 router.get("/logout", (req, res) => {

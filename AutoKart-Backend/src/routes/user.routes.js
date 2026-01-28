@@ -53,6 +53,44 @@ router.get("/", (req, res) => {
 });
 
 
+/* =========================
+   REGISTER PAGE
+========================= */
+router.get("/register", (req, res) => {
+  res.render("user/register");
+});
+
+/* =========================
+   LOGIN PAGE
+========================= */
+router.get("/customer_login", (req, res) => {
+  res.render("user/login_mobileotp");
+});
+
+/* =========================
+   MY PROFILE
+========================= */
+router.get("/my_profile", (req, res) => {
+  if (!req.session.user) {
+    return res.redirect("/customer_login");
+  }
+
+  const username = req.session.user.username;
+
+  req.db.query(
+    "SELECT * FROM user_create_account WHERE user_user_name = ?",
+    [username],
+    (err, result) => {
+      if (err) return res.send("Database error");
+      if (result.length === 0) return res.send("User not found");
+
+      res.render("user/my_profile", {
+        user: result[0]
+      });
+    }
+  );
+});
+
 router.get("/test-session-write", (req, res) => {
   req.session.test = "hello";
   res.send("session written");
@@ -107,7 +145,6 @@ router.get("/section/:id", (req, res) => {
   );
 });
 
-/* SUB-SECTION PRODUCTS */
 /* SUB-SECTION PRODUCTS */
 router.get("/sub-section/:slug", (req, res) => {
   const slug = req.params.slug;
