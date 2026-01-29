@@ -63,8 +63,11 @@ router.get("/register", (req, res) => {
 /* =========================
    LOGIN PAGE
 ========================= */
+// router.get("/customer_login", (req, res) => {
+//   res.render("user/login_mobileotp");
+// });
 router.get("/customer_login", (req, res) => {
-  res.render("user/login_mobileotp");
+  res.render("user/customer_login");
 });
 
 /* =========================
@@ -506,6 +509,27 @@ router.get("/payment-success", (req, res) => {
     method
   });
 });
+
+
+
+
+router.get("/dealer", (req, res) => {
+  res.render("become_dealer/become_dealer");
+});
+
+router.get("/dealer__login", (req, res) => {
+  res.render("become_dealer/dealer_login");
+});
+
+router.get("/dealer_start_selling", (req, res) => {
+  res.render("become_dealer/start_selling");
+});
+
+router.get("/payment_cycle", (req, res) => {
+  res.render("become_dealer/payment_cycle");
+});
+
+
 
 
 module.exports = router;
