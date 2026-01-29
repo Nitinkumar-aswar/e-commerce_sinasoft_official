@@ -1,0 +1,282 @@
+<%- include('../partials/header') %>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Order Details | AutoKart</title>
+
+  <style>
+    body {
+      margin: 0;
+      background: #f1f3f6;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    /* ===============================
+       FULL WIDTH CONTAINER
+    ================================ */
+    .order-wrapper {
+      width: 100%;
+      padding: 20px 0;
+    }
+
+    .order-container {
+      max-width: 1400px;
+      margin: auto;
+      display: flex;
+      gap: 20px;
+    }
+
+    /* ===============================
+       LEFT SECTION (PRODUCT + TIMELINE)
+    ================================ */
+    .order-left {
+      flex: 2.5;
+      background: #ffffff;
+      border-radius: 4px;
+      padding: 20px;
+    }
+
+    .product-row {
+      display: flex;
+      gap: 20px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 20px;
+    }
+
+    .product-row img {
+  width: 180px;
+  height: 180px;
+  object-fit: contain;
+  border: 1px solid #f0f0f0;
+  padding: 8px;
+  background: #fff;
+}
+
+
+    .product-info h2 {
+      font-size: 18px;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: #212121;
+    }
+
+    .product-info p {
+      font-size: 14px;
+      color: #878787;
+      margin-bottom: 8px;
+    }
+
+    .product-price {
+      font-size: 22px;
+      font-weight: bold;
+      color: #212121;
+    }
+
+    /* ===============================
+       ORDER TRACKING
+    ================================ */
+    .tracking {
+      margin-top: 30px;
+    }
+
+    .tracking-step {
+      display: flex;
+      align-items: center;
+      margin-bottom: 18px;
+      font-size: 14px;
+      color: #212121;
+    }
+
+    .tracking-dot {
+      width: 14px;
+      height: 14px;
+      background: #26a541;
+      border-radius: 50%;
+      margin-right: 12px;
+    }
+
+    .tracking-line {
+      width: 2px;
+      height: 30px;
+      background: #26a541;
+      margin-left: 6px;
+      margin-bottom: 6px;
+    }
+
+    /* ===============================
+       RIGHT SECTION
+    ================================ */
+    .order-right {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .info-box {
+      background: #ffffff;
+      padding: 16px;
+      border-radius: 4px;
+    }
+
+    .info-box h3 {
+      font-size: 16px;
+      margin-bottom: 12px;
+      color: #212121;
+    }
+
+    .info-box p {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 6px;
+    }
+
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .price-total {
+      font-size: 16px;
+      font-weight: bold;
+      margin-top: 10px;
+      border-top: 1px solid #eee;
+      padding-top: 10px;
+    }
+
+    .invoice-btn {
+      margin-top: 12px;
+      padding: 10px;
+      border: 1px solid #2874f0;
+      color: #2874f0;
+      text-align: center;
+      cursor: pointer;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    /* ===============================
+   LEFT SIDE FONT TUNING
+================================ */
+
+.order-left .product-info h2 {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.order-left .product-info p {
+  font-size: 12px;
+}
+
+.order-left .product-price {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.order-left .tracking-step {
+  font-size: 13px;
+}
+
+  </style>
+</head>
+
+<body>
+
+<div class="order-wrapper">
+  <div class="order-container">
+
+    <!-- ===============================
+         LEFT
+    ================================ -->
+  <div class="order-left">
+
+  <% items.forEach(item => { %>
+
+    <div class="product-row">
+      <img 
+        src="/uploads/<%= item.product_image %>" 
+        alt="<%= item.product_name %>"
+      >
+
+      <div class="product-info">
+        <h2><%= item.product_name %></h2>
+        <p>Seller: AutoKart</p>
+
+        <div class="product-price">
+          ₹<%= (item.price * item.quantity).toFixed(2) %>
+        </div>
+
+        <p>Qty: <%= item.quantity %></p>
+      </div>
+    </div>
+
+  <% }) %>
+
+  <!-- ORDER TRACKING -->
+  <div class="tracking">
+    <div class="tracking-step">
+      <div class="tracking-dot"></div>
+      Order Confirmed — <%= new Date(order.created_at).toDateString() %>
+    </div>
+
+    <div class="tracking-line"></div>
+
+    <div class="tracking-step">
+      <div class="tracking-dot"></div>
+      <%= order.status === 'DELIVERED' ? 'Delivered' : 'In progress' %>
+    </div>
+  </div>
+
+</div>
+
+
+    <!-- ===============================
+         RIGHT
+    ================================ -->
+    <div class="order-right">
+
+      <div class="info-box">
+        <h3>Delivery details</h3>
+        <p><strong>Name:</strong> Darshan Yadav</p>
+        <p><strong>Address:</strong> Pune, Maharashtra</p>
+        <p><strong>Phone:</strong> 9356688471</p>
+      </div>
+
+      <div class="info-box">
+        <h3>Price details</h3>
+        <div class="price-row">
+          <span>Item price</span>
+          <span>₹<%= order.price %></span>
+        </div>
+        <div class="price-row">
+          <span>Quantity</span>
+          <span><%= order.quantity %></span>
+        </div>
+
+        <div class="price-total">
+          Total: ₹<%= order.price * order.quantity %>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <h3>Payment method</h3>
+        <p><%= order.payment_method.toUpperCase() %></p>
+      </div>
+
+      <div class="info-box">
+        <div class="invoice-btn">
+          Download Invoice
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

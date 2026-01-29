@@ -424,10 +424,14 @@
         ADD TO CART
       </button>
 
-      <a href="/checkout?type=buy-now&productId=<%= product.id %>" class="buy-now-btn">
+     <form action="/create-checkout" method="POST">
+  <input type="hidden" name="product_id" value="<%= product.id %>">
+  <button type="submit" class="buy-now-btn">
+    BUY NOW
+  </button>
+</form>
 
-             BUY NOW
-           </a>
+
                 
 
     </div>

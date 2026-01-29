@@ -306,179 +306,113 @@
 <%- include("partials/header") %>
 
 <div class="page-wrapper">
+<!-- LEFT -->
+<div class="checkout-left">
 
-  <!-- LEFT -->
-  <div class="checkout-left">
-
-    <div class="section">
-      <h2>1. Delivery address</h2>
-      <div class="address-box">
-        <strong><%= address.name %></strong><br>
-        <%= address.address %><br>
-        <%= address.city %>, <%= address.state %> <%= address.pincode %>
-      </div>
-      <div class="address-actions">
-        <a href="#">Change</a>
-        <a href="#">Add delivery instructions</a>
-      </div>
+  <!-- ADDRESS -->
+  <div class="section">
+    <h2>1. Delivery address</h2>
+    <div class="address-box">
+      <strong><%= address.name %></strong><br>
+      <%= address.address %><br>
+      <%= address.city %>, <%= address.state %> <%= address.pincode %>
     </div>
-
-    <div class="section">
-      <h2>2. Select a payment method</h2>
-
-      <div class="payment-method active" id="card" onclick="selectPayment('card')">
-        <input type="radio" name="pay" checked>
-        Credit or Debit Card
-      </div>
-
-      <div class="payment-method" id="netbanking" onclick="selectPayment('netbanking')">
-        <input type="radio" name="pay">
-        Net Banking
-        <div class="payment-content">
-          <select>
-            <option>Choose an Option</option>
-            <option>Airtel Payments Bank</option>
-            <option>Axis Bank</option>
-            <option>HDFC Bank</option>
-            <option>ICICI Bank</option>
-            <option>Kotak Bank</option>
-            <option>State Bank of India</option>
-            <option>Bank of India</option>
-            <option>Bank of Maharashtra</option>
-            <option>Canara Bank</option>
-            <option>Central Bank of India</option>
-            <option>PNB</option>
-            <option>Union Bank</option>
-            <option>IDFC First Bank</option>
-            <option>Yes Bank</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="payment-method" id="scanupi" onclick="selectPayment('scanupi')">
-        <input type="radio" name="pay">
-        Scan and Pay with UPI
-        <div class="payment-content muted">
-          You will need to scan the QR code on the payment page to complete the payment.
-        </div>
-      </div>
-
-      <div class="payment-method" id="otherupi" onclick="selectPayment('otherupi')">
-  <input type="radio" name="pay">
-  Other UPI Apps
-  <div class="payment-content upi-box">
-    <div>Please enter your UPI ID</div>
-    <input type="text" placeholder="Enter UPI ID">
-    <button class="verify-btn" type="button">Verify</button>
-    <div class="muted">
-      The UPI ID is in the format of name/phone@bankname
-    </div>
-  </div>
-</div>
-
-      <div class="payment-method">
-        <input type="radio" disabled>
-        EMI Unavailable <span style="color:#007185;">Why?</span>
-      </div>
-
-      <div class="payment-method" id="cod" onclick="selectPayment('cod')">
-        <input type="radio" name="pay">
-        Cash on Delivery / Pay on Delivery
-        <div class="payment-content muted">
-          Cash, UPI and Cards accepted.
-        </div>
-      </div>
-
+    <div class="address-actions">
+      <a href="#">Change</a>
+      <a href="#">Add delivery instructions</a>
     </div>
   </div>
 
-  <!-- RIGHT -->
-  <form action="/pay" method="POST" class="checkout-right">
+  <!-- PAYMENT -->
+  <div class="section">
+    <h2>2. Select a payment method</h2>
 
-    <% if (mode === "buy-now") { %>
-  <input type="hidden" name="productId" value="<%= product.id %>">
-<% } %>
-
-    <input type="hidden" name="paymentMethod" id="paymentMethod" value="card">
-
-    <button type="submit" class="place-btn">
-      Use this payment method
-    </button>
-
-    <div class="summary-row">
-  <span>Items:</span>
-
-  <% if (mode === "buy-now") { %>
-    <span>₹<%= product.price %></span>
-  <% } %>
-
-  <% if (mode === "cart") { 
-       let total = 0;
-       cart.forEach(i => total += i.price * i.quantity);
-  %>
-    <span>₹<%= total %></span>
-  <% } %>
-</div>
-
-
-    <div class="summary-row">
-      <span>Delivery:</span>
-      <span style="color:green">FREE</span>
+    <div class="payment-method" id="card" onclick="selectPayment('card')">
+      <input type="radio" name="pay">
+      Credit or Debit Card
     </div>
 
-   <div class="summary-row summary-total">
-  <span>Order Total:</span>
-
-  <% if (mode === "buy-now") { %>
-    <span>₹<%= product.price %></span>
-  <% } %>
-
-  <% if (mode === "cart") { 
-       let total = 0;
-       cart.forEach(i => total += i.price * i.quantity);
-  %>
-    <span>₹<%= total %></span>
-  <% } %>
-</div>
-
-<div class="mini-cart-list">
-
-  <% if (mode === "buy-now") { %>
-    <div class="mini-cart-item">
-      <img
-        src="/uploads/<%= product.image %>"
-        alt="<%= product.product_name %>"
-      >
-      <div class="mini-cart-info">
-        <%= product.product_name %><br>
-        <small>Qty: 1</small>
+    <div class="payment-method" id="netbanking" onclick="selectPayment('netbanking')">
+      <input type="radio" name="pay">
+      Net Banking
+      <div class="payment-content">
+        <select>
+          <option>Choose an Option</option>
+          <option>HDFC Bank</option>
+          <option>ICICI Bank</option>
+          <option>SBI</option>
+        </select>
       </div>
     </div>
-  <% } %>
 
-  <% if (mode === "cart") { %>
-    <% cart.forEach(item => { %>
+    <div class="payment-method" id="scanupi" onclick="selectPayment('scanupi')">
+      <input type="radio" name="pay">
+      Scan and Pay with UPI
+    </div>
+
+    <div class="payment-method" id="otherupi" onclick="selectPayment('otherupi')">
+      <input type="radio" name="pay">
+      Other UPI Apps
+      <div class="payment-content upi-box">
+        <input type="text" placeholder="Enter UPI ID">
+        <button type="button" class="verify-btn">Verify</button>
+      </div>
+    </div>
+
+    <div class="payment-method" id="cod" onclick="selectPayment('cod')">
+      <input type="radio" name="pay">
+      Cash on Delivery / Pay on Delivery
+      <div class="payment-content muted">
+        Cash, UPI and Cards accepted.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- RIGHT -->
+<form action="/pay" method="POST" class="checkout-right">
+
+  <!-- 🔑 REQUIRED -->
+  <input type="hidden" name="checkout_id" value="<%= checkout.checkout_id %>">
+  <input type="hidden" name="paymentMethod" id="paymentMethod">
+
+ <button type="submit" class="place-btn" onclick="return validatePayment()">
+  Use this payment method
+</button>
+
+
+  <!-- SUMMARY -->
+  <div class="summary-row">
+    <span>Items:</span>
+    <span>₹<%= checkout.total_amount %></span>
+  </div>
+
+  <div class="summary-row">
+    <span>Delivery:</span>
+    <span style="color:green">FREE</span>
+  </div>
+
+  <div class="summary-row summary-total">
+    <span>Order Total:</span>
+    <span>₹<%= checkout.total_amount %></span>
+  </div>
+
+  <!-- MINI CART -->
+  <div class="mini-cart-list">
+    <% items.forEach(item => { %>
       <div class="mini-cart-item">
-        <img
-          src="/uploads/<%= item.image %>"
-          alt="<%= item.product_name %>"
-        >
+        <img src="/uploads/<%= item.product_image %>" alt="<%= item.product_name %>">
         <div class="mini-cart-info">
           <%= item.product_name %><br>
           <small>Qty: <%= item.quantity %></small>
         </div>
       </div>
     <% }) %>
-  <% } %>
+  </div>
 
-</div>
+</form>
 
-
-    </div>
-
-  </form>
-
-</div>
 
 <script>
 function selectPayment(method) {
@@ -513,6 +447,16 @@ function selectPayment(method) {
     }
   }
 }
+
+function validatePayment() {
+  const method = document.getElementById("paymentMethod").value;
+  if (!method) {
+    alert("Please select a payment method");
+    return false;
+  }
+  return true;
+}
+
 </script>
 
 
