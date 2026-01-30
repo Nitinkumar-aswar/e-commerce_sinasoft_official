@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const PDFDocument = require("pdfkit");
 
 /* =========================
    USER ROUTES
@@ -351,7 +352,111 @@ router.get("/orders/:orderId", (req, res) => {
   });
 });
 
+/* =========================
+   DOWNLOAD INVOICE
+========================= */
+router.get("/orders/:orderId/invoice", (req, res) => {
+  if (!req.session.user) {
+    return res.redirect("/customer_login");
+  }
 
+  const userId = req.session.user.user_id;
+  const orderId = req.params.orderId;
+
+  /* 1️⃣ Fetch order */
+  const orderSql = `
+    SELECT *
+    FROM orders
+    WHERE order_id = ?
+      AND user_id = ?
+    LIMIT 1
+  `;
+
+  req.db.query(orderSql, [orderId, userId], (err, orderRows) => {
+    if (err || orderRows.length === 0) {
+      return res.status(404).send("Order not found");
+    }
+
+    const order = orderRows[0];
+
+    /* 2️⃣ Fetch order items */
+    const itemsSql = `
+      SELECT
+        product_name,
+        price,
+        quantity
+      FROM order_items
+      WHERE order_id = ?
+        AND user_id = ?
+    `;
+
+    req.db.query(itemsSql, [orderId, userId], (err, items) => {
+      if (err || items.length === 0) {
+        return res.status(404).send("No items found");
+      }
+
+      /* 3️⃣ Calculate total */
+      let totalAmount = 0;
+      items.forEach(i => {
+        totalAmount += i.price * i.quantity;
+      });
+
+      /* 4️⃣ GENERATE PDF */
+      generateInvoicePDF(res, order, items, totalAmount);
+    });
+  });
+});
+
+function generateInvoicePDF(res, order, items, totalAmount) {
+  const doc = new PDFDocument({ margin: 40 });
+
+  res.setHeader("Content-Type", "application/pdf");
+  res.setHeader(
+    "Content-Disposition",
+    `attachment; filename=Invoice-${order.order_id}.pdf`
+  );
+
+  doc.pipe(res);
+
+  // HEADER
+  doc.fontSize(20).text("AutoKart Invoice", { align: "center" });
+  doc.moveDown();
+
+  doc.fontSize(12).text(`Order ID: ${order.order_id}`);
+  doc.text(`Order Date: ${new Date(order.created_at).toDateString()}`);
+  doc.text(`Payment Method: ${order.payment_method}`);
+  doc.moveDown();
+
+  // CUSTOMER
+  doc.text("Bill To:");
+  doc.text("Darshan Yadav");
+  doc.text("Pune, Maharashtra");
+  doc.text("Phone: 9356688471");
+  doc.moveDown();
+
+  // ITEMS
+  doc.fontSize(14).text("Order Items:");
+  doc.moveDown(0.5);
+
+  items.forEach(item => {
+    doc.fontSize(12).text(
+      `${item.product_name} | ₹${item.price} x ${item.quantity} = ₹${(
+        item.price * item.quantity
+      ).toFixed(2)}`
+    );
+  });
+
+  doc.moveDown();
+  doc.fontSize(14).text(`Total Amount: ₹${totalAmount.toFixed(2)}`);
+
+  doc.moveDown();
+  doc.fontSize(10).text(
+    "This is a computer-generated invoice.",
+    { align: "center" }
+  );
+
+  doc.end();
+}
 
 /* SHOP */
 router.get("/shop", (req, res) => {

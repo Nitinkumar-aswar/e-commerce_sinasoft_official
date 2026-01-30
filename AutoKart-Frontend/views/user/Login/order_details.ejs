@@ -248,29 +248,27 @@
 
       <div class="info-box">
         <h3>Price details</h3>
-        <div class="price-row">
-          <span>Item price</span>
-          <span>₹<%= order.price %></span>
-        </div>
-        <div class="price-row">
-          <span>Quantity</span>
-          <span><%= order.quantity %></span>
-        </div>
-
         <div class="price-total">
-          Total: ₹<%= order.price * order.quantity %>
-        </div>
-      </div>
+  Total: ₹<%= totalAmount.toFixed(2) %>
+</div>
+
 
       <div class="info-box">
         <h3>Payment method</h3>
         <p><%= order.payment_method.toUpperCase() %></p>
       </div>
 
-      <div class="info-box">
-        <div class="invoice-btn">
-          Download Invoice
-        </div>
+     <div class="info-box">
+  <a 
+    href="/orders/<%= order.order_id %>/invoice" 
+    class="invoice-btn"
+    style="text-decoration: none; display: block;"
+  >
+    Download Invoice
+  </a>
+</div>
+
+
       </div>
 
     </div>
