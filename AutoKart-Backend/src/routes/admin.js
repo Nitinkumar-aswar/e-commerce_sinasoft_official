@@ -474,6 +474,157 @@ router.get("/api/subsections/:sectionId", (req, res) => {
 });
 
 
+/* =========================
+   ADMIN ORDERS
+========================= */
+router.get("/orders", (req, res) => {
+  const db = req.db;
+  const search = req.query.search || "";
+
+  const ordersQuery = `
+    SELECT
+      o.order_id,
+      o.order_status,
+      o.payment_method,
+      o.payment_status,
+
+      u.user_first_name,
+      u.user_last_name,
+      u.user_mobile,
+
+      COUNT(oi.id) AS total_items
+
+    FROM orders o
+    JOIN user_create_account u 
+      ON o.user_id = u.user_id
+    LEFT JOIN order_items oi 
+      ON o.order_id = oi.order_id
+
+    WHERE
+      o.order_id LIKE ?
+      OR u.user_mobile LIKE ?
+      OR LOWER(CONCAT(u.user_first_name, ' ', u.user_last_name)) LIKE ?
+
+    GROUP BY o.order_id
+    ORDER BY o.id DESC
+  `;
+
+  const likeSearch = `%${search.toLowerCase().trim()}%`;
+
+  db.query(
+    ordersQuery,
+    [likeSearch, likeSearch, likeSearch],
+    (err, orders) => {
+      if (err) {
+        console.error("❌ ORDERS SEARCH ERROR:", err);
+        return res.send("Error loading orders");
+      }
+
+      res.render("admin/dashboard", {
+        page: "orders",
+        orders,
+        search
+      });
+    }
+  );
+});
+
+
+/* =========================
+   ADMIN VIEW ORDER
+========================= */
+
+router.get("/orders/:order_id", (req, res) => {
+  const db = req.db;
+  const orderId = req.params.order_id;
+
+  const orderQuery = `
+    SELECT 
+      o.order_id,
+      o.order_status,
+      o.payment_method,
+      o.payment_status,
+      o.created_at,
+
+      u.user_first_name,
+      u.user_last_name,
+      u.user_mobile,
+      u.user_email
+
+    FROM orders o
+    JOIN user_create_account u 
+      ON o.user_id = u.user_id
+    WHERE o.order_id = ?
+  `;
+
+  const itemsQuery = `
+    SELECT 
+      product_name,
+      product_image,
+      price,
+      quantity
+    FROM order_items
+    WHERE order_id = ?
+  `;
+
+  db.query(orderQuery, [orderId], (err, orderResult) => {
+    if (err || orderResult.length === 0) {
+      return res.send("Order not found");
+    }
+
+    db.query(itemsQuery, [orderId], (err, items) => {
+      if (err) return res.send("Error loading order items");
+
+      let totalAmount = 0;
+      items.forEach(item => {
+        totalAmount += item.price * item.quantity;
+      });
+
+      res.render("admin/dashboard", {
+        page: "order-view",
+        order: {
+          ...orderResult[0],   // ✅ FIX
+          calculated_total: totalAmount
+        },
+        items
+      });
+    });
+  });
+});
+
+/* =========================
+   UPDATE ORDER STATUS
+========================= */
+router.post("/orders/:order_id/status", (req, res) => {
+  const db = req.db;
+  const orderId = req.params.order_id;
+  const { order_status } = req.body;
+
+  const sql = `
+    UPDATE orders
+    SET order_status = ?
+    WHERE order_id = ?
+  `;
+
+  db.query(sql, [order_status, orderId], err => {
+    if (err) {
+      console.error("❌ STATUS UPDATE ERROR:", err.sqlMessage);
+      return res.send("Status update failed");
+    }
+
+    // ✅ COD auto-paid when delivered
+    if (order_status === "DELIVERED") {
+      db.query(
+        "UPDATE orders SET payment_status = 'PAID' WHERE order_id = ?",
+        [orderId]
+      );
+    }
+
+    res.redirect(`/admin/orders/${orderId}`);
+  });
+});
+
+
 
 
 

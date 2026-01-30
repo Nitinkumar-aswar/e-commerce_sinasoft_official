@@ -22,11 +22,13 @@
     }
 
     .order-container {
-      max-width: 1400px;
-      margin: auto;
-      display: flex;
-      gap: 20px;
-    }
+  max-width: 1400px;
+  margin: auto;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start; /* 🔥 THIS IS THE FIX */
+}
+
 
     /* ===============================
        LEFT SECTION (PRODUCT + TIMELINE)
@@ -77,10 +79,10 @@
     /* ===============================
        ORDER TRACKING
     ================================ */
-    .tracking {
-      margin-top: 30px;
-    }
-
+  .tracking {
+  margin-top: 30px;
+  position: relative; /* 🔥 REQUIRED */
+}
     .tracking-step {
       display: flex;
       align-items: center;
@@ -109,17 +111,19 @@
        RIGHT SECTION
     ================================ */
     .order-right {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
+  width: 360px;            /* Flipkart-like width */
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex-shrink: 0;          /* 🔥 prevents wrapping under left */
+}
 
     .info-box {
-      background: #ffffff;
-      padding: 16px;
-      border-radius: 4px;
-    }
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+}
 
     .info-box h3 {
       font-size: 16px;
@@ -181,10 +185,56 @@
   font-size: 13px;
 }
 
-  </style>
+.tracking-dot.inactive {
+  background: #ccc;
+}
+
+.tracking-line.inactive {
+  background: #ccc;
+}
+.order-right {
+  position: sticky;
+  top: 80px; /* stays visible while scrolling */
+  align-self: flex-start;
+}
+
+.cancel-order-box {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+.cancel-btn {
+  padding: 6px 12px;
+  background: #fff;
+  border: 1px solid #9a9191;
+  color: #000000;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.cancel-btn:hover {
+  background: #fff5f5;
+}
+
+
+</style>
 </head>
 
 <body>
+<%
+  const statusFlow = [
+    "PLACED",
+    "CONFIRMED",
+    "SHIPPED",
+    "OUT_FOR_DELIVERY",
+    "DELIVERED"
+  ];
+
+  const currentStatusIndex = statusFlow.indexOf(order.order_status);
+%>
 
 <div class="order-wrapper">
   <div class="order-container">
@@ -216,20 +266,50 @@
 
   <% }) %>
 
+
+
+
+
   <!-- ORDER TRACKING -->
   <div class="tracking">
-    <div class="tracking-step">
-      <div class="tracking-dot"></div>
-      Order Confirmed — <%= new Date(order.created_at).toDateString() %>
-    </div>
 
-    <div class="tracking-line"></div>
+  <% statusFlow.forEach((status, index) => { %>
 
     <div class="tracking-step">
-      <div class="tracking-dot"></div>
-      <%= order.status === 'DELIVERED' ? 'Delivered' : 'In progress' %>
+      <div class="tracking-dot <%= index <= currentStatusIndex ? '' : 'inactive' %>"></div>
+
+      <% if (status === 'PLACED') { %>
+        Order Placed — <%= new Date(order.created_at).toDateString() %>
+      <% } else if (status === 'CONFIRMED') { %>
+        Order Confirmed
+      <% } else if (status === 'SHIPPED') { %>
+        Shipped
+      <% } else if (status === 'OUT_FOR_DELIVERY') { %>
+        Out for Delivery
+      <% } else if (status === 'DELIVERED') { %>
+        Delivered
+      <% } %>
     </div>
-  </div>
+
+    <% if (index < statusFlow.length - 1) { %>
+      <div class="tracking-line <%= index < currentStatusIndex ? '' : 'inactive' %>"></div>
+    <% } %>
+
+  <% }) %>
+<% if (['PLACED', 'CONFIRMED'].includes(order.order_status)) { %>
+  <form 
+    action="/orders/<%= order.order_id %>/cancel" 
+    method="POST"
+    onsubmit="return confirm('Are you sure you want to cancel this order?');"
+    class="cancel-order-box"
+  >
+    <button type="submit" class="cancel-btn">
+      Cancel Order
+    </button>
+  </form>
+<% } %>
+
+</div>
 
 </div>
 
@@ -240,33 +320,60 @@
     <div class="order-right">
 
       <div class="info-box">
-        <h3>Delivery details</h3>
-        <p><strong>Name:</strong> Darshan Yadav</p>
-        <p><strong>Address:</strong> Pune, Maharashtra</p>
-        <p><strong>Phone:</strong> 9356688471</p>
-      </div>
+  <h3>Delivery details</h3>
 
-      <div class="info-box">
-        <h3>Price details</h3>
-        <div class="price-total">
-  Total: ₹<%= totalAmount.toFixed(2) %>
+  <p style="font-size:13px; color:#212121; font-weight:500;">
+    Home
+  </p>
+
+  <p style="font-size:13px; color:#555; line-height:1.4;">
+    Indira College Rd, Tathawade, Pune, Maharashtra
+  </p>
+
+  <hr style="border:none; border-top:1px solid #eee; margin:12px 0;">
+
+  <p style="font-size:13px;">
+    <strong>Darshan Yadav</strong> · 9356688471
+  </p>
 </div>
 
 
-      <div class="info-box">
-        <h3>Payment method</h3>
-        <p><%= order.payment_method.toUpperCase() %></p>
-      </div>
+     <div class="info-box">
+  <h3>Price details</h3>
+
+  <div class="price-row">
+    <span>Item price</span>
+    <span>₹<%= totalAmount.toFixed(2) %></span>
+  </div>
+
+  <div class="price-row">
+    <span>Delivery fee</span>
+    <span style="color:green;">FREE</span>
+  </div>
+
+  <hr style="border:none; border-top:1px dashed #ddd; margin:10px 0;">
+
+  <div class="price-row price-total">
+    <span>Total amount</span>
+    <span>₹<%= totalAmount.toFixed(2) %></span>
+  </div>
+</div>
+
+
 
      <div class="info-box">
+  <h3>Payment method</h3>
+  <p style="font-size:13px;"><%= order.payment_method.toUpperCase() %></p>
+
   <a 
-    href="/orders/<%= order.order_id %>/invoice" 
+    href="/orders/<%= order.order_id %>/invoice"
     class="invoice-btn"
-    style="text-decoration: none; display: block;"
+    style="margin-top:12px; display:block; text-decoration:none;"
   >
     Download Invoice
   </a>
 </div>
+
 
 
       </div>

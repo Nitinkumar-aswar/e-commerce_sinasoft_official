@@ -265,7 +265,7 @@ router.get("/orders", (req, res) => {
     SELECT 
       o.order_id,
       o.created_at,
-      o.status,
+      o.order_status,
       o.total_amount,
       o.total_items,
       oi.product_name,
@@ -406,6 +406,74 @@ router.get("/orders/:orderId/invoice", (req, res) => {
     });
   });
 });
+
+
+
+router.post("/orders/:orderId/cancel", (req, res) => {
+  if (!req.session.user) {
+    return res.redirect("/customer_login");
+  }
+
+  const userId = req.session.user.user_id;
+  const orderId = req.params.orderId;
+
+  /* =========================
+     1️⃣ VERIFY ORDER
+  ========================= */
+  const checkSql = `
+    SELECT order_status
+    FROM orders
+    WHERE order_id = ?
+      AND user_id = ?
+    LIMIT 1
+  `;
+
+  req.db.query(checkSql, [orderId, userId], (err, rows) => {
+    if (err || rows.length === 0) {
+      return res.send("Order not found");
+    }
+
+    const status = rows[0].order_status;
+
+    // ❌ BLOCK IF ALREADY SHIPPED
+    if (!["PLACED", "CONFIRMED"].includes(status)) {
+      return res.send("Order cannot be cancelled at this stage");
+    }
+
+    /* =========================
+       2️⃣ DELETE ORDER ITEMS
+    ========================= */
+    req.db.query(
+      "DELETE FROM order_items WHERE order_id = ?",
+      [orderId],
+      err => {
+        if (err) {
+          console.error("❌ ORDER ITEMS DELETE ERROR:", err);
+          return res.send("Cancel failed");
+        }
+
+        /* =========================
+           3️⃣ DELETE ORDER
+        ========================= */
+        req.db.query(
+          "DELETE FROM orders WHERE order_id = ?",
+          [orderId],
+          err => {
+            if (err) {
+              console.error("❌ ORDER DELETE ERROR:", err);
+              return res.send("Cancel failed");
+            }
+
+            console.log("❌ ORDER CANCELLED:", orderId);
+
+            return res.redirect("/orders");
+          }
+        );
+      }
+    );
+  });
+});
+
 
 function generateInvoicePDF(res, order, items, totalAmount) {
   const doc = new PDFDocument({ margin: 40 });
@@ -808,7 +876,10 @@ router.post("/create-checkout", (req, res) => {
     items.forEach(i => {
       totalAmount += i.price * i.quantity;
       totalItems += i.quantity;
+    
     });
+
+
 
     // 1️⃣ CREATE CHECKOUT SESSION
   req.db.query(
@@ -854,7 +925,23 @@ router.post("/create-checkout", (req, res) => {
   console.error("CHECKOUT INSERT ERROR 👉", err);
   return res.send("Checkout failed");
 }
-
+    /* =====================================================
+   🔧 SAVE TOTALS INTO CHECKOUT SESSION (CRITICAL)
+===================================================== */
+req.db.query(
+  `
+  UPDATE checkout_sessions
+  SET total_amount = ?, total_items = ?
+  WHERE checkout_id = ?
+  `,
+  [totalAmount, totalItems, checkoutId],
+  err => {
+    if (err) {
+      console.error("❌ CHECKOUT TOTAL UPDATE ERROR:", err);
+      return res.send("Checkout failed");
+    }
+  }
+);
 
             // 3️⃣ REDIRECT TO CHECKOUT PAGE
             res.redirect(`/checkout?checkout_id=${checkoutId}`);
@@ -996,6 +1083,7 @@ router.post("/pay", (req, res) => {
   }
 
   const userId = req.session.user.user_id;
+  const sessionId = req.sessionID;
 
   /* =====================================================
      1️⃣ FETCH CHECKOUT SESSION
@@ -1042,7 +1130,7 @@ router.post("/pay", (req, res) => {
       }
 
       /* =====================================================
-         3️⃣ CREATE ORDER (ONE ROW)
+         3️⃣ CREATE ORDER
       ===================================================== */
       const orderId = "ORD" + Date.now();
 
@@ -1077,7 +1165,7 @@ router.post("/pay", (req, res) => {
           }
 
           /* =====================================================
-             4️⃣ INSERT INTO ORDER_ITEMS
+             4️⃣ INSERT ORDER ITEMS
           ===================================================== */
           const orderItemsSql = `
             INSERT INTO order_items
@@ -1112,31 +1200,44 @@ router.post("/pay", (req, res) => {
             /* =====================================================
                5️⃣ MARK CHECKOUT SESSION COMPLETED
             ===================================================== */
-            req.db.query(
-              `
+            const updateCheckoutSql = `
               UPDATE checkout_sessions
               SET status = 'COMPLETED',
                   payment_method = 'COD',
                   payment_status = 'PENDING'
               WHERE checkout_id = ?
-              `,
-              [checkoutId],
-              err => {
-                if (err) {
-                  console.error("❌ CHECKOUT UPDATE ERROR:", err);
-                }
+            `;
 
-                console.log("✅ ORDER PLACED SUCCESSFULLY:", orderId);
-                return res.redirect("/payment-success?method=COD");
+            req.db.query(updateCheckoutSql, [checkoutId], err => {
+              if (err) {
+                console.error("❌ CHECKOUT UPDATE ERROR:", err);
+                return res.send("Order failed");
               }
-            );
+
+              /* =====================================================
+                 6️⃣ CLEAR CART
+              ===================================================== */
+              req.db.query(
+                "DELETE FROM cart WHERE session_id = ?",
+                [sessionId, userId],
+                err => {
+                  if (err) {
+                    console.error("❌ CART CLEAR ERROR:", err);
+                  }
+
+                  console.log("🧹 CART CLEARED");
+                  console.log("✅ ORDER PLACED SUCCESSFULLY:", orderId);
+
+                  return res.redirect("/payment-success?method=COD");
+                }
+              );
+            });
           });
         }
       );
     });
   });
 });
-
 
 /* =========================
    PAYMENT SUCCESS (TEMP)

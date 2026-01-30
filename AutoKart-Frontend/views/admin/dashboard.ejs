@@ -137,7 +137,8 @@
       <a href="/admin/sliders">Sliders</a>
       <a href="/admin/products">Products</a>
       <a href="#">Categories</a>
-      <a href="#">Orders</a>
+      <a href="/admin/orders">Orders</a>
+
       <a href="#">Users</a>
       <a href="/">Go to Website</a>
     </div>
@@ -145,30 +146,34 @@
     <!-- ===== CONTENT AREA ===== -->
     <div class="content">
 
-      <!-- ===== CARD (WHITE AREA) ===== -->
-      <div class="card">
+    <div class="content">
 
-        <!-- DASHBOARD VIEW -->
-        <div class="card">
+  <!-- ===== CARD (WHITE AREA) ===== -->
+  <div class="card">
 
-         <% if (page === "dashboard") { %>
-         <h2>Welcome to Admin Dashboard</h2>
-              <p>Select an option from the sidebar.</p>
-       <% } %>
+    <% if (page === "dashboard") { %>
+      <h2>Welcome to Admin Dashboard</h2>
+      <p>Select an option from the sidebar.</p>
+    <% } %>
 
-        <% if (page === "sliders") { %>
-       <%- include("sliders") %>
-             <% } %>
+    <% if (page === "sliders") { %>
+      <%- include("sliders") %>
+    <% } %>
 
-        <% if (page === "products") { %>
-     <%- include("products") %>
-               <% } %>
+    <% if (page === "products") { %>
+      <%- include("products") %>
+    <% } %>
 
+    <% if (page === "orders") { %>
+      <%- include("orders") %>
+    <% } %>
+    <% if (page === "order-view") { %>
+  <%- include("order-view") %>
+<% } %>
+
+  </div>
 </div>
 
-      <!-- ===== END CARD ===== -->
-
-    </div>
     <!-- ===== END CONTENT ===== -->
 
   </div>
