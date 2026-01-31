@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Checkout | AutoKart</title>
+
+
+  <style>
+    body {
+      margin: 0;
+      background: #eaeded;
+      font-family: Arial, sans-serif;
+    }
+
+    .page-wrapper {
+      max-width: 1400px;
+      margin: auto;
+      padding: 20px;
+      display: flex;
+      gap: 20px;
+    }
+
+    .checkout-left {
+      flex: 3;
+      background: #fff;
+      padding: 20px;
+    }
+
+    .section {
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+    }
+
+    .section h2 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .address-box {
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .address-actions a {
+      font-size: 13px;
+      color: #007185;
+      margin-right: 15px;
+      text-decoration: none;
+    }
+
+    .payment-method {
+      padding: 14px;
+      border-top: 1px solid #eee;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .payment-method.active {
+      background: #fff8f0;
+      border-left: 3px solid #ff9900;
+    }
+
+    .payment-content {
+      margin-top: 10px;
+      font-size: 13px;
+    }
+
+    select, input[type="text"] {
+      padding: 6px;
+      width: 260px;
+      margin-top: 8px;
+    }
+
+    .verify-btn {
+      margin-left: 8px;
+      padding: 6px 12px;
+      border: 1px solid #fcd200;
+      background: #ffd814;
+      cursor: pointer;
+    }
+
+    .muted {
+      color: #555;
+      font-size: 12px;
+      margin-top: 6px;
+    }
+
+    .checkout-right {
+      flex: 1.2;
+      background: #fff;
+      padding: 20px;
+      border: 1px solid #ddd;
+      height: fit-content;
+    }
+
+    .place-btn {
+      width: 100%;
+      background: #ffd814;
+      border: 1px solid #fcd200;
+      padding: 10px;
+      font-size: 14px;
+      cursor: pointer;
+      margin-bottom: 15px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .summary-total {
+      font-weight: bold;
+      border-top: 1px solid #ddd;
+      padding-top: 10px;
+    }
+
+    .mini-product {
+      display: flex;
+      gap: 12px;
+      margin-top: 15px;
+    }
+
+    .mini-product img {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      border: 1px solid #e0e0e0;
+      background: #fff;
+    }
+
+    .mini-product-name {
+      font-size: 13px;
+      line-height: 1.4;
+      max-width: 240px;
+    }
+    .upi-box {
+  display: none;
+}
+.mini-cart-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mini-cart-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.mini-cart-item img {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+  border: 1px solid #e0e0e0;
+  background: #fff;
+}
+
+.mini-cart-info {
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+/* MOBILE ≤480px */
+@media (max-width: 480px) {
+  .page-wrapper {
+    flex-direction: column;
+    padding: 10px;
+    gap: 15px;
+    align-items: center;
+  }
+
+  .checkout-left, .checkout-right {
+    width: 100%;
+    padding: 15px;
+  }
+
+  select, input[type="text"] {
+    width: 100%;
+  }
+
+  .payment-method {
+    font-size: 14px;
+  }
+
+  .place-btn {
+    font-size: 13px;
+  }
+
+  .mini-cart-item {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+/* TABLET 481px – 768px */
+@media (min-width: 481px) and (max-width: 768px) {
+  .page-wrapper {
+    flex-direction: column;
+    padding: 15px;
+    align-items: center;
+  }
+
+  .checkout-left, .checkout-right {
+    width: 100%;
+    padding: 20px;
+  }
+
+  select, input[type="text"] {
+    width: 100%;
+  }
+
+  .place-btn { font-size: 14px; }
+}
+
+/* LAPTOP 769px – 1024px */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .page-wrapper {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .checkout-left { flex: 2.5; }
+  .checkout-right { flex: 1; }
+}
+
+/* DESKTOP ≥1025px */
+@media (min-width: 1025px) {
+  .page-wrapper {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .checkout-left { flex: 3; }
+  .checkout-right { flex: 1.2; }
+}
+
+/* ===========================
+   MOBILE CHECKOUT NORMAL FIX
+=========================== */
+@media (max-width: 768px) {
+
+  body {
+    background: #f1f3f6;
+  }
+
+  .page-wrapper {
+    max-width: 100%;
+    padding: 10px;
+    gap: 12px;
+  }
+
+  .checkout-left,
+  .checkout-right {
+    width: 100%;
+    padding: 15px;
+    border-radius: 6px;
+  }
+
+  .section h2 {
+    font-size: 16px;
+  }
+
+  .address-box {
+    font-size: 13px;
+  }
+
+  .payment-method {
+    font-size: 13px;
+    padding: 12px;
+  }
+
+  select,
+  input[type="text"] {
+    width: 100%;
+  }
+
+  .place-btn {
+    font-size: 14px;
+    padding: 12px;
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+  }
+
+  .mini-cart-item img {
+    width: 60px;
+    height: 60px;
+  }
+
+  .mini-cart-info {
+    font-size: 12px;
+  }
+}
+
+  </style>
+</head>
+
+<body>
+
+<%- include("partials/header") %>
+
+<div class="page-wrapper">
+<!-- LEFT -->
+<div class="checkout-left">
+
+  <!-- ADDRESS -->
+  <div class="section">
+    <h2>1. Delivery address</h2>
+    <div class="address-box">
+      <strong><%= address.name %></strong><br>
+      <%= address.address %><br>
+      <%= address.city %>, <%= address.state %> <%= address.pincode %>
+    </div>
+    <div class="address-actions">
+      <a href="#">Change</a>
+      <a href="#">Add delivery instructions</a>
+    </div>
+  </div>
+
+  <!-- PAYMENT -->
+  <div class="section">
+    <h2>2. Select a payment method</h2>
+
+    <div class="payment-method" id="card" onclick="selectPayment('card')">
+      <input type="radio" name="pay">
+      Credit or Debit Card
+    </div>
+
+    <div class="payment-method" id="netbanking" onclick="selectPayment('netbanking')">
+      <input type="radio" name="pay">
+      Net Banking
+      <div class="payment-content">
+        <select>
+          <option>Choose an Option</option>
+          <option>HDFC Bank</option>
+          <option>ICICI Bank</option>
+          <option>SBI</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="payment-method" id="scanupi" onclick="selectPayment('scanupi')">
+      <input type="radio" name="pay">
+      Scan and Pay with UPI
+    </div>
+
+    <div class="payment-method" id="otherupi" onclick="selectPayment('otherupi')">
+      <input type="radio" name="pay">
+      Other UPI Apps
+      <div class="payment-content upi-box">
+        <input type="text" placeholder="Enter UPI ID">
+        <button type="button" class="verify-btn">Verify</button>
+      </div>
+    </div>
+
+    <div class="payment-method" id="cod" onclick="selectPayment('cod')">
+      <input type="radio" name="pay">
+      Cash on Delivery / Pay on Delivery
+      <div class="payment-content muted">
+        Cash, UPI and Cards accepted.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- RIGHT -->
+<form action="/pay" method="POST" class="checkout-right">
+
+  <!-- 🔑 REQUIRED -->
+  <input type="hidden" name="checkout_id" value="<%= checkout.checkout_id %>">
+  <input type="hidden" name="paymentMethod" id="paymentMethod">
+
+ <button type="submit" class="place-btn" onclick="return validatePayment()">
+  Use this payment method
+</button>
+
+
+  <!-- SUMMARY -->
+  <div class="summary-row">
+    <span>Items:</span>
+    <span>₹<%= checkout.total_amount %></span>
+  </div>
+
+  <div class="summary-row">
+    <span>Delivery:</span>
+    <span style="color:green">FREE</span>
+  </div>
+
+  <div class="summary-row summary-total">
+    <span>Order Total:</span>
+    <span>₹<%= checkout.total_amount %></span>
+  </div>
+
+  <!-- MINI CART -->
+  <div class="mini-cart-list">
+    <% items.forEach(item => { %>
+      <div class="mini-cart-item">
+        <img src="/uploads/<%= item.product_image %>" alt="<%= item.product_name %>">
+        <div class="mini-cart-info">
+          <%= item.product_name %><br>
+          <small>Qty: <%= item.quantity %></small>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+
+</form>
+
+
+<script>
+function selectPayment(method) {
+  // set hidden input
+  document.getElementById("paymentMethod").value = method;
+
+  // reset all payment methods
+  document.querySelectorAll(".payment-method").forEach(el => {
+    el.classList.remove("active");
+    const r = el.querySelector("input[type=radio]");
+    if (r) r.checked = false;
+  });
+
+  // hide UPI verify box by default
+  document.querySelectorAll(".upi-box").forEach(box => {
+    box.style.display = "none";
+  });
+
+  // activate selected method
+  const active = document.getElementById(method);
+  if (active) {
+    active.classList.add("active");
+    const r = active.querySelector("input[type=radio]");
+    if (r) r.checked = true;
+  }
+
+  // show UPI verify box ONLY for otherupi
+  if (method === "otherupi") {
+    const upiBox = document.querySelector("#otherupi .upi-box");
+    if (upiBox) {
+      upiBox.style.display = "block";
+    }
+  }
+}
+
+function validatePayment() {
+  const method = document.getElementById("paymentMethod").value;
+  if (!method) {
+    alert("Please select a payment method");
+    return false;
+  }
+  return true;
+}
+
+</script>
+
+
+</body>
+</html>

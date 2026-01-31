@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Become a Dealer | Register</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
+body{background:#f1f7fd;color:#1f2937}
+
+/* HEADER */
+.header{
+  background:#fff;
+  padding:14px 40px;
+  display:flex;
+  align-items:center;
+  border-bottom:1px solid #e5e7eb;
+}
+.header img{height:30px}
+
+/* MAIN */
+.main{
+  max-width:1150px;
+  margin:40px auto;
+  display:grid;
+  grid-template-columns:1.35fr 1fr;
+  gap:40px;
+  padding:0 20px;
+}
+
+/* FORM */
+.form-box{
+  background:#fff;
+  padding:36px;
+  border-radius:10px;
+}
+.steps{
+  display:flex;
+  gap:25px;
+  margin-bottom:30px;
+  font-size:14px;
+}
+.step{display:flex;align-items:center;gap:8px;color:#9ca3af}
+.step.active{color:#2563eb;font-weight:600}
+.step i{
+  background:#2563eb;color:#fff;
+  border-radius:50%;font-size:11px;padding:6px;
+}
+
+.input-group{margin-bottom:18px}
+.input-group label{
+  display:block;font-size:13px;
+  margin-bottom:6px;color:#374151;
+}
+.input-group input,select{
+  width:100%;padding:14px;
+  border-radius:6px;border:1px solid #d1d5db;
+  font-size:14px;
+}
+input:focus,select:focus{
+  outline:none;border-color:#2563eb;
+}
+
+.btn{
+  background:#2563eb;color:#fff;border:none;
+  padding:14px 26px;border-radius:6px;
+  font-size:15px;font-weight:600;
+  cursor:pointer;
+}
+
+/* RIGHT */
+.right{display:flex;flex-direction:column;gap:25px}
+.banner{
+  background:#0073e6;color:#fff;
+  border-radius:14px;padding:25px;text-align:center;
+}
+.banner h3{margin-bottom:10px}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .main{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+  <img src="https://static-assets-web.flixcart.com/fk-sp-static/images/sellerHub.svg">
+</header>
+
+<section class="main">
+
+<!-- LEFT FORM -->
+<div class="form-box">
+
+  <div class="steps">
+    <div class="step active"><i class="fa fa-check"></i> BASIC DETAILS</div>
+    <div class="step"><i class="fa fa-check"></i> BUSINESS INFO</div>
+  </div>
+
+  <form action="/admin/save_become_dealer_from" method="POST">
+
+    <div class="input-group">
+      <label>Full Name *</label>
+      <input type="text" name="name" required>
+    </div>
+
+    <div class="input-group">
+      <label>Mobile Number *</label>
+      <input type="number" name="mobile" required>
+    </div>
+
+    <div class="input-group">
+      <label>Email ID *</label>
+      <input type="email" name="email" required>
+    </div>
+
+    <div class="input-group">
+      <label>City *</label>
+      <input type="text" name="city" required>
+    </div>
+
+    <div class="input-group">
+      <label>Dealer Type *</label>
+      <select name="dealer_type" required>
+        <option value="">Select Type</option>
+        <option>Two Wheeler</option>
+        <option>Four Wheeler</option>
+        <option>EV Dealer</option>
+        <option>Spare Parts</option>
+      </select>
+    </div>
+
+    <button class="btn" type="submit">
+      Register as Dealer <i class="fa fa-arrow-right"></i>
+    </button>
+
+  </form>
+</div>
+
+<!-- RIGHT SIDE -->
+<div class="right">
+  <div class="banner">
+    <h3>Why Become a Dealer?</h3>
+    <p>✔ Pan India Reach<br>✔ High Margins<br>✔ Dedicated Support</p>
+  </div>
+</div>
+
+</section>
+
+<script>
+document.querySelector(".btn").addEventListener("click",()=>{
+  alert("Demo UI 🚀 Backend connected असल्यास data save होईल");
+});
+</script>
+
+</body>
+</html>

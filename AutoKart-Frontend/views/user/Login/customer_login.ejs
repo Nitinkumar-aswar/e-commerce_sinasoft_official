@@ -1,0 +1,271 @@
+
+<%- include('../partials/header') %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Create Account | Flipkart</title>
+  <link rel="stylesheet" href="user_cdn/css/register.css">
+  <style>
+    * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  background: #f1f3f6;
+  min-height: 100vh;
+}
+
+.auth-wrapper {
+  min-height: calc(100vh - 120px); /* header + navbar height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.main-container {
+  width: 750px;
+  height: 450px;
+  display: flex;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  background: white;
+}
+
+/* LEFT */
+.left-box {
+  width: 40%;
+  background: #2874f0;
+  color: white;
+  padding: 40px 25px;
+}
+
+.left-box h1 {
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+.left-box p {
+  font-size: 16px;
+  color: #dbdbdb;
+}
+
+/* RIGHT */
+.right-box {
+  width: 60%;
+  padding: 40px 35px;
+}
+
+.right-box input {
+  width: 100%;
+  padding: 10px 0;
+  margin-bottom: 20px;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.right-box input:focus {
+  outline: none;
+  border-bottom: 2px solid #2874f0;
+}
+
+.terms {
+  font-size: 12px;
+  color: #878787;
+  margin-bottom: 20px;
+}
+
+.terms span {
+  color: #2874f0;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 12px;
+  background: #fb641b;
+  color: white;
+  border: none;
+  font-size: 15px;
+  cursor: pointer;
+  margin-bottom: 15px;
+}
+
+.btn-primary:hover {
+  background: #e85b17;
+}
+
+.login-link {
+  display: block;
+  text-align: center;
+  color: #2874f0;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+  </style>
+  
+</head>
+<body>
+
+  <div class="auth-wrapper">
+<div class="main-container">
+
+  <!-- LEFT SIDE -->
+  <div class="left-box">
+        <h1>Login </h1>
+    <h1>Looks like you're new here!</h1>
+    <p>Sign up with your details to get started</p>
+  </div>
+
+  <!-- RIGHT SIDE -->
+  <div class="right-box">
+   <form id="otpLoginForm">
+
+  <!-- MOBILE INPUT -->
+  <label>Enter Mobile Number</label>
+  <input 
+    type="text" 
+    name="mobile" 
+    id="mobile"
+    placeholder="10-digit mobile number"
+    maxlength="10"
+    required
+  >
+
+  <!-- OTP INPUT (HIDDEN INITIALLY) -->
+  <div id="otpSection" style="display:none;">
+    <label>Enter OTP</label>
+    <input 
+      type="text" 
+      name="otp"
+      id="otp"
+      placeholder="Enter OTP"
+      maxlength="6"
+    >
+  </div>
+
+  <p class="terms">
+    By continuing, you agree to Flipkart's
+    <span>Terms of Use</span> and <span>Privacy Policy</span>.
+  </p>
+
+  <!-- BUTTON -->
+  <button type="button" class="btn-primary" id="sendOtpBtn">
+    Request OTP
+  </button>
+
+  <button 
+    type="button" 
+    class="btn-primary" 
+    id="verifyOtpBtn" 
+    style="display:none;"
+  >
+    Verify & Login
+  </button>
+
+  <a href="/register" class="login-link">Create Account Here</a>
+
+</form>
+
+    
+  </div>
+
+</div>
+<script>
+  const sendOtpBtn = document.getElementById("sendOtpBtn");
+  const verifyOtpBtn = document.getElementById("verifyOtpBtn");
+  const otpSection = document.getElementById("otpSection");
+
+  const mobileInput = document.getElementById("mobile");
+  const otpInput = document.getElementById("otp");
+
+  /* =========================
+     SEND OTP (LOGIN)
+  ========================= */
+  sendOtpBtn.addEventListener("click", async () => {
+    const mobile = mobileInput.value.trim();
+
+    // Basic mobile validation
+    if (!/^[6-9]\d{9}$/.test(mobile)) {
+      alert("Enter a valid 10-digit mobile number");
+      return;
+    }
+
+    sendOtpBtn.disabled = true;
+    sendOtpBtn.innerText = "Sending OTP...";
+
+    try {
+      const res = await fetch("/auth/login/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mobile })
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        otpSection.style.display = "block";
+        sendOtpBtn.style.display = "none";
+        verifyOtpBtn.style.display = "block";
+        alert("OTP sent successfully");
+      } else {
+        alert(data.message || "Unable to send OTP");
+        sendOtpBtn.disabled = false;
+        sendOtpBtn.innerText = "Request OTP";
+      }
+    } catch (err) {
+      alert("Something went wrong. Please try again.");
+      sendOtpBtn.disabled = false;
+      sendOtpBtn.innerText = "Request OTP";
+    }
+  });
+
+  /* =========================
+     VERIFY OTP (LOGIN)
+  ========================= */
+  verifyOtpBtn.addEventListener("click", async () => {
+    const mobile = mobileInput.value.trim();
+    const otp = otpInput.value.trim();
+
+    if (otp.length !== 6) {
+      alert("Enter a valid 6-digit OTP");
+      return;
+    }
+
+    verifyOtpBtn.disabled = true;
+    verifyOtpBtn.innerText = "Verifying...";
+
+    try {
+      const res = await fetch("/auth/login/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mobile, otp })
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        // ✅ session created in backend
+        window.location.href = "/";
+      } else {
+        alert(data.message || "Invalid OTP");
+        verifyOtpBtn.disabled = false;
+        verifyOtpBtn.innerText = "Verify & Login";
+      }
+    } catch (err) {
+      alert("Something went wrong. Please try again.");
+      verifyOtpBtn.disabled = false;
+      verifyOtpBtn.innerText = "Verify & Login";
+    }
+  });
+</script>
+
+
+
+</body>
+</html>
