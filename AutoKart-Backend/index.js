@@ -1,4 +1,5 @@
 const express = require("express");
+require("dotenv").config();
 const path = require("path");
 const mysql = require("mysql2");
 const session = require("express-session");
@@ -78,20 +79,17 @@ app.set('views', path.join(__dirname, '../AutoKart-Frontend/views'));
    MAIN DATABASE
 ========================= */
 
-const db = mysql.createConnection({
+const db = mysql.createPool({
   host: "localhost",
   user: "root",
   password: "",
-  database: "autokart_db"
-});
+  database: "autokart_db",
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
+}).promise();
 
-db.connect(err => {
-  if (err) {
-    console.error("❌ MySQL failed:", err);
-  } else {
-    console.log("✅ MySQL connected");
-  }
-});
+
 
 /* =========================
    MAKE DB AVAILABLE
@@ -103,46 +101,37 @@ app.use((req, res, next) => {
 });
 
 /* =========================
-   GLOBAL NAVBAR DATA
-========================= */
+    GLOBAL NAVBAR DATA
+   ========================= */
 
-app.use((req, res, next) => {
-  const sectionQuery = `
-    SELECT id, name, display_slug 
-    FROM sections
-  `;
+app.use(async (req, res, next) => {
+  try {
+    const [sections] = await req.db.query(
+      "SELECT id, name, display_slug FROM sections"
+    );
 
-  const subSectionQuery = `
-    SELECT id, name, section_id, display_slug 
-    FROM sub_sections
-  `;
+    const [subSections] = await req.db.query(
+      "SELECT id, name, section_id, display_slug FROM sub_sections"
+    );
 
-  req.db.query(sectionQuery, (err, sections) => {
-    if (err) {
-      res.locals.sections = [];
-      res.locals.subSectionsBySection = {};
-      return next();
-    }
-
-    req.db.query(subSectionQuery, (err, subSections) => {
-      const grouped = {};
-
-      if (!err && subSections.length) {
-        subSections.forEach(s => {
-          if (!grouped[s.section_id]) {
-            grouped[s.section_id] = [];
-          }
-          grouped[s.section_id].push(s);
-        });
+    const grouped = {};
+    subSections.forEach(s => {
+      if (!grouped[s.section_id]) {
+        grouped[s.section_id] = [];
       }
-
-      res.locals.sections = sections;
-      res.locals.subSectionsBySection = grouped;
-      next();
+      grouped[s.section_id].push(s);
     });
-  });
-});
 
+    res.locals.sections = sections;
+    res.locals.subSectionsBySection = grouped;
+    next();
+  } catch (err) {
+    console.error("NAVBAR ERROR:", err);
+    res.locals.sections = [];
+    res.locals.subSectionsBySection = {};
+    next();
+  }
+});
 
 /* =========================
    ROUTES

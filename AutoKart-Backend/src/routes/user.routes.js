@@ -1,58 +1,59 @@
 const express = require("express");
 const router = express.Router();
 const PDFDocument = require("pdfkit");
+const otpStore = new Map();
+const { sendOTP } = require("../utils/sns");
 
 /* =========================
    USER ROUTES
 ========================= */
 
 /* HOME */
-router.get("/", (req, res) => {
-  const sectionQuery = `SELECT id, name, display_slug FROM sections`;
-  const subSectionQuery = `SELECT id, name, section_id, display_slug FROM sub_sections`;
-  const productQuery = `SELECT * FROM products WHERE is_active = 1`;
-  const sliderQuery = `SELECT * FROM sliders WHERE status = 'active'`;
+router.get("/", async (req, res) => {
+  try {
+    const [sections] = await req.db.query(
+      "SELECT id, name, display_slug FROM sections"
+    );
 
-  req.db.query(sectionQuery, (err, sections) => {
-    if (err) return res.send("Error loading sections");
+    const [subSections] = await req.db.query(
+      "SELECT id, name, section_id, display_slug FROM sub_sections"
+    );
 
-    req.db.query(subSectionQuery, (err, subSections) => {
-      if (err) return res.send("Error loading sub-sections");
+    const [products] = await req.db.query(
+      "SELECT * FROM products WHERE is_active = 1"
+    );
 
-      req.db.query(productQuery, (err, products) => {
-        if (err) return res.send("Error loading products");
+    const [sliders] = await req.db.query(
+      "SELECT * FROM sliders WHERE status = 'active'"
+    );
 
-        req.db.query(sliderQuery, (err, sliders) => {
-          if (err) return res.send("Error loading sliders");
-
-          const productsBySection = {};
-          products.forEach(p => {
-            if (!productsBySection[p.section_id]) {
-              productsBySection[p.section_id] = [];
-            }
-            productsBySection[p.section_id].push(p);
-          });
-
-          const subSectionsBySection = {};
-          subSections.forEach(s => {
-            if (!subSectionsBySection[s.section_id]) {
-              subSectionsBySection[s.section_id] = [];
-            }
-            subSectionsBySection[s.section_id].push(s);
-          });
-
-          res.render("user/home", {
-            sections,
-            productsBySection,
-            subSectionsBySection,
-            sliders
-          });
-        });
-      });
+    const productsBySection = {};
+    products.forEach(p => {
+      if (!productsBySection[p.section_id]) {
+        productsBySection[p.section_id] = [];
+      }
+      productsBySection[p.section_id].push(p);
     });
-  });
-});
 
+    const subSectionsBySection = {};
+    subSections.forEach(s => {
+      if (!subSectionsBySection[s.section_id]) {
+        subSectionsBySection[s.section_id] = [];
+      }
+      subSectionsBySection[s.section_id].push(s);
+    });
+
+    res.render("user/home", {
+      sections,
+      productsBySection,
+      subSectionsBySection,
+      sliders
+    });
+  } catch (err) {
+    console.error(err);
+    res.send("Error loading home");
+  }
+});
 
 /* =========================
    REGISTER PAGE
@@ -60,67 +61,66 @@ router.get("/", (req, res) => {
 router.get("/register", (req, res) => {
   res.render("user/Login/register");
 });
-/* =========================
-   REGISTER (SAVE USER)
-========================= */
-router.post("/register", (req, res) => {
-  const {
-    user_first_name,
-    user_last_name,
-    user_user_name,
-    user_mobile,
-    user_email,
-    user_password
-  } = req.body;
 
-  // 🔒 Basic validation
-  if (
-    !user_first_name ||
-    !user_last_name ||
-    !user_user_name ||
-    !user_mobile ||
-    !user_email ||
-    !user_password
-  ) {
-    return res.send("All fields are required");
+router.post("/auth/register/send-otp", async (req, res) => {
+  try {
+    const { mobile } = req.body;
+
+    if (!mobile || mobile.length !== 10) {
+      return res.json({ success: false, message: "Invalid mobile number" });
+    }
+
+    const [existing] = await req.db.query(
+  "SELECT user_id FROM user_create_account WHERE user_mobile = ?",
+  [mobile]
+);
+
+
+    if (existing.length > 0) {
+      return res.json({ success: false, message: "Mobile already registered" });
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000);
+
+    otpStore.set(mobile, {
+      otp,
+      expiresAt: Date.now() + 5 * 60 * 1000
+    });
+
+    await sendOTP(mobile, otp); // ✅ SNS SMS
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error("SNS ERROR:", err);
+    res.json({ success: false, message: "OTP send failed" });
+  }
+});
+
+
+router.post("/auth/register/verify-otp", async (req, res) => {
+  const { mobile, otp } = req.body;
+
+  const record = otpStore.get(mobile);
+
+  if (!record || record.expiresAt < Date.now()) {
+    return res.json({ success: false, message: "OTP expired" });
   }
 
-  const insertSql = `
-    INSERT INTO user_create_account
-    (
-      user_first_name,
-      user_last_name,
-      user_user_name,
-      user_mobile,
-      user_email,
-      user_password
-    )
-    VALUES (?, ?, ?, ?, ?, ?)
-  `;
+  if (record.otp != otp) {
+    return res.json({ success: false, message: "Invalid OTP" });
+  }
 
-  req.db.query(
-    insertSql,
-    [
-      user_first_name,
-      user_last_name,
-      user_user_name,
-      user_mobile,
-      user_email,
-      user_password
-    ],
-    (err, result) => {
-      if (err) {
-        console.error("REGISTER ERROR:", err);
-        return res.send("Registration failed");
-      }
+  // CREATE USER (ONLY MOBILE)
+ await req.db.query(
+  "INSERT INTO user_create_account (user_mobile) VALUES (?)",
+  [mobile]
+);
 
-      // ✅ IMPORTANT: DO NOT CREATE SESSION
-      // ✅ IMPORTANT: DO NOT LOGIN USER
 
-      // Redirect to login page
-      return res.redirect("/customer_login");
-    }
-  );
+
+  otpStore.delete(mobile);
+
+  res.json({ success: true });
 });
 
 /* =========================
@@ -129,82 +129,86 @@ router.post("/register", (req, res) => {
 router.get("/customer_login", (req, res) => {
   res.render("user/Login/customer_login");
 });
-/* =========================
-   LOGIN (USER)
-========================= */
-router.post("/customer_login", (req, res) => {
-  const { user_user_name, user_password } = req.body;
+router.post("/auth/login/send-otp", async (req, res) => {
+  try {
+    const { mobile } = req.body;
 
-  // 🔒 Basic validation
-  if (!user_user_name || !user_password) {
-    return res.send("Please enter username and password");
-  }
+const [users] = await req.db.query(
+  "SELECT * FROM user_create_account WHERE user_mobile = ? LIMIT 1",
+  [mobile]
+);
 
-  // 🔍 Check user credentials
-  const sql = `
-    SELECT *
-    FROM user_create_account
-    WHERE user_user_name = ? AND user_password = ?
-    LIMIT 1
-  `;
 
-  req.db.query(sql, [user_user_name, user_password], (err, results) => {
-    if (err) {
-      console.error("LOGIN ERROR:", err);
-      return res.send("Database error");
+    if (users.length === 0) {
+      return res.json({ success: false, message: "User not found" });
     }
 
-    if (results.length === 0) {
-      return res.send("Invalid credentials");
-    }
+    const otp = Math.floor(100000 + Math.random() * 900000);
 
-    const user = results[0];
-
-    /* =========================
-       ✅ CREATE SESSION USER
-    ========================= */
-
-    req.session.user = {
-      user_id: user.user_id,
-      user_user_name: user.user_user_name
-    };
-
-    /* =========================
-       🔥 FORCE SESSION SAVE
-    ========================= */
-
-    req.session.save(saveErr => {
-      if (saveErr) {
-        console.error("SESSION SAVE ERROR:", saveErr);
-        return res.send("Session error");
-      }
-
-      /* =========================
-         🔗 CLAIM GUEST CART
-      ========================= */
-
-      const sessionId = req.sessionID;
-
-      req.db.query(
-        `
-        UPDATE cart
-        SET user_id = ?
-        WHERE session_id = ?
-          AND user_id IS NULL
-        `,
-        [user.user_id, sessionId],
-        cartErr => {
-          if (cartErr) {
-            console.error("CART CLAIM ERROR:", cartErr);
-          }
-
-          // ✅ LOGIN COMPLETE
-          return res.redirect("/");
-        }
-      );
+    otpStore.set(mobile, {
+      otp,
+      expiresAt: Date.now() + 5 * 60 * 1000
     });
+
+    await sendOTP(mobile, otp); // 🔥 REAL SMS
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error("LOGIN OTP SNS ERROR:", err);
+    res.json({ success: false, message: "OTP send failed" });
+  }
+});
+
+router.post("/auth/login/verify-otp", async (req, res) => {
+  const { mobile, otp } = req.body;
+
+  const record = otpStore.get(mobile);
+ if (!record || record.expiresAt < Date.now()) {
+  return res.json({ success: false, message: "OTP expired" });
+}
+
+if (record.otp != otp) {
+  return res.json({ success: false, message: "Invalid OTP" });
+}
+
+const [users] = await req.db
+  .promise()
+  .query(
+    "SELECT * FROM user_create_account WHERE user_mobile = ? LIMIT 1",
+    [mobile]
+  );
+
+
+
+
+  const user = users[0];
+
+  /* 🔥 CREATE SESSION — SAME AS BEFORE */
+  req.session.user = {
+    user_id: user.user_id
+  };
+
+  req.session.save(() => {
+    const sessionId = req.sessionID;
+
+    // CLAIM GUEST CART
+    req.db.query(
+      `
+      UPDATE cart
+      SET user_id = ?
+      WHERE session_id = ?
+        AND user_id IS NULL
+      `,
+      [user.user_id, sessionId],
+      () => {
+        otpStore.delete(mobile);
+        res.json({ success: true });
+      }
+    );
   });
 });
+
+
 
 /* =========================
    LOGOUT
@@ -227,11 +231,11 @@ router.get("/my_profile", (req, res) => {
     return res.redirect("/customer_login");
   }
 
-  const username = req.session.user.user_user_name;
+  const userId = req.session.user.user_id;
 
   req.db.query(
-    "SELECT * FROM user_create_account WHERE user_user_name = ?",
-    [username],
+    "SELECT * FROM user_create_account WHERE user_id = ?",
+    [userId],
     (err, result) => {
       if (err) return res.send("Database error");
       if (result.length === 0) return res.send("User not found");
@@ -241,11 +245,6 @@ router.get("/my_profile", (req, res) => {
       });
     }
   );
-});
-
-router.get("/test-session-write", (req, res) => {
-  req.session.test = "hello";
-  res.send("session written");
 });
 
 
@@ -954,6 +953,13 @@ req.db.query(
 
 
 
+
+
+
+
+
+
+
 /* =========================
    CHECKOUT (AMAZON / FLIPKART STYLE)
    SOURCE: checkout_sessions
@@ -1217,10 +1223,12 @@ router.post("/pay", (req, res) => {
               /* =====================================================
                  6️⃣ CLEAR CART
               ===================================================== */
-              req.db.query(
+              
+               req.db.query(
                 "DELETE FROM cart WHERE session_id = ?",
-                [sessionId, userId],
-                err => {
+               [sessionId],
+                 err => {
+
                   if (err) {
                     console.error("❌ CART CLEAR ERROR:", err);
                   }

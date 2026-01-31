@@ -124,28 +124,148 @@ body {
 
   <!-- RIGHT SIDE -->
   <div class="right-box">
-    <form action="/customer_login" method="post">
+   <form id="otpLoginForm">
 
+  <!-- MOBILE INPUT -->
+  <label>Enter Mobile Number</label>
+  <input 
+    type="text" 
+    name="mobile" 
+    id="mobile"
+    placeholder="10-digit mobile number"
+    maxlength="10"
+    required
+  >
 
-User Name
-      <input type="text" name="user_user_name" placeholder="Username" required>
+  <!-- OTP INPUT (HIDDEN INITIALLY) -->
+  <div id="otpSection" style="display:none;">
+    <label>Enter OTP</label>
+    <input 
+      type="text" 
+      name="otp"
+      id="otp"
+      placeholder="Enter OTP"
+      maxlength="6"
+    >
+  </div>
 
-Password      
-      <input type="password" name="user_password" placeholder="Password" required>
+  <p class="terms">
+    By continuing, you agree to Flipkart's
+    <span>Terms of Use</span> and <span>Privacy Policy</span>.
+  </p>
 
-      <p class="terms">
-        By continuing, you agree to Flipkart's
-        <span>Terms of Use</span> and <span>Privacy Policy</span>.
-      </p>
+  <!-- BUTTON -->
+  <button type="button" class="btn-primary" id="sendOtpBtn">
+    Request OTP
+  </button>
 
-      <button type="submit" class="btn-primary">Login Account </button>
+  <button 
+    type="button" 
+    class="btn-primary" 
+    id="verifyOtpBtn" 
+    style="display:none;"
+  >
+    Verify & Login
+  </button>
 
-      <a href="/register" class="login-link">Create Account Here</a>
+  <a href="/register" class="login-link">Create Account Here</a>
 
-    </form>
+</form>
+
+    
   </div>
 
 </div>
+<script>
+  const sendOtpBtn = document.getElementById("sendOtpBtn");
+  const verifyOtpBtn = document.getElementById("verifyOtpBtn");
+  const otpSection = document.getElementById("otpSection");
+
+  const mobileInput = document.getElementById("mobile");
+  const otpInput = document.getElementById("otp");
+
+  /* =========================
+     SEND OTP (LOGIN)
+  ========================= */
+  sendOtpBtn.addEventListener("click", async () => {
+    const mobile = mobileInput.value.trim();
+
+    // Basic mobile validation
+    if (!/^[6-9]\d{9}$/.test(mobile)) {
+      alert("Enter a valid 10-digit mobile number");
+      return;
+    }
+
+    sendOtpBtn.disabled = true;
+    sendOtpBtn.innerText = "Sending OTP...";
+
+    try {
+      const res = await fetch("/auth/login/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mobile })
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        otpSection.style.display = "block";
+        sendOtpBtn.style.display = "none";
+        verifyOtpBtn.style.display = "block";
+        alert("OTP sent successfully");
+      } else {
+        alert(data.message || "Unable to send OTP");
+        sendOtpBtn.disabled = false;
+        sendOtpBtn.innerText = "Request OTP";
+      }
+    } catch (err) {
+      alert("Something went wrong. Please try again.");
+      sendOtpBtn.disabled = false;
+      sendOtpBtn.innerText = "Request OTP";
+    }
+  });
+
+  /* =========================
+     VERIFY OTP (LOGIN)
+  ========================= */
+  verifyOtpBtn.addEventListener("click", async () => {
+    const mobile = mobileInput.value.trim();
+    const otp = otpInput.value.trim();
+
+    if (otp.length !== 6) {
+      alert("Enter a valid 6-digit OTP");
+      return;
+    }
+
+    verifyOtpBtn.disabled = true;
+    verifyOtpBtn.innerText = "Verifying...";
+
+    try {
+      const res = await fetch("/auth/login/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mobile, otp })
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        // ✅ session created in backend
+        window.location.href = "/";
+      } else {
+        alert(data.message || "Invalid OTP");
+        verifyOtpBtn.disabled = false;
+        verifyOtpBtn.innerText = "Verify & Login";
+      }
+    } catch (err) {
+      alert("Something went wrong. Please try again.");
+      verifyOtpBtn.disabled = false;
+      verifyOtpBtn.innerText = "Verify & Login";
+    }
+  });
+</script>
+
+
 
 </body>
 </html>

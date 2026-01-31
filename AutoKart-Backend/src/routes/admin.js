@@ -627,5 +627,14 @@ router.post("/orders/:order_id/status", (req, res) => {
 
 
 
+// login zal 
+router.get("/become_dealer",function(req,res){
+  res.render("become_dealer/become_dealer_from")
+})
+
+router.post("/save_become_dealer_from",function(req,res){
+  res.send(req.body);
+});
+
 
 module.exports = router;
