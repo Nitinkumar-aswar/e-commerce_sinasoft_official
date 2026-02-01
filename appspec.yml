@@ -1,0 +1,19 @@
+version: 0.0
+os: linux
+
+files:
+  - source: /
+    destination: /var/www/ecommerce
+
+hooks:
+  BeforeInstall:
+    - location: scripts/stop_backend.sh
+      runas: ubuntu
+
+  AfterInstall:
+    - location: scripts/install_dependencies.sh
+      runas: ubuntu
+
+  ApplicationStart:
+    - location: scripts/start_backend.sh
+      runas: ubuntu
