@@ -4,6 +4,7 @@ os: linux
 files:
   - source: /
     destination: /var/www/ecommerce
+    overwrite: true
 
 hooks:
   BeforeInstall:
