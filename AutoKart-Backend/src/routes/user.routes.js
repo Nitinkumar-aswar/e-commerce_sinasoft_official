@@ -1,59 +1,58 @@
 const express = require("express");
 const router = express.Router();
 const PDFDocument = require("pdfkit");
-const otpStore = new Map();
-const { sendOTP } = require("../utils/sns");
 
 /* =========================
    USER ROUTES
 ========================= */
 
 /* HOME */
-router.get("/", async (req, res) => {
-  try {
-    const [sections] = await req.db.query(
-      "SELECT id, name, display_slug FROM sections"
-    );
+router.get("/", (req, res) => {
+  const sectionQuery = `SELECT id, name, display_slug FROM sections`;
+  const subSectionQuery = `SELECT id, name, section_id, display_slug FROM sub_sections`;
+  const productQuery = `SELECT * FROM products WHERE is_active = 1`;
+  const sliderQuery = `SELECT * FROM sliders WHERE status = 'active'`;
 
-    const [subSections] = await req.db.query(
-      "SELECT id, name, section_id, display_slug FROM sub_sections"
-    );
+  req.db.query(sectionQuery, (err, sections) => {
+    if (err) return res.send("Error loading sections");
 
-    const [products] = await req.db.query(
-      "SELECT * FROM products WHERE is_active = 1"
-    );
+    req.db.query(subSectionQuery, (err, subSections) => {
+      if (err) return res.send("Error loading sub-sections");
 
-    const [sliders] = await req.db.query(
-      "SELECT * FROM sliders WHERE status = 'active'"
-    );
+      req.db.query(productQuery, (err, products) => {
+        if (err) return res.send("Error loading products");
 
-    const productsBySection = {};
-    products.forEach(p => {
-      if (!productsBySection[p.section_id]) {
-        productsBySection[p.section_id] = [];
-      }
-      productsBySection[p.section_id].push(p);
+        req.db.query(sliderQuery, (err, sliders) => {
+          if (err) return res.send("Error loading sliders");
+
+          const productsBySection = {};
+          products.forEach(p => {
+            if (!productsBySection[p.section_id]) {
+              productsBySection[p.section_id] = [];
+            }
+            productsBySection[p.section_id].push(p);
+          });
+
+          const subSectionsBySection = {};
+          subSections.forEach(s => {
+            if (!subSectionsBySection[s.section_id]) {
+              subSectionsBySection[s.section_id] = [];
+            }
+            subSectionsBySection[s.section_id].push(s);
+          });
+
+          res.render("user/home", {
+            sections,
+            productsBySection,
+            subSectionsBySection,
+            sliders
+          });
+        });
+      });
     });
-
-    const subSectionsBySection = {};
-    subSections.forEach(s => {
-      if (!subSectionsBySection[s.section_id]) {
-        subSectionsBySection[s.section_id] = [];
-      }
-      subSectionsBySection[s.section_id].push(s);
-    });
-
-    res.render("user/home", {
-      sections,
-      productsBySection,
-      subSectionsBySection,
-      sliders
-    });
-  } catch (err) {
-    console.error(err);
-    res.send("Error loading home");
-  }
+  });
 });
+
 
 /* =========================
    REGISTER PAGE
@@ -61,66 +60,67 @@ router.get("/", async (req, res) => {
 router.get("/register", (req, res) => {
   res.render("user/Login/register");
 });
+/* =========================
+   REGISTER (SAVE USER)
+========================= */
+router.post("/register", (req, res) => {
+  const {
+    user_first_name,
+    user_last_name,
+    user_user_name,
+    user_mobile,
+    user_email,
+    user_password
+  } = req.body;
 
-router.post("/auth/register/send-otp", async (req, res) => {
-  try {
-    const { mobile } = req.body;
+  // 🔒 Basic validation
+  if (
+    !user_first_name ||
+    !user_last_name ||
+    !user_user_name ||
+    !user_mobile ||
+    !user_email ||
+    !user_password
+  ) {
+    return res.send("All fields are required");
+  }
 
-    if (!mobile || mobile.length !== 10) {
-      return res.json({ success: false, message: "Invalid mobile number" });
+  const insertSql = `
+    INSERT INTO user_create_account
+    (
+      user_first_name,
+      user_last_name,
+      user_user_name,
+      user_mobile,
+      user_email,
+      user_password
+    )
+    VALUES (?, ?, ?, ?, ?, ?)
+  `;
+
+  req.db.query(
+    insertSql,
+    [
+      user_first_name,
+      user_last_name,
+      user_user_name,
+      user_mobile,
+      user_email,
+      user_password
+    ],
+    (err, result) => {
+      if (err) {
+        console.error("REGISTER ERROR:", err);
+        return res.send("Registration failed");
+      }
+
+      // ✅ IMPORTANT: DO NOT CREATE SESSION
+      // ✅ IMPORTANT: DO NOT LOGIN USER
+
+      // Redirect to login page
+      return res.redirect("/customer_login");
     }
-
-    const [existing] = await req.db.query(
-  "SELECT user_id FROM user_create_account WHERE user_mobile = ?",
-  [mobile]
-);
-
-
-    if (existing.length > 0) {
-      return res.json({ success: false, message: "Mobile already registered" });
-    }
-
-    const otp = Math.floor(100000 + Math.random() * 900000);
-
-    otpStore.set(mobile, {
-      otp,
-      expiresAt: Date.now() + 5 * 60 * 1000
-    });
-
-    await sendOTP(mobile, otp); // ✅ SNS SMS
-
-    res.json({ success: true });
-  } catch (err) {
-    console.error("SNS ERROR:", err);
-    res.json({ success: false, message: "OTP send failed" });
-  }
-});
-
-
-router.post("/auth/register/verify-otp", async (req, res) => {
-  const { mobile, otp } = req.body;
-
-  const record = otpStore.get(mobile);
-
-  if (!record || record.expiresAt < Date.now()) {
-    return res.json({ success: false, message: "OTP expired" });
-  }
-
-  if (record.otp != otp) {
-    return res.json({ success: false, message: "Invalid OTP" });
-  }
-
-  // CREATE USER (ONLY MOBILE)
- await req.db.query(
-  "INSERT INTO user_create_account (user_mobile) VALUES (?)",
-  [mobile]
-);
-
-
-
-  otpStore.delete(mobile);
-
-  res.json({ success: true });
+  );
 });
 
 /* =========================
@@ -129,86 +129,82 @@ router.post("/auth/register/verify-otp", async (req, res) => {
 router.get("/customer_login", (req, res) => {
   res.render("user/Login/customer_login");
 });
-router.post("/auth/login/send-otp", async (req, res) => {
-  try {
-    const { mobile } = req.body;
+/* =========================
+   LOGIN (USER)
+========================= */
+router.post("/customer_login", (req, res) => {
+  const { user_user_name, user_password } = req.body;
 
-const [users] = await req.db.query(
-  "SELECT * FROM user_create_account WHERE user_mobile = ? LIMIT 1",
-  [mobile]
-);
+  // 🔒 Basic validation
+  if (!user_user_name || !user_password) {
+    return res.send("Please enter username and password");
+  }
 
+  // 🔍 Check user credentials
+  const sql = `
+    SELECT *
+    FROM user_create_account
+    WHERE user_user_name = ? AND user_password = ?
+    LIMIT 1
+  `;
 
-    if (users.length === 0) {
-      return res.json({ success: false, message: "User not found" });
+  req.db.query(sql, [user_user_name, user_password], (err, results) => {
+    if (err) {
+      console.error("LOGIN ERROR:", err);
+      return res.send("Database error");
     }
 
-    const otp = Math.floor(100000 + Math.random() * 900000);
+    if (results.length === 0) {
+      return res.send("Invalid credentials");
+    }
 
-    otpStore.set(mobile, {
-      otp,
-      expiresAt: Date.now() + 5 * 60 * 1000
-    });
+    const user = results[0];
 
-    await sendOTP(mobile, otp); // 🔥 REAL SMS
+    /* =========================
+       ✅ CREATE SESSION USER
+    ========================= */
 
-    res.json({ success: true });
-  } catch (err) {
-    console.error("LOGIN OTP SNS ERROR:", err);
-    res.json({ success: false, message: "OTP send failed" });
-  }
-});
+    req.session.user = {
+      user_id: user.user_id,
+      user_user_name: user.user_user_name
+    };
 
-router.post("/auth/login/verify-otp", async (req, res) => {
-  const { mobile, otp } = req.body;
+    /* =========================
+       🔥 FORCE SESSION SAVE
+    ========================= */
 
-  const record = otpStore.get(mobile);
- if (!record || record.expiresAt < Date.now()) {
-  return res.json({ success: false, message: "OTP expired" });
-}
-
-if (record.otp != otp) {
-  return res.json({ success: false, message: "Invalid OTP" });
-}
-
-const [users] = await req.db
-  .promise()
-  .query(
-    "SELECT * FROM user_create_account WHERE user_mobile = ? LIMIT 1",
-    [mobile]
-  );
-
-
-
-
-  const user = users[0];
-
-  /* 🔥 CREATE SESSION — SAME AS BEFORE */
-  req.session.user = {
-    user_id: user.user_id
-  };
-
-  req.session.save(() => {
-    const sessionId = req.sessionID;
-
-    // CLAIM GUEST CART
-    req.db.query(
-      `
-      UPDATE cart
-      SET user_id = ?
-      WHERE session_id = ?
-        AND user_id IS NULL
-      `,
-      [user.user_id, sessionId],
-      () => {
-        otpStore.delete(mobile);
-        res.json({ success: true });
+    req.session.save(saveErr => {
+      if (saveErr) {
+        console.error("SESSION SAVE ERROR:", saveErr);
+        return res.send("Session error");
       }
-    );
+
+      /* =========================
+         🔗 CLAIM GUEST CART
+      ========================= */
+
+      const sessionId = req.sessionID;
+
+      req.db.query(
+        `
+        UPDATE cart
+        SET user_id = ?
+        WHERE session_id = ?
+          AND user_id IS NULL
+        `,
+        [user.user_id, sessionId],
+        cartErr => {
+          if (cartErr) {
+            console.error("CART CLAIM ERROR:", cartErr);
+          }
+
+          // ✅ LOGIN COMPLETE
+          return res.redirect("/");
+        }
+      );
+    });
   });
 });
-
-
 
 /* =========================
    LOGOUT
@@ -231,11 +227,11 @@ router.get("/my_profile", (req, res) => {
     return res.redirect("/customer_login");
   }
 
-  const userId = req.session.user.user_id;
+  const username = req.session.user.user_user_name;
 
   req.db.query(
-    "SELECT * FROM user_create_account WHERE user_id = ?",
-    [userId],
+    "SELECT * FROM user_create_account WHERE user_user_name = ?",
+    [username],
     (err, result) => {
       if (err) return res.send("Database error");
       if (result.length === 0) return res.send("User not found");
@@ -245,6 +241,11 @@ router.get("/my_profile", (req, res) => {
       });
     }
   );
+});
+
+router.get("/test-session-write", (req, res) => {
+  req.session.test = "hello";
+  res.send("session written");
 });
 
 
@@ -306,12 +307,23 @@ router.get("/orders/:orderId", (req, res) => {
 
   /* 1️⃣ Fetch order header */
   const orderSql = `
-    SELECT *
-    FROM orders
-    WHERE order_id = ?
-      AND user_id = ?
-    LIMIT 1
-  `;
+  SELECT 
+    o.*,
+    a.full_name,
+    a.mobile,
+    a.address_line,
+    a.landmark,
+    a.city,
+    a.state,
+    a.pincode,
+    a.address_type
+  FROM orders o
+  JOIN user_addresses a ON o.address_id = a.address_id
+  WHERE o.order_id = ?
+    AND o.user_id = ?
+  LIMIT 1
+`;
+
 
   req.db.query(orderSql, [orderId, userId], (err, orderRows) => {
     if (err || orderRows.length === 0) {
@@ -363,13 +375,26 @@ router.get("/orders/:orderId/invoice", (req, res) => {
   const orderId = req.params.orderId;
 
   /* 1️⃣ Fetch order */
-  const orderSql = `
-    SELECT *
-    FROM orders
-    WHERE order_id = ?
-      AND user_id = ?
-    LIMIT 1
-  `;
+ const orderSql = `
+  SELECT 
+    o.order_id,
+    o.created_at,
+    o.payment_method,
+    a.full_name,
+    a.mobile,
+    a.address_type,
+    a.address_line,
+    a.city,
+    a.state,
+    a.pincode
+  FROM orders o
+  JOIN user_addresses a 
+    ON o.address_id = a.address_id
+  WHERE o.order_id = ?
+    AND o.user_id = ?
+  LIMIT 1
+`;
+
 
   req.db.query(orderSql, [orderId, userId], (err, orderRows) => {
     if (err || orderRows.length === 0) {
@@ -473,7 +498,6 @@ router.post("/orders/:orderId/cancel", (req, res) => {
   });
 });
 
-
 function generateInvoicePDF(res, order, items, totalAmount) {
   const doc = new PDFDocument({ margin: 40 });
 
@@ -494,11 +518,17 @@ function generateInvoicePDF(res, order, items, totalAmount) {
   doc.text(`Payment Method: ${order.payment_method}`);
   doc.moveDown();
 
-  // CUSTOMER
-  doc.text("Bill To:");
-  doc.text("Darshan Yadav");
-  doc.text("Pune, Maharashtra");
-  doc.text("Phone: 9356688471");
+  // DELIVERY ADDRESS
+  doc.fontSize(12).text("Delivery Address:", { underline: true });
+  doc.moveDown(0.5);
+
+  doc.fontSize(11).text(order.full_name);
+  doc.text(order.address_type);
+  doc.text(
+    `${order.address_line}, ${order.city}, ${order.state} - ${order.pincode}`
+  );
+  doc.text(`Phone: ${order.mobile}`);
+
   doc.moveDown();
 
   // ITEMS
@@ -965,9 +995,6 @@ req.db.query(
    SOURCE: checkout_sessions
 ========================= */
 router.get("/checkout", (req, res) => {
-  /* =========================
-     AUTH CHECK
-  ========================= */
   if (!req.session.user) {
     return res.redirect("/customer_login");
   }
@@ -975,34 +1002,15 @@ router.get("/checkout", (req, res) => {
   const userId = req.session.user.user_id;
   const checkoutId = req.query.checkout_id;
 
-  /* =========================
-     VALIDATE CHECKOUT SESSION
-  ========================= */
   if (!checkoutId) {
     return res.send("Checkout session missing");
   }
 
   /* =========================
-     DELIVERY ADDRESS (TEMP)
+     1️⃣ FETCH CHECKOUT SESSION
   ========================= */
-  const address = {
-    name: "Darshan Yadav",
-    address: "17 Kartikeyan Boys Hostel, Tathawade",
-    city: "Pimpri Chinchwad",
-    state: "Maharashtra",
-    pincode: "411033"
-  };
-
-  /* =====================================================
-     1️⃣ FETCH CHECKOUT SESSION (HEADER)
-  ===================================================== */
   const checkoutSql = `
-    SELECT
-      checkout_id,
-      user_id,
-      total_amount,
-      total_items,
-      status
+    SELECT checkout_id, total_amount, total_items, status
     FROM checkout_sessions
     WHERE checkout_id = ?
       AND user_id = ?
@@ -1011,49 +1019,70 @@ router.get("/checkout", (req, res) => {
   `;
 
   req.db.query(checkoutSql, [checkoutId, userId], (err, checkoutRows) => {
-    if (err) {
+    if (err || checkoutRows.length === 0) {
       console.error("❌ CHECKOUT SESSION ERROR:", err);
-      return res.send("Checkout error");
-    }
-
-    if (checkoutRows.length === 0) {
-      return res.send("Invalid or expired checkout session");
+      return res.send("Invalid checkout session");
     }
 
     const checkout = checkoutRows[0];
 
-    /* =====================================================
-       2️⃣ FETCH CHECKOUT SESSION ITEMS
-    ===================================================== */
+    /* =========================
+       2️⃣ FETCH CHECKOUT ITEMS
+    ========================= */
     const itemsSql = `
-      SELECT
-        product_id,
-        product_name,
-        product_image,
-        price,
-        quantity
+      SELECT product_id, product_name, product_image, price, quantity
       FROM checkout_session_items
       WHERE checkout_id = ?
         AND user_id = ?
     `;
 
     req.db.query(itemsSql, [checkoutId, userId], (err, items) => {
-      if (err) {
+      if (err || items.length === 0) {
         console.error("❌ CHECKOUT ITEMS ERROR:", err);
-        return res.send("Checkout error");
+        return res.send("Checkout items missing");
       }
 
-      if (items.length === 0) {
-        return res.send("No items found for checkout");
-      }
+      /* =========================
+         3️⃣ FETCH LATEST ADDRESS
+      ========================= */
+      const addressSql = `
+        SELECT *
+        FROM user_addresses
+        WHERE user_id = ?
+        ORDER BY created_at DESC
+        
+      `;
 
-      /* =====================================================
-         3️⃣ RENDER CHECKOUT PAGE
-      ===================================================== */
-      return res.render("user/checkout", {
-        checkout, // checkout_id, totals
-        items,    // item snapshot
-        address
+      req.db.query(addressSql, [userId], (addrErr, addressRows) => {
+        if (addrErr) {
+          console.error("❌ ADDRESS FETCH ERROR:", addrErr);
+          return res.send("Address error");
+        }
+
+       const addresses = addressRows;
+let selectedAddress = null;
+
+// if user selected an address from modal
+if (req.session.selectedAddressId) {
+  selectedAddress = addresses.find(
+    a => a.address_id == req.session.selectedAddressId
+  );
+}
+
+// fallback: first address
+if (!selectedAddress && addresses.length > 0) {
+  selectedAddress = addresses[0];
+}
+
+
+res.render("user/checkout", {
+  checkout,
+  items,
+  addresses,
+  selectedAddress
+});
+
+
       });
     });
   });
@@ -1061,6 +1090,49 @@ router.get("/checkout", (req, res) => {
 
 
 
+router.post("/select-address", (req, res) => {
+  if (!req.session || !req.session.user) {
+    return res.json({ success: false });
+  }
+
+  const userId = req.session.user.user_id;
+  const { address_id } = req.body;
+
+  req.db.query(
+    `
+    UPDATE user_addresses
+    SET is_selected = CASE
+      WHEN address_id = ? THEN 1
+      ELSE 0
+    END
+    WHERE user_id = ?
+    `,
+    [address_id, userId],
+    err => {
+      if (err) {
+        console.error("❌ ADDRESS SELECT ERROR:", err);
+        return res.json({ success: false });
+      }
+
+      return res.json({ success: true });
+    }
+  );
+});
+
+
+router.post("/checkout/select-address", (req, res) => {
+  if (!req.session || !req.session.user) {
+    return res.status(401).json({ success: false });
+  }
+
+  const userId = req.session.user.user_id;
+  const { address_id } = req.body;
+
+  // save selected address in session
+  req.session.selectedAddressId = address_id;
+
+  res.json({ success: true });
+});
 
 /* =========================
    PAY (CHECKOUT FLOW)
@@ -1135,40 +1207,75 @@ router.post("/pay", (req, res) => {
         return res.send("No items found for checkout");
       }
 
-      /* =====================================================
-         3️⃣ CREATE ORDER
-      ===================================================== */
-      const orderId = "ORD" + Date.now();
 
-      const orderSql = `
-        INSERT INTO orders
-        (
-          order_id,
-          user_id,
-          checkout_id,
-          total_amount,
-          total_items,
-          order_status,
-          payment_method,
-          payment_status
-        )
-        VALUES (?, ?, ?, ?, ?, 'PLACED', 'COD', 'PENDING')
-      `;
+ // 3.5️⃣ FETCH SELECTED ADDRESS
+const addressSql = req.session.selectedAddressId
+  ? `
+      SELECT *
+      FROM user_addresses
+      WHERE address_id = ?
+        AND user_id = ?
+      LIMIT 1
+    `
+  : `
+      SELECT *
+      FROM user_addresses
+      WHERE user_id = ?
+      ORDER BY created_at DESC
+      LIMIT 1
+    `;
 
-      req.db.query(
-        orderSql,
-        [
-          orderId,
-          userId,
-          checkoutId,
-          checkout.total_amount,
-          checkout.total_items
-        ],
-        err => {
-          if (err) {
-            console.error("❌ ORDER INSERT ERROR:", err);
-            return res.send("Order failed");
-          }
+const params = req.session.selectedAddressId
+  ? [req.session.selectedAddressId, userId]
+  : [userId];
+
+req.db.query(addressSql, params, (addrErr, addrRows) => {
+  if (addrErr || addrRows.length === 0) {
+    return res.send("Address not found");
+  }
+
+  const address = addrRows[0];
+
+
+    /* =====================================================
+       3️⃣ CREATE ORDER
+    ===================================================== */
+    const orderId = "ORD" + Date.now();
+
+    const orderSql = `
+  INSERT INTO orders
+  (
+    order_id,
+    user_id,
+    checkout_id,
+    address_id,
+    total_amount,
+    total_items,
+    order_status,
+    payment_method,
+    payment_status
+  )
+  VALUES (?, ?, ?, ?, ?, ?, 'PLACED', 'COD', 'PENDING')
+`;
+
+
+    
+   req.db.query(
+  orderSql,
+  [
+    orderId,
+    userId,
+    checkoutId,
+    address.address_id, // 🔥 THIS LINE
+    checkout.total_amount,
+    checkout.total_items
+  ],
+
+      err => {
+        if (err) {
+          console.error("❌ ORDER INSERT ERROR:", err);
+          return res.send("Order failed");
+        }
 
           /* =====================================================
              4️⃣ INSERT ORDER ITEMS
@@ -1223,12 +1330,10 @@ router.post("/pay", (req, res) => {
               /* =====================================================
                  6️⃣ CLEAR CART
               ===================================================== */
-              
-               req.db.query(
+              req.db.query(
                 "DELETE FROM cart WHERE session_id = ?",
-               [sessionId],
-                 err => {
-
+                [sessionId, userId],
+                err => {
                   if (err) {
                     console.error("❌ CART CLEAR ERROR:", err);
                   }
@@ -1237,7 +1342,8 @@ router.post("/pay", (req, res) => {
                   console.log("✅ ORDER PLACED SUCCESSFULLY:", orderId);
 
                   return res.redirect("/payment-success?method=COD");
-                }
+                
+              }
               );
             });
           });
@@ -1246,6 +1352,115 @@ router.post("/pay", (req, res) => {
     });
   });
 });
+});
+router.post("/save-address", (req, res) => {
+  if (!req.session || !req.session.user) {
+    return res.status(401).json({ success: false });
+  }
+
+  const userId = req.session.user.user_id;
+
+  const {
+    address_id,
+    full_name,
+    mobile,
+    address_line,
+    landmark,
+    city,
+    state,
+    pincode,
+    address_type
+  } = req.body;
+
+  console.log("📦 SAVE ADDRESS:", req.body);
+
+  // ======================
+  // UPDATE ADDRESS
+  // ======================
+  if (address_id) {
+    req.db.query(
+      `
+      UPDATE user_addresses
+      SET
+        full_name = ?,
+        mobile = ?,
+        address_line = ?,
+        landmark = ?,
+        city = ?,
+        state = ?,
+        pincode = ?,
+        address_type = ?
+      WHERE address_id = ?
+        AND user_id = ?
+      `,
+      [
+        full_name,
+        mobile,
+        address_line,
+        landmark,
+        city,
+        state,
+        pincode,
+        address_type,
+        address_id,
+        userId
+      ],
+      (err, result) => {
+        if (err) {
+          console.error("❌ ADDRESS UPDATE ERROR:", err);
+          return res.json({ success: false });
+        }
+
+        console.log("✅ ADDRESS UPDATED");
+        return res.json({ success: true, action: "updated" });
+      }
+    );
+    return; // 🔴 VERY IMPORTANT
+  }
+
+  // ======================
+  // INSERT ADDRESS
+  // ======================
+  req.db.query(
+    `
+    INSERT INTO user_addresses
+    (
+      user_id,
+      full_name,
+      mobile,
+      address_line,
+      landmark,
+      city,
+      state,
+      pincode,
+      address_type
+    )
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `,
+    [
+      userId,
+      full_name,
+      mobile,
+      address_line,
+      landmark,
+      city,
+      state,
+      pincode,
+      address_type
+    ],
+    (err, result) => {
+      if (err) {
+        console.error("❌ ADDRESS INSERT ERROR:", err);
+        return res.json({ success: false });
+      }
+
+      console.log("✅ ADDRESS INSERTED");
+      return res.json({ success: true, action: "inserted" });
+    }
+  );
+});
+
+
 
 /* =========================
    PAYMENT SUCCESS (TEMP)

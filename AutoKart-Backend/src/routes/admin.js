@@ -632,9 +632,35 @@ router.get("/become_dealer",function(req,res){
   res.render("become_dealer/become_dealer_from")
 })
 
-router.post("/save_become_dealer_from",function(req,res){
-  res.send(req.body);
+
+router.post("/save_become_dealer_from", function (req, res) {
+
+  console.log("REQ BODY 👉", req.body);
+
+  const { full_name, mobile, email, city, dealer_type } = req.body;
+
+  const sql = `
+    INSERT INTO become_dealers
+    (full_name, mobile, email, city, dealer_type)
+    VALUES (?, ?, ?, ?, ?)
+  `;
+
+  req.db.query(sql, [full_name, mobile, email, city, dealer_type], function (err, result) {
+    if (err) {
+      console.error("❌ INSERT ERROR 👉", err);   
+      return res.status(500).json({
+        success: false,
+        error: err.message
+      });
+    }
+
+    res.json({
+      success: true,
+      insertId: result.insertId
+    });
+  });
 });
+
 
 
 module.exports = router;
