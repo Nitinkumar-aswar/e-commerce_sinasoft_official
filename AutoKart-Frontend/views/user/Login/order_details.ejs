@@ -314,66 +314,72 @@
 </div>
 
 
-    <!-- ===============================
-         RIGHT
-    ================================ -->
-    <div class="order-right">
+<!-- ===============================
+     RIGHT SIDE (STICKY INFO BOXES)
+=============================== -->
+<div class="order-right">
 
-      <div class="info-box">
-  <h3>Delivery details</h3>
+  <!-- DELIVERY DETAILS -->
+  <div class="info-box">
+    <h3>Delivery details</h3>
 
-  <p style="font-size:13px; color:#212121; font-weight:500;">
-    Home
-  </p>
+    <p style="font-size:13px; color:#212121; font-weight:500;">
+      <%= order.address_type %>
+    </p>
 
-  <p style="font-size:13px; color:#555; line-height:1.4;">
-    Indira College Rd, Tathawade, Pune, Maharashtra
-  </p>
+    <p style="font-size:13px; color:#555; line-height:1.4;">
+      <%= order.address_line %>,
+      <%= order.city %>,
+      <%= order.state %> - <%= order.pincode %>
+    </p>
 
-  <hr style="border:none; border-top:1px solid #eee; margin:12px 0;">
+    <hr style="border:none; border-top:1px solid #eee; margin:12px 0;">
 
-  <p style="font-size:13px;">
-    <strong>Darshan Yadav</strong> · 9356688471
-  </p>
-</div>
-
-
-     <div class="info-box">
-  <h3>Price details</h3>
-
-  <div class="price-row">
-    <span>Item price</span>
-    <span>₹<%= totalAmount.toFixed(2) %></span>
+    <p style="font-size:13px;">
+      <strong><%= order.full_name %></strong> · <%= order.mobile %>
+    </p>
   </div>
 
-  <div class="price-row">
-    <span>Delivery fee</span>
-    <span style="color:green;">FREE</span>
+  <!-- PRICE DETAILS -->
+  <div class="info-box">
+    <h3>Price details</h3>
+
+    <div class="price-row">
+      <span>Item price</span>
+      <span>₹<%= totalAmount.toFixed(2) %></span>
+    </div>
+
+    <div class="price-row">
+      <span>Delivery fee</span>
+      <span style="color:green;">FREE</span>
+    </div>
+
+    <hr style="border:none; border-top:1px dashed #ddd; margin:10px 0;">
+
+    <div class="price-row price-total">
+      <span>Total amount</span>
+      <span>₹<%= totalAmount.toFixed(2) %></span>
+    </div>
   </div>
 
-  <hr style="border:none; border-top:1px dashed #ddd; margin:10px 0;">
+  <!-- PAYMENT METHOD -->
+  <div class="info-box">
+    <h3>Payment method</h3>
 
-  <div class="price-row price-total">
-    <span>Total amount</span>
-    <span>₹<%= totalAmount.toFixed(2) %></span>
+    <p style="font-size:13px;">
+      <%= order.payment_method.toUpperCase() %>
+    </p>
+
+    <a
+      href="/orders/<%= order.order_id %>/invoice"
+      class="invoice-btn"
+      style="margin-top:12px; display:block; text-decoration:none;"
+    >
+      Download Invoice
+    </a>
   </div>
+
 </div>
-
-
-
-     <div class="info-box">
-  <h3>Payment method</h3>
-  <p style="font-size:13px;"><%= order.payment_method.toUpperCase() %></p>
-
-  <a 
-    href="/orders/<%= order.order_id %>/invoice"
-    class="invoice-btn"
-    style="margin-top:12px; display:block; text-decoration:none;"
-  >
-    Download Invoice
-  </a>
-</div>
-
 
 
       </div>

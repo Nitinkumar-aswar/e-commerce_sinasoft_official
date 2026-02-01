@@ -497,142 +497,29 @@ body {
 
   <!-- RIGHT SIDE -->
   <div class="right-box">
- <form id="registerOtpForm">
-
-  <input 
-    type="text" 
-    id="mobile"
-    placeholder="Enter Mobile Number"
-    maxlength="10"
-    required
-  >
-
-  <!-- OTP FIELD (HIDDEN INITIALLY) -->
-  <div id="otpSection" style="display:none;">
-    <input 
-      type="text"
-      id="otp"
-      placeholder="Enter OTP"
-      maxlength="6"
-      required
-    >
-  </div>
-
-  <p class="terms">
-    By continuing, you agree to AutoKart's
-    <span>Terms of Use</span> and <span>Privacy Policy</span>.
-  </p>
-
-  <button type="button" class="btn-primary" id="sendOtpBtn">
-    Request OTP
-  </button>
-
-  <button 
-    type="button" 
-    class="btn-primary" 
-    id="verifyOtpBtn"
-    style="display:none;"
-  >
-    Verify & Create Account
-  </button>
-
-  <a href="/customer_login" class="login-link">
-    Existing User? Log in
-  </a>
-
-</form>
+   <form action="/register" method="post">
 
 
+
+      <input type="text" name="user_first_name" placeholder="First Name" maxlength="20" required autocomplete="off">
+      <input type="text" name="user_last_name" placeholder="Last Name" maxlength="20" required autocomplete="off">
+      <input type="text" name="user_user_name" placeholder="Username" maxlength="15" required autocomplete="off">
+      <input type="number" name="user_mobile" placeholder="Mobile Number" maxlength="13" pattern="[0-9]{10}" required autocomplete="off">
+      <input type="email" name="user_email" placeholder="Email" maxlength="50" required autocomplete="off">
+      <input type="password" name="user_password" placeholder="Password" maxlength="20" required autocomplete="new-password" >
+
+      <p class="terms">
+        By continuing, you agree to AutoKart's
+        <span>Terms of Use</span> and <span>Privacy Policy</span>.
+      </p>
+
+      <button type="submit" class="btn-primary">Create Account</button>
+      <a href="/customer_login" class="login-link">Existing User? Log in</a>
+
+    </form>
   </div>
 
 </div>
-<script>
-  const sendOtpBtn = document.getElementById("sendOtpBtn");
-  const verifyOtpBtn = document.getElementById("verifyOtpBtn");
-  const otpSection = document.getElementById("otpSection");
-
-  const mobileInput = document.getElementById("mobile");
-  const otpInput = document.getElementById("otp");
-
-  /* =========================
-     SEND OTP (REGISTER)
-  ========================= */
-  sendOtpBtn.addEventListener("click", async () => {
-    const mobile = mobileInput.value.trim();
-
-    if (!/^[6-9]\d{9}$/.test(mobile)) {
-      alert("Enter a valid 10-digit mobile number");
-      return;
-    }
-
-    sendOtpBtn.disabled = true;
-    sendOtpBtn.innerText = "Sending OTP...";
-
-    try {
-      const res = await fetch("/auth/register/send-otp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mobile })
-      });
-
-      const data = await res.json();
-
-      if (data.success) {
-        otpSection.style.display = "block";
-        sendOtpBtn.style.display = "none";
-        verifyOtpBtn.style.display = "block";
-        alert("OTP sent successfully");
-      } else {
-        alert(data.message || "Failed to send OTP");
-        sendOtpBtn.disabled = false;
-        sendOtpBtn.innerText = "Request OTP";
-      }
-    } catch (err) {
-      alert("Something went wrong. Try again.");
-      sendOtpBtn.disabled = false;
-      sendOtpBtn.innerText = "Request OTP";
-    }
-  });
-
-  /* =========================
-     VERIFY OTP (REGISTER)
-  ========================= */
-  verifyOtpBtn.addEventListener("click", async () => {
-    const mobile = mobileInput.value.trim();
-    const otp = otpInput.value.trim();
-
-    if (otp.length !== 6) {
-      alert("Enter valid 6-digit OTP");
-      return;
-    }
-
-    verifyOtpBtn.disabled = true;
-    verifyOtpBtn.innerText = "Verifying...";
-
-    try {
-      const res = await fetch("/auth/register/verify-otp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mobile, otp })
-      });
-
-      const data = await res.json();
-
-      if (data.success) {
-        alert("Account created successfully");
-        window.location.href = "/customer_login";
-      } else {
-        alert(data.message || "Invalid OTP");
-        verifyOtpBtn.disabled = false;
-        verifyOtpBtn.innerText = "Verify & Create Account";
-      }
-    } catch (err) {
-      alert("Something went wrong. Try again.");
-      verifyOtpBtn.disabled = false;
-      verifyOtpBtn.innerText = "Verify & Create Account";
-    }
-  });
-</script>
 
 </body>
 </html>

@@ -1,10 +1,5 @@
 <link rel="stylesheet" href="/css/navbar.css">
-
-<link rel="stylesheet" href="/css/navbar.css">
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <!-- ================= TOP NAVBAR ================= -->
 <div class="top-navbar">
@@ -29,36 +24,44 @@
     </button>
     <div id="searchDropdown" class="search-dropdown"></div>
   </div>
+<div class="top-actions" style="display:flex; align-items:center; gap:15px;">
 
-  <!-- ACTIONS -->
-  <div class="top-actions">
+  <!-- LOGIN / USER DROPDOWN -->
+  <div class="dropdown">
+    <div class="action-item">
+      <i class="fa fa-user"></i>
 
-    <!-- LOGIN -->
-    <div class="dropdown">
-      <div class="action-item">
-        <i class="fa fa-user"></i>
+      <% if (currentUser) { %>
+        <span><%= currentUser.user_user_name %></span>
+      <% } else { %>
         <span>Login</span>
-        <i class="fa fa-caret-down"></i>
-      </div>
+      <% } %>
 
-      <div class="dropdown-menu">
+      <i class="fa fa-caret-down"></i>
+    </div>
+
+    <div class="dropdown-menu">
+      <% if (!currentUser) { %>
         <a href="/customer_login">Customer Login</a>
+      <% } %>
+
+      <% if (currentUser) { %>
         <a href="/my_profile">My Profile</a>
         <a href="/orders">Orders</a>
-      </div>
+        <a href="/logout">Logout</a>
+      <% } %>
     </div>
-
-    <!-- CART -->
-    <div class="action-item">
-      <a href="/cart" class="cart-link">
-        <i class="fa fa-shopping-cart"></i>
-        <span>Cart</span>
-      </a>
-    </div>
-
   </div>
-</div>
 
+  <!-- CART -->
+  <div class="action-item">
+    <a href="/cart" class="cart-link">
+      <i class="fa fa-shopping-cart"></i>
+      <span>Cart</span>
+    </a>
+  </div>
+
+</div>
 
 </div>
 
@@ -80,11 +83,7 @@
             <%= section.name %>
           </a>
 
-          <% if (
-            typeof subSectionsBySection !== "undefined" &&
-            subSectionsBySection[section.id]
-          ) { %>
-
+          <% if (subSectionsBySection && subSectionsBySection[section.id]) { %>
             <div class="nav-dropdown-menu">
               <% subSectionsBySection[section.id].forEach(sub => { %>
                 <a href="/sub-section/<%= sub.display_slug %>">
@@ -92,7 +91,6 @@
                 </a>
               <% }) %>
             </div>
-
           <% } %>
         </li>
 
@@ -100,13 +98,12 @@
     <% } %>
 
     <!-- STATIC LINKS -->
-   
     <li>
       <a href="/gallery">Gallery</a>
     </li>
 
     <li>
-      <a href="/dealer">Become Seller</a>
+      <a href="/admin/become_dealer">Become Dealer</a>
     </li>
 
     <li>
@@ -116,18 +113,8 @@
   </ul>
 </div>
 
-
-
-
 <script>
-
-
-
-
-
-
-
-  console.log("SEARCH JS LOADED");
+console.log("SEARCH JS LOADED");
 
 const input = document.getElementById("searchInput");
 const dropdown = document.getElementById("searchDropdown");
