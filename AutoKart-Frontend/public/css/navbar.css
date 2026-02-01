@@ -1,0 +1,475 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+/* ===============================
+   TOP NAVBAR
+================================ */
+.top-navbar {
+  display: flex;
+  align-items: center;
+  gap: 100px;
+
+  padding: 10px 40px;
+  height: 60px;
+
+  background-color: #ffffff;
+  border-bottom: 1px solid #ddd;
+
+  position: relative;
+  z-index: 10001;   /* 🔥 MUST BE ABOVE menu-navbar */
+}
+
+
+
+
+.logo {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.logo img {
+  height: 40px;        /* 🔥 controlled height */
+  display: block;      /* 🔥 removes inline gap */
+}
+
+
+/* ===============================
+   SEARCH
+================================ */
+
+.search-box {
+  flex: 1;
+  max-width: 650px;     /* 🔥 CONTROLLED WIDTH */
+  
+  display: flex;
+  position: relative;
+}
+
+.search-box input {
+  width: 100%;
+  height: 40px;
+  padding: 0 50px 0 15px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 2px;
+  outline: none;
+}
+
+.search-box button {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 60px;
+  height: 100%;
+  border: none;
+  background: #2874f0;         /* Flipkart blue */
+  color: #fff;
+  cursor: pointer;
+}
+
+.search-dropdown {
+  position: absolute;
+  top: 45px;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  display: none;
+  z-index: 9999;
+}
+
+.search-item {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  text-decoration: none;
+  color: #000;
+}
+
+.search-item img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+}
+
+.search-item:hover {
+  background: #f1f3f6;
+}
+
+
+.search-item .name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #212121;
+}
+
+.search-item .price {
+  font-size: 13px;
+  color: #388e3c;
+}
+
+
+/* ===============================
+   ACTIONS
+================================ */
+
+.top-actions {
+  margin-left: auto;     /* 🔥 THIS pushes it to the right edge */
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+
+.action-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* ===============================
+   SECOND NAVBAR
+================================ */
+
+.menu-navbar {
+  background-color: #1f212b;
+  position: relative;
+  z-index: 3000;
+}
+
+
+.menu-navbar ul {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+}
+
+.menu-navbar ul li {
+  padding: 14px 18px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* kill default anchor behavior */
+.menu-navbar a {
+  color: #ffffff;
+  text-decoration: none;
+  display: block;
+}
+
+.menu-navbar ul li:hover,
+.menu-navbar ul li.active {
+  background-color: #111;
+}
+
+/* ===============================
+   DROPDOWN
+================================ */
+
+.dropdown {
+  position: relative;
+}
+
+/* isolate dropdown from layout */
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+
+  background: #ffffff;
+  min-width: 260px;
+
+  display: none;
+  flex-direction: column;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 9999;
+
+  /* prevent stretch / overlay bugs */
+  white-space: normal;
+}
+
+/* ===== LOGIN DROPDOWN ITEMS FIX ===== */
+.top-actions .dropdown-menu a {
+  display: block;              /* 🔥 one below another */
+  width: 100%;
+
+  padding: 10px 16px;
+
+  text-decoration: none;       /* 🔥 remove underline */
+  color: #212121;
+  font-size: 14px;
+  font-weight: 500;
+
+  border-bottom: 1px solid #eee;
+}
+
+/* remove last line */
+.top-actions .dropdown-menu a:last-child {
+  border-bottom: none;
+}
+
+/* hover effect like Amazon */
+.top-actions .dropdown-menu a:hover {
+  background-color: #f1f3f6;
+}
+
+
+.dropdown-menu a:hover {
+  background: #f1f1f1;
+}
+
+.dropdown:hover > .dropdown-menu {
+  display: flex;
+}
+
+/* ===============================
+   MEGA MENU (SAFE & FINAL)
+================================ */
+
+/* parent anchor */
+.mega-dropdown {
+  position: relative;
+}
+
+/* mega menu panel */
+.mega-dropdown > .mega-menu {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: 1000px;
+  max-width: calc(100vw - 40px);   /* 🔥 prevent overflow */
+
+  background: #ffffff;
+  padding: 20px;
+
+  display: none;                   /* 🔥 hidden by default */
+  visibility: hidden;              /* 🔥 no layout bleed */
+  opacity: 0;
+
+  box-shadow: 0 6px 16px rgba(0,0,0,0.18);
+  z-index: 10000;
+
+  gap: 30px;
+}
+
+/* show only when parent is hovered */
+.mega-dropdown:hover > .mega-menu {
+  display: flex;
+  visibility: visible;
+  opacity: 1;
+}
+
+/* columns */
+.mega-column {
+  flex: 1;
+  min-width: 180px;
+}
+
+/* column headings */
+.mega-column h4 {
+  font-size: 15px;
+  margin-bottom: 10px;
+  color: #2874f0;
+  font-weight: 600;
+}
+
+/* links */
+.mega-column a {
+  display: block;
+  padding: 6px 0;
+  font-size: 14px;
+  color: #333;
+  text-decoration: none;
+}
+
+/* hover */
+.mega-column a:hover {
+  color: #2874f0;
+  text-decoration: underline;
+}
+
+
+/* ===============================
+   CART
+================================ */
+.cart-link,
+.cart-link:visited,
+.cart-link:hover,
+.cart-link:active {
+  color: #000000; /* keep your cart color */
+  text-decoration: none;
+}
+
+.cart-link i {
+  color: inherit;
+}
+/* ==================================================
+   AMAZON-STYLE MOBILE HEADER (FINAL & CLEAN)
+================================================== */
+@media (max-width: 768px) {
+
+  /* ===============================
+     TOP NAVBAR
+  =============================== */
+  .top-navbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    padding: 6px 15px;
+    height: auto;              /* override desktop height */
+  }
+
+  /* ---------- LOGO ---------- */
+  .logo {
+    order: 1;
+  }
+
+  .logo img {
+    height: 26px;
+  }
+
+  /* ---------- ACTION ICONS ---------- */
+  .top-actions {
+    order: 2;
+    margin-left: auto;
+  }
+
+  .action-item span {
+    display: none;             /* icons only */
+  }
+
+  /* ===============================
+     SEARCH BAR (SECOND ROW)
+  =============================== */
+  .search-box {
+    order: 3;
+    flex: 0 0 100%;            /* force full-width row */
+    max-width: 100%;
+    margin-top: 6px;
+  }
+
+  .search-box input {
+    width: 100%;
+    height: 38px;
+  }
+
+  /* ===============================
+     MOBILE MAIN MENU (SCROLLABLE)
+  =============================== */
+  .menu-navbar {
+    height: 40px;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .menu-navbar ul {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100%;
+    padding: 0 6px;
+    margin: 0;
+  }
+
+  .menu-navbar ul li {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 10px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  .menu-navbar ul li a {
+    padding: 0;
+    line-height: 1;
+  }
+
+}
+
+/* ======================================
+   LOGIN DROPDOWN — FINAL FIX
+====================================== */
+
+/* anchor login dropdown */
+.top-actions .dropdown {
+  position: relative;
+}
+
+/* override generic dropdown-menu */
+.top-actions .dropdown-menu {
+  left: auto !important;   /* 🔥 cancel global left:0 */
+  right: 0;                /* 🔥 align under Login */
+
+  top: 100%;
+  min-width: 180px;
+
+  display: none;
+  flex-direction: column;
+
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 10000;
+}
+
+/* show on hover */
+.top-actions .dropdown:hover > .dropdown-menu {
+  display: flex;
+}
+/* ===============================
+   CATEGORY / NAV DROPDOWN
+================================ */
+
+/* parent */
+.nav-dropdown {
+  position: relative;
+}
+
+/* dropdown panel */
+.nav-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+
+  min-width: 240px;
+  background-color: #ffffff;
+
+  display: none;
+  flex-direction: column;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 9999;
+}
+
+/* desktop hover behavior */
+.nav-dropdown:hover > .nav-dropdown-menu {
+  display: block;
+}
+
+/* dropdown links */
+.nav-dropdown-menu a {
+  display: block;
+  padding: 10px 14px;
+
+  font-size: 14px;
+  color: #212121;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* hover effect */
+.nav-dropdown-menu a:hover {
+  background-color: #f1f3f6;
+}
