@@ -6,14 +6,17 @@ files:
     destination: /var/www/ecommerce
 
 hooks:
-  BeforeInstall:
+  ApplicationStop:
     - location: scripts/stop_backend.sh
-      runas: ubuntu
+      timeout: 300
+      runas: root
 
-  AfterInstall:
+  BeforeInstall:
     - location: scripts/install_dependencies.sh
-      runas: ubuntu
+      timeout: 300
+      runas: root
 
   ApplicationStart:
     - location: scripts/start_backend.sh
-      runas: ubuntu
+      timeout: 300
+      runas: root
