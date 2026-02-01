@@ -3,17 +3,17 @@ os: linux
 
 files:
   - source: /
-    destination: /var/www/ecommerce/AutoKart-Frontend
+    destination: /var/www/ecommerce
 
 hooks:
-  ApplicationStop:
+  BeforeInstall:
     - location: scripts/stop_backend.sh
       timeout: 300
       runas: root
 
-  BeforeInstall:
+  AfterInstall:
     - location: scripts/install_dependencies.sh
-      timeout: 300
+      timeout: 600
       runas: root
 
   ApplicationStart:
