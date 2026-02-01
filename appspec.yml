@@ -3,7 +3,7 @@ os: linux
 
 files:
   - source: /
-    destination: /var/www/ecommerce
+    destination: /var/www/ecommerce/AutoKart-Frontend
 
 hooks:
   ApplicationStop:
