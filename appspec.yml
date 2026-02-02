@@ -7,6 +7,11 @@ files:
     overwrite: yes
 
 hooks:
+  ApplicationStop:
+    - location: scripts/stop.sh
+      timeout: 300
+      runas: ec2-user
+
   BeforeInstall:
     - location: scripts/install.sh
       timeout: 300
