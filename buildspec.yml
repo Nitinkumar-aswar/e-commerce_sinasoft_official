@@ -5,12 +5,11 @@ phases:
     runtime-versions:
       nodejs: 20
     commands:
-      - cd AutoKart-Backend
-      - npm install
+      - echo "CodeBuild install phase"
 
   build:
     commands:
-      - echo "Build step (Node app)"
+      - echo "Build step skipped (Node app)"
 
 artifacts:
   files:
