@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "Starting application with PM2..."
+echo "Starting AutoKart Backend"
 
 cd /var/www/autokart/AutoKart-Backend
 
