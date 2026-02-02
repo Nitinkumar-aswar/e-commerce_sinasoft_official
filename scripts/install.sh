@@ -1,8 +1,14 @@
 #!/bin/bash
 set -e
 
-echo "Installing dependencies..."
+echo "Installing backend dependencies..."
 
-cd /var/www/autokart/AutoKart-Backend
+APP_DIR="/var/www/autokart/AutoKart-Backend"
 
-npm install
+if [ ! -d "$APP_DIR" ]; then
+  echo "ERROR: $APP_DIR does not exist"
+  exit 1
+fi
+
+cd "$APP_DIR"
+npm install --production
