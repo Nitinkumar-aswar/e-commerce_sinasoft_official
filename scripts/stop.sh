@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "Stopping existing PM2 app..."
+echo "Stopping AutoKart Backend"
 
 pm2 stop autokart || true
 pm2 delete autokart || true
