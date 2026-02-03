@@ -853,12 +853,11 @@ router.post("/add-to-cart", (req, res) => {
 });
 
 
-router.get("/create-checkout", (req, res) => {
-  return res.redirect("/cart");
-});
 
 
 router.post("/create-checkout", (req, res) => {
+  console.log("✅ POST /create-checkout HIT");
+
   if (!req.session.user) {
     return res.redirect("/customer_login");
   }
@@ -1339,16 +1338,19 @@ req.db.query(addressSql, params, (addrErr, addrRows) => {
               /* =====================================================
                  6️⃣ CLEAR CART
               ===================================================== */
-              req.db.query(
+             req.db.query(
   "DELETE FROM cart WHERE session_id = ?",
   [sessionId],
   err => {
-    if (err) {
-      console.error("❌ CART CLEAR ERROR:", err);
-    }
-    return res.redirect("/payment-success?method=COD");
-  }
-);
+
+                  if (err) {
+                    console.error("❌ CART CLEAR ERROR:", err);
+                  }
+
+                  console.log("🧹 CART CLEARED");
+                  console.log("✅ ORDER PLACED SUCCESSFULLY:", orderId);
+
+                  return res.redirect("/payment-success?method=COD");
 
               }
               );
@@ -1359,7 +1361,7 @@ req.db.query(addressSql, params, (addrErr, addrRows) => {
     });
   });
 });
-
+});
 router.post("/save-address", (req, res) => {
   if (!req.session || !req.session.user) {
     return res.status(401).json({ success: false });
