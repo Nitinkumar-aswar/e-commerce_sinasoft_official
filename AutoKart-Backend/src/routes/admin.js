@@ -626,41 +626,245 @@ router.post("/orders/:order_id/status", (req, res) => {
 
 
 
-
-// login zal 
-router.get("/become_dealer",function(req,res){
-  res.render("become_dealer/become_dealer_from")
-})
-
-
+/* =========================
+   SAVE BECOME DEALER FORM
+========================= */
 router.post("/save_become_dealer_from", function (req, res) {
-
-  console.log("REQ BODY 👉", req.body);
-
+  const db = req.db;
   const { full_name, mobile, email, city, dealer_type } = req.body;
 
-  const sql = `
-    INSERT INTO become_dealers
-    (full_name, mobile, email, city, dealer_type)
-    VALUES (?, ?, ?, ?, ?)
-  `;
+  if (!full_name || !mobile || !email || !city || !dealer_type) {
+    return res.render("become_dealer/become_dealer_from", {
+      errorMessage: "All fields are required",
+      successMessage: null
+    });
+  }
 
-  req.db.query(sql, [full_name, mobile, email, city, dealer_type], function (err, result) {
-    if (err) {
-      console.error("❌ INSERT ERROR 👉", err);   
-      return res.status(500).json({
-        success: false,
-        error: err.message
+  db.query(
+    "SELECT id FROM dealers WHERE mobile = ?",
+    [mobile],
+    function (err, rows) {
+      if (err) {
+        return res.render("become_dealer/become_dealer_from", {
+          errorMessage: "Something went wrong",
+          successMessage: null
+        });
+      }
+
+      if (rows.length > 0) {
+        return res.render("become_dealer/become_dealer_from", {
+          errorMessage: "Mobile number already registered",
+          successMessage: null
+        });
+      }
+
+      const sql = `
+        INSERT INTO dealers
+        (full_name, mobile, email, city, dealer_type, status)
+        VALUES (?, ?, ?, ?, ?, 'pending')
+      `;
+
+      db.query(sql, [full_name, mobile, email, city, dealer_type], err => {
+        if (err) {
+          return res.render("become_dealer/become_dealer_from", {
+            errorMessage: "Registration failed",
+            successMessage: null
+          });
+        }
+
+        return res.render("become_dealer/become_dealer_from", {
+          successMessage:
+            "✅ Registration successful. Please check your status using mobile number.",
+          errorMessage: null
+        });
       });
     }
+  );
+});
 
-    res.json({
-      success: true,
-      insertId: result.insertId
+/* =========================
+   ADMIN → BECOME DEALER PAGE
+========================= */
+router.get("/become_dealer", (req, res) => {
+  res.render("become_dealer/become_dealer_from", {
+    successMessage: null,
+    errorMessage: null
+  });
+});
+
+/* =========================
+   ADMIN → DEALER REQUESTS LIST
+   ✅ WITH SUMMARY COUNTS
+========================= */
+router.get("/dealer_requests", (req, res) => {
+  const db = req.db;
+
+  const dealersQuery = `
+    SELECT * FROM dealers
+    ORDER BY created_at DESC
+  `;
+
+  const summaryQuery = `
+    SELECT
+      COUNT(*) AS total,
+      SUM(status = 'pending') AS pending,
+      SUM(status = 'approved') AS approved,
+      SUM(status = 'rejected') AS rejected
+    FROM dealers
+  `;
+
+  db.query(dealersQuery, (err, dealers) => {
+    if (err) return res.send("Error loading dealer requests");
+
+    db.query(summaryQuery, (err, result) => {
+      if (err) return res.send("Error loading summary");
+
+      res.render("admin/dealers", {
+        dealers,
+        summary: result[0]   // 👈 summary dashboard data
+      });
     });
   });
 });
 
+/* =========================
+   ADMIN → DEALER APPROVE
+========================= */
+router.post("/dealer/approve", (req, res) => {
+  const db = req.db;
+  const { dealer_id } = req.body;
 
+  db.query(
+    "UPDATE dealers SET status = 'approved' WHERE id = ?",
+    [dealer_id],
+    () => res.redirect("/admin/dealer_requests")
+  );
+});
+
+/* =========================
+   ADMIN → DEALER REJECT
+========================= */
+router.post("/dealer/reject", (req, res) => {
+  const db = req.db;
+  const { dealer_id, rejection_reason } = req.body;
+
+  if (!dealer_id || !rejection_reason) {
+    return res.send("Reject reason is required");
+  }
+
+  db.query(
+    `UPDATE dealers
+     SET status = 'rejected',
+         rejection_reason = ?
+     WHERE id = ?`,
+    [rejection_reason, dealer_id],
+    (err) => {
+      if (err) {
+        console.error(err);
+        return res.send("Database error");
+      }
+      res.redirect("/admin/dealer_requests");
+    }
+  );
+});
+
+
+/* =========================
+   DEALER → CHECK STATUS (POST)
+========================= */
+router.post("/dealer/check_status", (req, res) => {
+  const db = req.db;
+  const { mobile } = req.body;
+
+  if (!mobile) {
+    return res.redirect(
+      "/admin/dealer/status_result?error=Please enter mobile number"
+    );
+  }
+
+  db.query(
+    "SELECT full_name, status FROM dealers WHERE mobile = ?",
+    [mobile],
+    (err, rows) => {
+      if (err || rows.length === 0) {
+        return res.redirect(
+          "/admin/dealer/status_result?error=No dealer request found"
+        );
+      }
+
+      return res.redirect(
+        `/admin/dealer/status_result?mobile=${mobile}`
+      );
+    }
+  );
+});
+
+/* =========================
+   DEALER → STATUS RESULT (GET)
+========================= */
+router.get("/dealer/status_result", (req, res) => {
+  const db = req.db;
+  const { mobile, error } = req.query;
+
+  if (error) {
+    return res.render("become_dealer/dealer_status", {
+      message: error,
+      type: "error",
+      name: "",
+      reason: ""
+    });
+  }
+
+  if (!mobile) {
+    return res.render("become_dealer/dealer_status", {
+      message: "Invalid request",
+      type: "error",
+      name: "",
+      reason: ""
+    });
+  }
+
+  // ✅ rejection_reason pan gheto
+  db.query(
+    "SELECT full_name, status, rejection_reason FROM dealers WHERE mobile = ?",
+    [mobile],
+    (err, rows) => {
+      if (err || rows.length === 0) {
+        return res.render("become_dealer/dealer_status", {
+          message: "Dealer not found",
+          type: "error",
+          name: "",
+          reason: ""
+        });
+      }
+
+      const dealer = rows[0];
+      let message = "";
+      let type = "";
+
+      if (dealer.status === "approved") {
+        message =
+          "Your request has been APPROVED. Our team will contact you shortly.";
+        type = "success";
+      } 
+      else if (dealer.status === "rejected") {
+        message = "Your request has been REJECTED.";
+        type = "error";
+      } 
+      else {
+        message = "Your request is currently PENDING.";
+        type = "warning";
+      }
+
+      res.render("become_dealer/dealer_status", {
+  message,
+  type,
+  name: dealer.full_name || "",
+  reason: dealer.rejection_reason || ""
+});
+
+    }
+  );
+});
 
 module.exports = router;

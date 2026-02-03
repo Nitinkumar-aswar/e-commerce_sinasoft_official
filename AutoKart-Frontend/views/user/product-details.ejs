@@ -7,6 +7,32 @@
   <title><%= product.product_name %> | AutoKart</title>
 
   <style>
+    /* ===== TOP CENTER TOAST ===== */
+.cart-toast {
+  position: fixed;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #323232;
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 99999;
+  transition: top 0.4s ease;
+}
+
+.cart-toast.show {
+  top: 20px;
+}
+
+  /* cart ch ahe  */
+#cart-count.cart-bounce {
+    transform: scale(1.5);
+    transition: transform 0.3s ease;
+}
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -369,6 +395,58 @@
     display: none !important;
   }
 }
+/* cccccccccccccccccccccccccccccccccccccccccccccccccccccc */
+/* ===== MODAL ALERT ===== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.modal-box {
+  background: #fff;
+  padding: 25px 35px;
+  border-radius: 10px;
+  text-align: center;
+  min-width: 300px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  animation: pop 0.3s ease;
+}
+
+.modal-box h3 {
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.modal-box button {
+  padding: 8px 22px;
+  border: none;
+  background: #2874f0;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 
   </style>
 </head>
@@ -377,7 +455,7 @@
 <body>
 
 <%- include('partials/header') %>
-  
+  <div id="cart-toast" class="cart-toast">Added to cart</div>
 <div class="product-page">
 
   <!-- LEFT SIDE -->
@@ -462,7 +540,13 @@
 </div>
 
 
-
+<!-- Custom Alert Modal -->
+<!-- <div id="cart-modal" class="modal-overlay">
+  <div class="modal-box">
+    <h3>Added to cart</h3>
+    <button onclick="closeCartModal()">OK</button>
+  </div>
+</div> -->
 
   <script>
 const mainImage = document.getElementById("mainImage");
@@ -524,27 +608,114 @@ function changeImage(src) {
   zoomPreview.style.backgroundImage = `url(${src})`;
 }
 </script>
-
 <script>
-document.querySelector(".add-cart-btn").addEventListener("click", function () {
-  const productId = this.dataset.productId;
+document.addEventListener("DOMContentLoaded", function () {
 
-  fetch("/add-to-cart", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ productId, qty: 1 })
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.success) {
-      alert("Added to cart");
-    } else {
-      alert("Failed to add to cart");
-    }
-  })
-  .catch(err => console.error(err));
+  /* ================= IMAGE ZOOM ================= */
+  const mainImage = document.getElementById("mainImage");
+  const lens = document.getElementById("lens");
+  const zoomPreview = document.getElementById("zoomPreview");
+  const zoomLevel = 2.5;
+
+  function moveLens(e) {
+    const rect = mainImage.getBoundingClientRect();
+    let x = e.clientX - rect.left - lens.offsetWidth / 2;
+    let y = e.clientY - rect.top - lens.offsetHeight / 2;
+
+    x = Math.max(0, Math.min(x, rect.width - lens.offsetWidth));
+    y = Math.max(0, Math.min(y, rect.height - lens.offsetHeight));
+
+    lens.style.left = x + "px";
+    lens.style.top = y + "px";
+
+    const fx = (x / rect.width) * 100;
+    const fy = (y / rect.height) * 100;
+
+    zoomPreview.style.backgroundPosition = `${fx}% ${fy}%`;
+    zoomPreview.style.backgroundSize =
+      rect.width * zoomLevel + "px " +
+      rect.height * zoomLevel + "px";
+  }
+
+  if (mainImage) {
+    mainImage.addEventListener("mouseenter", () => {
+      lens.style.display = "block";
+      zoomPreview.style.display = "block";
+      zoomPreview.style.backgroundImage = `url(${mainImage.src})`;
+    });
+
+    mainImage.addEventListener("mouseleave", () => {
+      lens.style.display = "none";
+      zoomPreview.style.display = "none";
+    });
+
+    mainImage.addEventListener("mousemove", moveLens);
+    lens.addEventListener("mousemove", moveLens);
+  }
+
+  /* ================= THUMB CHANGE ================= */
+  window.changeImage = function (src) {
+    mainImage.src = src;
+    zoomPreview.style.backgroundImage = `url(${src})`;
+  };
+
+  /* ================= TOP TOAST ================= */
+  function showToast(msg) {
+    const toast = document.getElementById("cart-toast");
+    if (!toast) return;
+
+    toast.innerText = msg;
+    toast.classList.add("show");
+
+    setTimeout(() => {
+      toast.classList.remove("show");
+    }, 2000);
+  }
+
+  /* ================= ADD TO CART ================= */
+  const addCartBtn = document.querySelector(".add-cart-btn");
+
+  if (addCartBtn) {
+    addCartBtn.addEventListener("click", function () {
+
+      const productId = this.dataset.productId;
+
+      fetch("/add-to-cart", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productId, qty: 1 })
+      })
+      .then(res => res.json())
+      .then(data => {
+
+        if (data.success) {
+
+          /* CART COUNT */
+          const cartCountEl = document.getElementById("cart-count");
+          if (cartCountEl) {
+            let count = parseInt(cartCountEl.innerText) || 0;
+            cartCountEl.innerText = count + 1;
+            cartCountEl.style.display = "inline-block";
+            cartCountEl.classList.add("cart-bounce");
+            setTimeout(() => cartCountEl.classList.remove("cart-bounce"), 300);
+          }
+
+          /* 🔥 TOP CENTER POP */
+          showToast("✅ Product added to cart");
+
+        } else {
+          showToast("❌ Failed to add product");
+        }
+
+      })
+      .catch(() => showToast("⚠️ Server error"));
+    });
+  }
+
 });
 </script>
+
+
 
 
 
