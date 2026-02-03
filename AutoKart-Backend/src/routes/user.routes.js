@@ -768,6 +768,20 @@ router.get("/cart", (req, res) => {
 });
 
 
+// Get cart count API
+router.get("/cart-count", (req, res) => {
+    const sessionId = req.sessionID;
+    req.db.query(
+        "SELECT SUM(quantity) AS count FROM cart WHERE session_id = ?",
+        [sessionId],
+        (err, rows) => {
+            if (err) return res.json({ count: 0 });
+            res.json({ count: rows[0].count || 0 });
+        }
+    );
+});
+
+
 
 router.post("/cart/update", (req, res) => {
   const { product_id, action } = req.body;
