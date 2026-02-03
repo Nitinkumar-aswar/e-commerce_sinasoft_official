@@ -853,6 +853,9 @@ router.post("/add-to-cart", (req, res) => {
 });
 
 
+router.get("/create-checkout", (req, res) => {
+  return res.redirect("/cart");
+});
 
 
 router.post("/create-checkout", (req, res) => {
@@ -920,17 +923,28 @@ router.post("/create-checkout", (req, res) => {
 
     // 1️⃣ CREATE CHECKOUT SESSION
   req.db.query(
-  `
-  INSERT INTO checkout_sessions
-  (checkout_id, user_id, session_id, mode, status)
-  VALUES (?, ?, ?, ?, 'ACTIVE')
-  `,
-  [
-    checkoutId,
-    userId,
-    sessionId,
-    productId ? "BUY_NOW" : "CART"
-  ],
+`
+INSERT INTO checkout_sessions
+(
+  checkout_id,
+  user_id,
+  session_id,
+  mode,
+  status,
+  total_amount,
+  total_items
+)
+VALUES (?, ?, ?, ?, 'ACTIVE', ?, ?)
+`,
+[
+  checkoutId,
+  userId,
+  sessionId,
+  productId ? "BUY_NOW" : "CART",
+  totalAmount,
+  totalItems
+],
+
 
       err => {
         if (err) {
@@ -965,20 +979,6 @@ router.post("/create-checkout", (req, res) => {
     /* =====================================================
    🔧 SAVE TOTALS INTO CHECKOUT SESSION (CRITICAL)
 ===================================================== */
-req.db.query(
-  `
-  UPDATE checkout_sessions
-  SET total_amount = ?, total_items = ?
-  WHERE checkout_id = ?
-  `,
-  [totalAmount, totalItems, checkoutId],
-  err => {
-    if (err) {
-      console.error("❌ CHECKOUT TOTAL UPDATE ERROR:", err);
-      return res.send("Checkout failed");
-    }
-  }
-);
 
             // 3️⃣ REDIRECT TO CHECKOUT PAGE
             res.redirect(`/checkout?checkout_id=${checkoutId}`);
