@@ -227,89 +227,118 @@
       <th>Status</th>
       <th>Created At</th>
       <th>Action</th>
+      <th>Details</th>
     </tr>
   </thead>
 
-  <tbody>
-    <% if (dealers.length === 0) { %>
-      <tr>
-        <td colspan="9">No dealer requests found</td>
-      </tr>
-    <% } %>
+<tbody>
+  <% if (dealers.length === 0) { %>
+    <tr>
+      <td colspan="10">No dealer requests found</td>
+    </tr>
+  <% } %>
 
-    <% dealers.forEach(d => { %>
-      <tr data-status="<%= d.status %>">
-        <td><%= d.id %></td>
-        <td><strong><%= d.full_name %></strong></td>
-        <td><%= d.mobile %></td>
-        <td><%= d.email %></td>
-        <td><%= d.city %></td>
-        <td><%= d.dealer_type %></td>
+  <% dealers.forEach(d => { %>
+    <tr data-status="<%= d.status %>">
+      
+      <!-- ID -->
+      <td><%= d.id %></td>
 
-        <td>
-          <span class="status <%= d.status %>"><%= d.status %></span>
-        </td>
+      <!-- Name -->
+      <td><strong><%= d.full_name %></strong></td>
 
-        <td>
-          <%= new Date(d.created_at).toLocaleString('en-IN', {
-            day:'2-digit',
-            month:'short',
-            year:'numeric',
-            hour:'2-digit',
-            minute:'2-digit',
-            hour12:true
-          }) %>
-        </td>
+      <!-- Mobile -->
+      <td><%= d.mobile %></td>
 
-        <td>
-          <% if (d.status === 'pending') { %>
-           <div class="actions">
-  <form action="/admin/dealer/approve" method="POST">
-    <input type="hidden" name="dealer_id" value="<%= d.id %>">
-    <button class="btn btn-approve">Approve</button>
-  </form>
+      <!-- Email -->
+      <td><%= d.email %></td>
 
-  <!-- Reject button -->
-  <button
-  type="button"
-  class="btn btn-reject"
-  onclick="showRejectReason('<%= d.id %>')">
-  Reject
-</button>
+      <!-- City -->
+      <td><%= d.city %></td>
 
+      <!-- Dealer Type -->
+      <td><%= d.dealer_type %></td>
 
-  <!-- Hidden reject form -->
-  <form
-    id="reject-form-<%= d.id %>"
-    action="/admin/dealer/reject"
-    method="POST"
-    style="display:none; gap:6px; margin-top:6px;"
-  >
-    <input type="hidden" name="dealer_id" value="<%= d.id %>">
+      <!-- Status -->
+      <td>
+        <span class="status <%= d.status %>"><%= d.status %></span>
+      </td>
 
-    <select name="rejection_reason" required>
-      <option value="">Select reason</option>
-      <option value="Incomplete documents">Incomplete documents</option>
-      <option value="Wrong dealer type">Wrong dealer type</option>
-      <option value="Area already assigned">Area already assigned</option>
-    </select>
+      <!-- Created At -->
+      <td>
+        <%= new Date(d.created_at).toLocaleString('en-IN', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: true
+        }) %>
+      </td>
 
-    <button class="btn btn-reject" type="submit">
-      Confirm Reject
-    </button>
-  </form>
-</div>
+      <!-- Action (Approve / Reject / Disabled) -->
+      <td>
+        <% if (d.status === 'pending') { %>
+          <div class="actions">
+            <!-- Approve -->
+            <form action="/admin/dealer/approve" method="POST">
+              <input type="hidden" name="dealer_id" value="<%= d.id %>">
+              <button class="btn btn-approve">Approve</button>
+            </form>
 
-            </div>
-          <% } else { %>
-            <button class="btn btn-disabled" disabled>
-              <%= d.status.toUpperCase() %>
+            <!-- Reject button -->
+            <button
+              type="button"
+              class="btn btn-reject"
+              onclick="showRejectReason('<%= d.id %>')">
+              Reject
             </button>
-          <% } %>
-        </td>
-      </tr>
-    <% }) %>
-  </tbody>
+          </div>
+
+          <!-- Hidden reject form -->
+          <form
+            id="reject-form-<%= d.id %>"
+            action="/admin/dealer/reject"
+            method="POST"
+            style="display:none; gap:6px; margin-top:6px;"
+          >
+            <input type="hidden" name="dealer_id" value="<%= d.id %>">
+
+            <select name="rejection_reason" required>
+              <option value="">Select reason</option>
+              <option value="Incomplete documents">Incomplete documents</option>
+              <option value="Wrong dealer type">Wrong dealer type</option>
+              <option value="Area already assigned">Area already assigned</option>
+            </select>
+
+            <button class="btn btn-reject" type="submit">
+              Confirm Reject
+            </button>
+          </form>
+
+        <% } else { %>
+          <button class="btn btn-disabled" disabled>
+            <%= d.status.toUpperCase() %>
+          </button>
+        <% } %>
+      </td>
+
+      <!-- ✅ DETAILS (DOWNLOAD PDF) -->
+      <td>
+        <a
+          href="/admin/dealer/<%= d.id %>/pdf"
+          class="btn btn-approve"
+          target="_blank"
+          style="text-decoration:none;"
+        >
+          Download PDF
+        </a>
+      </td>
+
+    </tr>
+  <% }) %>
+</tbody>
+
 </table>
 </div>
 

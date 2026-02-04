@@ -2,6 +2,8 @@ const express = require("express");
 const path = require("path");
 const multer = require("multer");
 const fs = require("fs");
+const generateInvoicePDF = require("../utils/invoice");
+const generateDealerPDF = require("../utils/dealerPdf");
 
 const router = express.Router();
 
@@ -530,6 +532,60 @@ router.get("/orders", (req, res) => {
 });
 
 
+router.get("/orders/:orderId/invoice", (req, res) => {
+  const db = req.db;
+  const orderId = req.params.orderId;
+
+  // 1️⃣ Fetch order (NO user_id check – admin can see all)
+  const orderSql = `
+    SELECT
+      o.order_id,
+      o.created_at,
+      o.payment_method,
+      o.payment_status,
+      a.full_name,
+      a.mobile,
+      a.address_type,
+      a.address_line,
+      a.city,
+      a.state,
+      a.pincode
+    FROM orders o
+    JOIN user_addresses a ON o.address_id = a.address_id
+    WHERE o.order_id = ?
+    LIMIT 1
+  `;
+
+  db.query(orderSql, [orderId], (err, orderRows) => {
+    if (err || orderRows.length === 0) {
+      return res.status(404).send("Order not found");
+    }
+
+    const order = orderRows[0];
+
+    // 2️⃣ Fetch items
+    const itemsSql = `
+      SELECT product_name, price, quantity
+      FROM order_items
+      WHERE order_id = ?
+    `;
+
+    db.query(itemsSql, [orderId], (err, items) => {
+      if (err || items.length === 0) {
+        return res.status(404).send("No items found");
+      }
+
+      // 3️⃣ Calculate total
+      let totalAmount = 0;
+      items.forEach(i => {
+        totalAmount += i.price * i.quantity;
+      });
+
+      // 4️⃣ Generate PDF (reuse same function)
+      generateInvoicePDF(res, order, items, totalAmount);
+    });
+  });
+});
 /* =========================
    ADMIN VIEW ORDER
 ========================= */
@@ -595,35 +651,108 @@ router.get("/orders/:order_id", (req, res) => {
 /* =========================
    UPDATE ORDER STATUS
 ========================= */
-router.post("/orders/:order_id/status", (req, res) => {
+router.post("/orders/:order_id/status", async (req, res) => {
   const db = req.db;
   const orderId = req.params.order_id;
   const { order_status } = req.body;
 
-  const sql = `
-    UPDATE orders
-    SET order_status = ?
-    WHERE order_id = ?
-  `;
-
-  db.query(sql, [order_status, orderId], err => {
-    if (err) {
-      console.error("❌ STATUS UPDATE ERROR:", err.sqlMessage);
-      return res.send("Status update failed");
-    }
-
-    // ✅ COD auto-paid when delivered
-    if (order_status === "DELIVERED") {
-      db.query(
-        "UPDATE orders SET payment_status = 'PAID' WHERE order_id = ?",
+  try {
+    /* =========================
+       1️⃣ FETCH CURRENT ORDER
+    ========================= */
+    const [orderRows] = await db
+      .promise()
+      .query(
+        "SELECT order_status, stock_deducted FROM orders WHERE order_id = ?",
         [orderId]
       );
+
+    if (orderRows.length === 0) {
+      return res.status(404).send("Order not found");
     }
 
-    res.redirect(`/admin/orders/${orderId}`);
-  });
-});
+    const previousStatus = orderRows[0].order_status;
+    const stockDeducted = orderRows[0].stock_deducted;
 
+    /* =========================
+       2️⃣ BLOCK INVALID CHANGES
+    ========================= */
+    if (previousStatus === "DELIVERED" || previousStatus === "CANCELLED") {
+      return res.send("Order status cannot be changed");
+    }
+
+    /* =========================
+       3️⃣ UPDATE ORDER STATUS
+    ========================= */
+    await db
+      .promise()
+      .query(
+        "UPDATE orders SET order_status = ? WHERE order_id = ?",
+        [order_status, orderId]
+      );
+
+    /* =========================
+       4️⃣ DEDUCT STOCK (ONLY ONCE)
+       👉 ONLY WHEN MOVING TO SHIPPED
+    ========================= */
+    if (
+      previousStatus !== "SHIPPED" &&
+      order_status === "SHIPPED" &&
+      stockDeducted === 0
+    ) {
+      const [items] = await db
+        .promise()
+        .query(
+          "SELECT product_id, quantity FROM order_items WHERE order_id = ?",
+          [orderId]
+        );
+
+      for (const item of items) {
+        const [result] = await db.promise().query(
+          `
+          UPDATE products
+          SET quantity = quantity - ?
+          WHERE id = ?
+            AND quantity >= ?
+          `,
+          [item.quantity, item.product_id, item.quantity]
+        );
+
+        if (result.affectedRows === 0) {
+          return res.send("Insufficient stock for one or more products");
+        }
+      }
+
+      // ✅ Mark stock as deducted
+      await db
+        .promise()
+        .query(
+          "UPDATE orders SET stock_deducted = 1 WHERE order_id = ?",
+          [orderId]
+        );
+    }
+
+    /* =========================
+       5️⃣ AUTO PAY COD ON DELIVERY
+    ========================= */
+    if (order_status === "DELIVERED") {
+      await db
+        .promise()
+        .query(
+          "UPDATE orders SET payment_status = 'PAID' WHERE order_id = ?",
+          [orderId]
+        );
+    }
+
+    /* =========================
+       6️⃣ REDIRECT BACK
+    ========================= */
+    return res.redirect(`/admin/orders/${orderId}`);
+  } catch (err) {
+    console.error("❌ ORDER STATUS UPDATE ERROR:", err);
+    return res.send("Status update failed");
+  }
+});
 
 
 /* =========================
@@ -768,6 +897,22 @@ router.post("/dealer/reject", (req, res) => {
   );
 });
 
+router.get("/dealer/:id/pdf", (req, res) => {
+  const db = req.db;
+  const dealerId = req.params.id;
+
+  db.query(
+    "SELECT * FROM dealers WHERE id = ?",
+    [dealerId],
+    (err, rows) => {
+      if (err || rows.length === 0) {
+        return res.status(404).send("Dealer not found");
+      }
+
+      generateDealerPDF(res, rows[0]);
+    }
+  );
+});
 
 /* =========================
    DEALER → CHECK STATUS (POST)

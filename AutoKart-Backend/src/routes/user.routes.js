@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const PDFDocument = require("pdfkit");
+const generateInvoicePDF = require("../utils/invoice");
+
 
 /* =========================
    USER ROUTES
@@ -507,62 +508,7 @@ router.post("/orders/:orderId/cancel", (req, res) => {
   });
 });
 
-function generateInvoicePDF(res, order, items, totalAmount) {
-  const doc = new PDFDocument({ margin: 40 });
 
-  res.setHeader("Content-Type", "application/pdf");
-  res.setHeader(
-    "Content-Disposition",
-    `attachment; filename=Invoice-${order.order_id}.pdf`
-  );
-
-  doc.pipe(res);
-
-  // HEADER
-  doc.fontSize(20).text("AutoKart Invoice", { align: "center" });
-  doc.moveDown();
-
-  doc.fontSize(12).text(`Order ID: ${order.order_id}`);
-  doc.text(`Order Date: ${new Date(order.created_at).toDateString()}`);
-  doc.text(`Payment Method: ${order.payment_method}`);
-  doc.moveDown();
-
-  // DELIVERY ADDRESS
-  doc.fontSize(12).text("Delivery Address:", { underline: true });
-  doc.moveDown(0.5);
-
-  doc.fontSize(11).text(order.full_name);
-  doc.text(order.address_type);
-  doc.text(
-    `${order.address_line}, ${order.city}, ${order.state} - ${order.pincode}`
-  );
-  doc.text(`Phone: ${order.mobile}`);
-
-  doc.moveDown();
-
-  // ITEMS
-  doc.fontSize(14).text("Order Items:");
-  doc.moveDown(0.5);
-
-  items.forEach(item => {
-    doc.fontSize(12).text(
-      `${item.product_name} | ₹${item.price} x ${item.quantity} = ₹${(
-        item.price * item.quantity
-      ).toFixed(2)}`
-    );
-  });
-
-  doc.moveDown();
-  doc.fontSize(14).text(`Total Amount: ₹${totalAmount.toFixed(2)}`);
-
-  doc.moveDown();
-  doc.fontSize(10).text(
-    "This is a computer-generated invoice.",
-    { align: "center" }
-  );
-
-  doc.end();
-}
 
 /* SHOP */
 router.get("/shop", (req, res) => {
@@ -1333,49 +1279,57 @@ req.db.query(addressSql, params, (addrErr, addrRows) => {
             }
 
             /* =====================================================
-               5️⃣ MARK CHECKOUT SESSION COMPLETED
-            ===================================================== */
-            const updateCheckoutSql = `
-              UPDATE checkout_sessions
-              SET status = 'COMPLETED',
-                  payment_method = 'COD',
-                  payment_status = 'PENDING'
-              WHERE checkout_id = ?
-            `;
+   5️⃣ MARK CHECKOUT SESSION COMPLETED
+===================================================== */
+const updateCheckoutSql = `
+  UPDATE checkout_sessions
+  SET status = 'COMPLETED',
+      payment_method = 'COD',
+      payment_status = 'PENDING'
+  WHERE checkout_id = ?
+`;
 
-            req.db.query(updateCheckoutSql, [checkoutId], err => {
-              if (err) {
-                console.error("❌ CHECKOUT UPDATE ERROR:", err);
-                return res.send("Order failed");
-              }
+req.db.query(updateCheckoutSql, [checkoutId], err => {
+  if (err) {
+    console.error("❌ CHECKOUT UPDATE ERROR:", err);
+    return res.send("Order failed");
+  }
 
-              /* =====================================================
-                 6️⃣ CLEAR CART
-              ===================================================== */
-             req.db.query(
-  "DELETE FROM cart WHERE session_id = ?",
-  [sessionId],
-  err => {
+  /* =====================================================
+     6️⃣ CLEAR CART (ONLY IF CART CHECKOUT)
+  ===================================================== */
 
-                  if (err) {
-                    console.error("❌ CART CLEAR ERROR:", err);
-                  }
+  if (checkout.mode === "CART") {
+    req.db.query(
+      "DELETE FROM cart WHERE session_id = ?",
+      [sessionId],
+      err => {
+        if (err) {
+          console.error("❌ CART CLEAR ERROR:", err);
+        } else {
+          console.log("🧹 CART CLEARED (CART CHECKOUT)");
+        }
 
-                  console.log("🧹 CART CLEARED");
-                  console.log("✅ ORDER PLACED SUCCESSFULLY:", orderId);
+        console.log("✅ ORDER PLACED SUCCESSFULLY:", orderId);
+        return res.redirect("/payment-success?method=COD");
+      }
+    );
+  } else {
+    // BUY NOW → DO NOT TOUCH CART
+    console.log("🛒 BUY NOW ORDER → CART PRESERVED");
+    console.log("✅ ORDER PLACED SUCCESSFULLY:", orderId);
 
-                  return res.redirect("/payment-success?method=COD");
-
-              }
-              );
-            });
+    return res.redirect("/payment-success?method=COD");
+  }
+});
+          });
           });
         }
       );
     });
   });
 });
-});
+
 router.post("/save-address", (req, res) => {
   if (!req.session || !req.session.user) {
     return res.status(401).json({ success: false });

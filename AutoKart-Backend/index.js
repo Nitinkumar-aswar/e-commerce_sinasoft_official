@@ -27,6 +27,7 @@ const sessionDB = mysql.createPool({
   database: "autokart_db"
 });
 
+
 /* =========================
    SESSION STORE
 ========================= */

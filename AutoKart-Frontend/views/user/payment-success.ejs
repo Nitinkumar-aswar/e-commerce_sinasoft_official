@@ -1,43 +1,146 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Payment Success</title>
+  <meta charset="UTF-8" />
+  <title>Order Placed | AutoKart</title>
+
   <style>
     body {
-      font-family: Arial, sans-serif;
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
       background: #f1f3f6;
-      text-align: center;
-      padding-top: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
 
-    .box {
-      background: #fff;
-      width: 400px;
-      margin: auto;
-      padding: 30px;
-      border-radius: 6px;
+    .success-card {
+      background: #ffffff;
+      width: 420px;
+      padding: 32px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .success-icon {
+      font-size: 48px;
+      color: #2e7d32;
+      margin-bottom: 12px;
     }
 
     h2 {
-      color: #388e3c;
+      margin: 0;
+      color: #2e7d32;
+      font-size: 22px;
+      font-weight: bold;
     }
 
-    a {
-      display: inline-block;
-      margin-top: 20px;
+    .subtitle {
+      margin-top: 8px;
+      color: #555;
+      font-size: 14px;
+    }
+
+    .divider {
+      margin: 20px 0;
+      height: 1px;
+      background: #e0e0e0;
+    }
+
+    .details {
+      text-align: left;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .details p {
+      margin: 8px 0;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .details span {
+      font-weight: 600;
+    }
+
+    .note {
+      margin-top: 14px;
+      font-size: 13px;
+      color: #666;
+      line-height: 1.5;
+    }
+
+    .actions {
+      margin-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 12px 0;
+      border-radius: 4px;
       text-decoration: none;
-      color: #2874f0;
+      font-size: 14px;
       font-weight: bold;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: #2874f0;
+      color: #fff;
+    }
+
+    .btn-secondary {
+      background: #f1f3f6;
+      color: #2874f0;
+      border: 1px solid #2874f0;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
     }
   </style>
 </head>
+
 <body>
 
-  <div class="box">
-    <h2>Payment Successful ✅</h2>
-    <p>Payment Method: <strong><%= method %></strong></p>
-    <p>This is a test success page.</p>
-    <a href="/">Go to Home</a>
+  <div class="success-card">
+    <div class="success-icon">✔</div>
+
+    <h2>Order Placed Successfully</h2>
+    <p class="subtitle">
+      Thank you for shopping with AutoKart
+    </p>
+
+    <div class="divider"></div>
+
+    <div class="details">
+      <p>
+        <span>Payment Method</span>
+        <span>Cash on Delivery</span>
+      </p>
+
+      
+    </div>
+
+    <p class="note">
+      Your order has been placed successfully and will be shipped soon.
+      Please keep cash ready at the time of delivery.
+    </p>
+
+    <div class="actions">
+      <a href="/orders" class="btn btn-secondary">
+        View Orders
+      </a>
+      <a href="/" class="btn btn-primary">
+        Continue Shopping
+      </a>
+    </div>
   </div>
 
 </body>
