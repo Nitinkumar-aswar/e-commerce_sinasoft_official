@@ -20,11 +20,10 @@ app.set("trust proxy", 1);
 /* =========================
    SESSION DATABASE (POOL)
 ========================= */
-
 const sessionDB = mysql.createPool({
   host: "localhost",
-  user: "root",
-  password: "",
+  user: "autokart",
+  password: "AutoKart@123",
   database: "autokart_db"
 });
 
@@ -91,8 +90,8 @@ app.set("views", path.join(__dirname, "../AutoKart-Frontend/views"));
 
 const db = mysql.createPool({
   host: "localhost",
-  user: "root",
-  password: "",
+  user: "autokart",
+  password: "AutoKart@123",
   database: "autokart_db"
 });
 
@@ -122,12 +121,12 @@ app.use((req, res, next) => {
 
 app.use((req, res, next) => {
   const sectionQuery = `
-    SELECT id, name, display_slug 
+    SELECT id, name, display_slug
     FROM sections
   `;
 
   const subSectionQuery = `
-    SELECT id, name, section_id, display_slug 
+    SELECT id, name, section_id, display_slug
     FROM sub_sections
   `;
 
@@ -166,6 +165,6 @@ app.use("/admin", adminRoutes);
    SERVER
 ========================= */
 
-app.listen(PORT, () => {
-  console.log(`🚀 AutoKart running at http://localhost:${PORT}`);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`🚀 AutoKart running on port ${PORT}`);
 });
