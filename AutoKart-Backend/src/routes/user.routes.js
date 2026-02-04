@@ -766,20 +766,6 @@ router.get("/cart", (req, res) => {
     res.render("user/cart", { cart });
   });
 });
-// jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj
-// Get cart count API
-router.get("/cart-count", (req, res) => {
-    const sessionId = req.sessionID;
-    req.db.query(
-        "SELECT SUM(quantity) AS count FROM cart WHERE session_id = ?",
-        [sessionId],
-        (err, rows) => {
-            if (err) return res.json({ count: 0 });
-            res.json({ count: rows[0].count || 0 });
-        }
-    );
-});
-
 
 
 // Get cart count API
@@ -1530,8 +1516,6 @@ router.get("/payment_cycle", (req, res) => {
   res.render("become_dealer/payment_cycle");
 });
 
-
-
 router.post("/dealer/register", (req, res) => {
   const db = req.db;
 
@@ -1543,27 +1527,26 @@ router.post("/dealer/register", (req, res) => {
     dealer_type
   } = req.body;
 
-  // ✅ basic validation (NO password)
+  // Basic validation (NO password)
   if (!full_name || !mobile || !email || !city || !dealer_type) {
-    return res.send("All fields required");
+    return res.status(400).send("All fields are required");
   }
 
-  // ✅ duplicate mobile check
+  // Check if mobile already exists
   db.query(
     "SELECT id FROM dealers WHERE mobile = ?",
     [mobile],
     (err, rows) => {
       if (err) {
-        console.error(err);
-        return res.send("Something went wrong");
+        console.error("Duplicate check error:", err);
+        return res.status(500).send("Something went wrong");
       }
 
       if (rows.length > 0) {
-        return res.send("Mobile already registered");
+        return res.status(409).send("Mobile already registered");
       }
 
- feature-tushar
-      
+      // Insert new dealer
       db.query(
         `
         INSERT INTO dealers
@@ -1573,17 +1556,17 @@ router.post("/dealer/register", (req, res) => {
         [full_name, mobile, email, city, dealer_type],
         err => {
           if (err) {
-            console.error(err);
-            return res.send("Registration failed");
+            console.error("Insert error:", err);
+            return res.status(500).send("Registration failed");
           }
 
-          res.send(" registered successfully");
+          res.status(201).send("Dealer registered successfully");
         }
       );
     }
   );
 });
+
+
+
 module.exports = router;
-=======
-module.exports = router;
- master

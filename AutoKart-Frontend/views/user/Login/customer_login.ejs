@@ -125,22 +125,13 @@ body {
   <!-- RIGHT SIDE -->
   <div class="right-box">
     <form action="/customer_login" method="post">
-<!-- 
+
 
 User Name
-      <input type="text" name="user_user_name" placeholder="Username" required autocomplete="off">
+      <input type="text" name="user_user_name" placeholder="Username" required>
 
 Password      
-      <input type="password" name="user_password" placeholder="Password" required autocomplete="off"> -->
-<!-- USERNAME -->
-<label>User Name</label>
-<input type="text" name="user_user_name" placeholder="Username" required autocomplete="off" minlength="4" maxlength="15" pattern="^(?=.*[a-zA-Z])[a-zA-Z0-9_]+$" title="Username must contain at least one letter. Only letters, numbers and underscore allowed (4-15 chars)."
-/>
-
-<!-- PASSWORD -->
-<label>Password</label>
-<input  type="password"  name="user_password"  placeholder="Password"  required  autocomplete="off"  minlength="8"  pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$"  title="Min 8 chars, 1 uppercase, 1 lowercase, 1 number & 1 special character"
-/>
+      <input type="password" name="user_password" placeholder="Password" required>
 
       <p class="terms">
         By continuing, you agree to Flipkart's
