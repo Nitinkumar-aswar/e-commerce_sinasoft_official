@@ -766,6 +766,20 @@ router.get("/cart", (req, res) => {
     res.render("user/cart", { cart });
   });
 });
+// jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj
+// Get cart count API
+router.get("/cart-count", (req, res) => {
+    const sessionId = req.sessionID;
+    req.db.query(
+        "SELECT SUM(quantity) AS count FROM cart WHERE session_id = ?",
+        [sessionId],
+        (err, rows) => {
+            if (err) return res.json({ count: 0 });
+            res.json({ count: rows[0].count || 0 });
+        }
+    );
+});
+
 
 
 // Get cart count API
@@ -1518,5 +1532,58 @@ router.get("/payment_cycle", (req, res) => {
 
 
 
+router.post("/dealer/register", (req, res) => {
+  const db = req.db;
 
+  const {
+    full_name,
+    mobile,
+    email,
+    city,
+    dealer_type
+  } = req.body;
+
+  // ✅ basic validation (NO password)
+  if (!full_name || !mobile || !email || !city || !dealer_type) {
+    return res.send("All fields required");
+  }
+
+  // ✅ duplicate mobile check
+  db.query(
+    "SELECT id FROM dealers WHERE mobile = ?",
+    [mobile],
+    (err, rows) => {
+      if (err) {
+        console.error(err);
+        return res.send("Something went wrong");
+      }
+
+      if (rows.length > 0) {
+        return res.send("Mobile already registered");
+      }
+
+ feature-tushar
+      
+      db.query(
+        `
+        INSERT INTO dealers
+        (full_name, mobile, email, city, dealer_type, status)
+        VALUES (?, ?, ?, ?, ?, 'pending')
+        `,
+        [full_name, mobile, email, city, dealer_type],
+        err => {
+          if (err) {
+            console.error(err);
+            return res.send("Registration failed");
+          }
+
+          res.send(" registered successfully");
+        }
+      );
+    }
+  );
+});
 module.exports = router;
+=======
+module.exports = router;
+ master

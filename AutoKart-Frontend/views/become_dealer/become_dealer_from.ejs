@@ -9,84 +9,199 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
-body{background:#f1f7fd;color:#1f2937}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Inter',sans-serif;
+}
+
+body{
+  background:#f1f7fd;
+  color:#1f2937;
+}
 
 /* HEADER */
 .header{
   background:#fff;
   padding:14px 40px;
-  display:flex;
-  align-items:center;
   border-bottom:1px solid #e5e7eb;
 }
-.header img{height:30px}
+.header img{
+  width:80px;
+}
 
 /* MAIN */
 .main{
   max-width:1150px;
   margin:40px auto;
   display:grid;
-  grid-template-columns:1.35fr 1fr;
+  grid-template-columns:1.3fr 1fr;
   gap:40px;
   padding:0 20px;
 }
 
-/* FORM */
+/* LEFT FORM */
 .form-box{
   background:#fff;
   padding:36px;
-  border-radius:10px;
+  border-radius:16px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.06);
 }
+
+/* STEPS */
 .steps{
   display:flex;
   gap:25px;
   margin-bottom:30px;
   font-size:14px;
 }
-.step{display:flex;align-items:center;gap:8px;color:#9ca3af}
-.step.active{color:#2563eb;font-weight:600}
+.step{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:#9ca3af;
+}
+.step.active{
+  color:#2563eb;
+  font-weight:600;
+}
 .step i{
-  background:#2563eb;color:#fff;
-  border-radius:50%;font-size:11px;padding:6px;
+  background:#2563eb;
+  color:#fff;
+  border-radius:50%;
+  font-size:11px;
+  padding:6px;
 }
 
-.input-group{margin-bottom:18px}
-.input-group label{
-  display:block;font-size:13px;
-  margin-bottom:6px;color:#374151;
+/* INPUTS */
+.input-group{
+  margin-bottom:18px;
 }
-.input-group input,select{
-  width:100%;padding:14px;
-  border-radius:6px;border:1px solid #d1d5db;
+.input-group label{
+  display:block;
+  font-size:13px;
+  margin-bottom:6px;
+  color:#374151;
+  font-weight:500;
+}
+.input-group input,
+.input-group select{
+  width:100%;
+  padding:14px;
+  border-radius:8px;
+  border:1px solid #d1d5db;
   font-size:14px;
 }
-input:focus,select:focus{
-  outline:none;border-color:#2563eb;
+.input-group input:focus,
+.input-group select:focus{
+  outline:none;
+  border-color:#2563eb;
+  box-shadow:0 0 0 2px rgba(37,99,235,0.15);
 }
 
+/* BUTTON */
 .btn{
-  background:#2563eb;color:#fff;border:none;
-  padding:14px 26px;border-radius:6px;
-  font-size:15px;font-weight:600;
+  background:#2563eb;
+  color:#fff;
+  border:none;
+  padding:15px;
+  border-radius:8px;
+  font-size:15px;
+  font-weight:600;
+  cursor:pointer;
+  width:100%;
+}
+.btn:hover{
+  background:#1d4ed8;
+}
+
+/* MESSAGE */
+.msg{
+  padding:14px;
+  border-radius:8px;
+  margin-bottom:20px;
+  font-size:14px;
+}
+.msg.success{
+  background:#ecfdf5;
+  color:#047857;
+}
+.msg.error{
+  background:#fef2f2;
+  color:#b91c1c;
+}
+
+/* RIGHT SIDE */
+.right{
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+
+/* CHECK STATUS CARD */
+.check-status{
+  background:#fff;
+  padding:20px;
+  border-radius:14px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.06);
+}
+.check-status h4{
+  margin-bottom:12px;
+  font-size:16px;
+  color:#111827;
+}
+.check-status form{
+  display:flex;
+  gap:10px;
+}
+.check-status input{
+  flex:1;
+  padding:12px;
+  border-radius:8px;
+  border:1px solid #d1d5db;
+  font-size:14px;
+}
+.check-status input:focus{
+  outline:none;
+  border-color:#2563eb;
+}
+.check-status button{
+  background:#111827;
+  color:#fff;
+  border:none;
+  padding:12px 18px;
+  border-radius:8px;
+  font-size:14px;
+  font-weight:600;
   cursor:pointer;
 }
-
-/* RIGHT */
-.right{display:flex;flex-direction:column;gap:25px}
-.banner{
-  background:#0073e6;color:#fff;
-  border-radius:14px;padding:25px;text-align:center;
+.check-status button:hover{
+  background:#000;
 }
-.banner h3{margin-bottom:10px}
+
+/* BANNER */
+.banner{
+  background:linear-gradient(135deg,#0073e6,#005bb5);
+  color:#fff;
+  border-radius:18px;
+  padding:36px;
+  text-align:center;
+}
+.banner h3{
+  margin-bottom:14px;
+  font-size:22px;
+}
+.banner p{
+  line-height:1.8;
+  font-size:15px;
+}
 
 /* RESPONSIVE */
 @media(max-width:900px){
-  .main{grid-template-columns:1fr}
-}
-.header img{
-  width: 70px;
-  height: auto;
+  .main{
+    grid-template-columns:1fr;
+  }
 }
 </style>
 </head>
@@ -99,70 +214,133 @@ input:focus,select:focus{
 
 <section class="main">
 
-<!-- LEFT FORM -->
-<div class="form-box">
+  <!-- LEFT -->
+  <div class="form-box">
 
-  <div class="steps">
-    <div class="step active"><i class="fa fa-check"></i> BASIC DETAILS</div>
-    <div class="step"><i class="fa fa-check"></i> BUSINESS INFO</div>
+    <% if (successMessage) { %>
+      <div class="msg success"><%= successMessage %></div>
+    <% } %>
+    <% if (errorMessage) { %>
+      <div class="msg error"><%= errorMessage %></div>
+    <% } %>
+
+    <div class="steps">
+      <div class="step active"><i class="fa fa-check"></i> BASIC DETAILS</div>
+      <div class="step"><i class="fa fa-check"></i> BUSINESS INFO</div>
+    </div>
+<!-- 
+    <form action="/dealer/register" method="POST" autocomplete="off">
+    <div class="input-group">
+  <label>Full Name *</label>
+  <input type="text" name="full_name" required autocomplete="new-name">
+</div>
+
+<div class="input-group">
+  <label>Mobile Number *</label>
+  <input
+    type="text"
+    name="mobile"
+    required
+    maxlength="10"
+    inputmode="numeric"
+    pattern="[0-9]{10}"
+    autocomplete="new-password"
+    placeholder="Enter 10 digit number"
+    oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+  >
+</div>
+
+<div class="input-group">
+  <label>Email ID *</label>
+  <input type="email" name="email" required autocomplete="new-email">
+</div>
+
+<div class="input-group">
+  <label>City *</label>
+  <input type="text" name="city" required autocomplete="new-city">
+</div>
+
+      <div class="input-group">
+        <label>Dealer Type *</label>
+        <select name="dealer_type" required>
+          <option value="">Select Dealer Type</option>
+          <option>Truck Dealer</option>
+          <option>Auto Parts Dealer</option>
+          <option>Service Center</option>
+        </select>
+      </div>
+
+      <button class="btn">Register as Dealer →</button>
+    </form> -->
+<form action="/dealer/register" method="POST" autocomplete="off">
+
+  <!-- Hidden dummy fields to block autofill -->
+  <input type="text" name="fakeusername" style="display:none">
+  <input type="password" name="fakepassword" style="display:none">
+
+  <!-- Real Fields -->
+  <div class="input-group">
+    <label>Full Name *</label>
+    <input type="text" name="full_name" required autocomplete="new-name">
   </div>
 
-  <form action="/admin/save_become_dealer_from" method="POST">
+  <div class="input-group">
+    <label>Mobile Number *</label>
+    <input type="text" name="mobile" required maxlength="10" inputmode="numeric"
+           pattern="[0-9]{10}" autocomplete="new-password"
+           oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+  </div>
 
-    <div class="input-group">
-      <label>Full Name *</label>
-      <input type="text" name="full_name" required>
-    </div>
-
-    <div class="input-group">
-      <label>Mobile Number *</label>
-      <input type="number" name="mobile" required>
-    </div>
-
-    <div class="input-group">
-      <label>Email ID *</label>
-      <input type="email" name="email" required>
-    </div>
-
-    <div class="input-group">
-      <label>City *</label>
-      <input type="text" name="city" required>
-    </div>
-
-    <div class="input-group">
-      <label>Dealer Type *</label>
+  <div class="input-group">
+    <label>Email ID *</label>
+    <input type="email" name="email" required autocomplete="new-email">
+  </div>
+<div class="input-group">
+  <label>City *</label>
+  <input type="text" name="city" required autocomplete="off" 
+         oninput="this.value=this.value.replace(/[^a-zA-Z\s]/g,'')"
+         placeholder="Enter City">
+</div>
+  <div class="input-group">
+    <label>Dealer Type *</label>
     <select name="dealer_type" required>
-  <option value="">Select Dealer Type</option>
-  <option value="EV Dealer">Truck Dealer</option>
-  <option value="Auto Parts Dealer">Auto Parts Dealer</option>
-  <option value="Service Center">Service Center</option>
-  <option value="Other">Other</option>
-</select>
+      <option value="">Select Dealer Type</option>
+      <option>Truck Dealer</option>
+      <option>Auto Parts Dealer</option>
+      <option>Service Center</option>
+    </select>
+  </div>
 
+  <button class="btn">Register as Dealer →</button>
+</form>
+
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right">
+
+    <!-- CHECK STATUS (ABOVE BANNER) -->
+    <div class="check-status">
+      <h4>Check Your Request Status</h4>
+      <form action="/admin/dealer/check_status" method="POST">
+        <input type="number" name="mobile" placeholder="Enter Mobile Number" required autocomplete="off">
+        <button type="submit">Check Status</button>
+      </form>
     </div>
 
-    <button class="btn" type="submit">
-      Register as Dealer <i class="fa fa-arrow-right"></i>
-    </button>
+    <!-- WHY BECOME DEALER -->
+    <div class="banner">
+      <h3>Why Become a Dealer?</h3>
+      <p>
+        ✔ Pan India Reach<br>
+        ✔ High Margins<br>
+        ✔ Dedicated Support
+      </p>
+    </div>
 
-  </form>
-</div>
-
-<!-- RIGHT SIDE -->
-<div class="right">
-  <div class="banner">
-    <h3>Why Become a Dealer?</h3>
-    <p>✔ Pan India Reach<br>✔ High Margins<br>✔ Dedicated Support</p>
   </div>
-</div>
 
 </section>
-
-<script>
-document.querySelector(".btn").addEventListener("click",()=>{
-  alert("Demo UI 🚀 Backend connected असल्यास data save होईल");
-});
-</script>
 
 </body>
 </html>
