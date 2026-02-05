@@ -1530,4 +1530,21 @@ router.get("/contact", (req, res) => {
 });
 
 
+router.get("/privacy", (req, res) => {
+  res.render("policy/privacy");
+});
+
+router.get("/terms", (req, res) => {
+  res.render("policy/terms");
+});
+
+router.get("/returns", (req, res) => {
+  res.render("policy/returns");
+});
+
+router.get("/security", (req, res) => {
+  res.render("policy/security");
+});
+
+
 module.exports = router;
