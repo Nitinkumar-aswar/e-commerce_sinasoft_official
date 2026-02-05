@@ -8,16 +8,25 @@ const PDFDocument = require("pdfkit");
 
 /* HOME */
 router.get("/", (req, res) => {
-  const sectionQuery = `SELECT id, name, display_slug FROM sections`;
+ const sectionQuery = `SELECT id, name, display_slug FROM sections`;
   const subSectionQuery = `SELECT id, name, section_id, display_slug FROM sub_sections`;
   const productQuery = `SELECT * FROM products WHERE is_active = 1`;
   const sliderQuery = `SELECT * FROM sliders WHERE status = 'active'`;
 
   req.db.query(sectionQuery, (err, sections) => {
-    if (err) return res.send("Error loading sections");
+  if (err) {
+  console.error("SECTIONS ERROR >>>>>>>", err);
+  return res.status(500).send(err.sqlMessage || err.message || err);
+}
+
+
 
     req.db.query(subSectionQuery, (err, subSections) => {
-      if (err) return res.send("Error loading sub-sections");
+      if (err) {
+  console.error("SUB SECTIONS ERROR:", err);
+  return res.status(500).send(err.sqlMessage || err.message || err);
+}
+
 
       req.db.query(productQuery, (err, products) => {
         if (err) return res.send("Error loading products");
@@ -262,7 +271,7 @@ router.get("/orders", (req, res) => {
   console.log("📦 FETCHING ORDERS FOR USER:", userId);
 
   const ordersSql = `
-    SELECT 
+    SELECT
       o.order_id,
       o.created_at,
       o.order_status,
@@ -273,7 +282,7 @@ router.get("/orders", (req, res) => {
       oi.quantity,
       oi.price
     FROM orders o
-    INNER JOIN order_items oi 
+    INNER JOIN order_items oi
       ON oi.order_id = o.order_id
     WHERE o.user_id = ?
     ORDER BY o.created_at DESC
@@ -307,7 +316,7 @@ router.get("/orders/:orderId", (req, res) => {
 
   /* 1️⃣ Fetch order header */
   const orderSql = `
-  SELECT 
+  SELECT
     o.*,
     a.full_name,
     a.mobile,
@@ -334,7 +343,7 @@ router.get("/orders/:orderId", (req, res) => {
 
     /* 2️⃣ Fetch order items */
     const itemsSql = `
-      SELECT 
+      SELECT
         product_name,
         product_image,
         price,
@@ -383,6 +392,7 @@ router.get("/orders/:orderId/invoice", (req, res) => {
   }
 
   /* 1️⃣ Fetch order */
+<<<<<<< HEAD
   let orderSql = `
     SELECT 
       o.order_id,
@@ -400,6 +410,27 @@ router.get("/orders/:orderId/invoice", (req, res) => {
       ON o.address_id = a.address_id
     WHERE o.order_id = ?
   `;
+=======
+ const orderSql = `
+  SELECT
+    o.order_id,
+    o.created_at,
+    o.payment_method,
+    a.full_name,
+    a.mobile,
+    a.address_type,
+    a.address_line,
+    a.city,
+    a.state,
+    a.pincode
+  FROM orders o
+  JOIN user_addresses a
+    ON o.address_id = a.address_id
+  WHERE o.order_id = ?
+    AND o.user_id = ?
+  LIMIT 1
+`;
+>>>>>>> edb3a2e1f3f6a60376acf325fd6c2703b28f067c
 
   const orderParams = [orderId];
 
@@ -788,7 +819,7 @@ router.get("/cart", (req, res) => {
   console.log("SESSION USER:", req.session.user);
 
   const query = `
-    SELECT 
+    SELECT
       c.product_id,
       c.quantity,
       p.product_name,
@@ -823,6 +854,20 @@ router.get("/cart-count", (req, res) => {
     );
 });
 
+
+
+// Get cart count API
+router.get("/cart-count", (req, res) => {
+    const sessionId = req.sessionID;
+    req.db.query(
+        "SELECT SUM(quantity) AS count FROM cart WHERE session_id = ?",
+        [sessionId],
+        (err, rows) => {
+            if (err) return res.json({ count: 0 });
+            res.json({ count: rows[0].count || 0 });
+        }
+    );
+});
 
 
 
@@ -916,6 +961,8 @@ router.get("/create-checkout", (req, res) => {
 
 
 router.post("/create-checkout", (req, res) => {
+  console.log("✅ POST /create-checkout HIT");
+
   if (!req.session.user) {
     return res.redirect("/customer_login");
   }
@@ -932,7 +979,7 @@ router.post("/create-checkout", (req, res) => {
   // 🟠 BUY NOW
   if (productId) {
     itemsSql = `
-      SELECT 
+      SELECT
         p.id AS product_id,
         1 AS quantity,
         p.product_name,
@@ -947,7 +994,7 @@ router.post("/create-checkout", (req, res) => {
   // 🔵 CART
   else {
     itemsSql = `
-      SELECT 
+      SELECT
         c.product_id,
         c.quantity,
         p.product_name,
@@ -971,13 +1018,14 @@ router.post("/create-checkout", (req, res) => {
     items.forEach(i => {
       totalAmount += i.price * i.quantity;
       totalItems += i.quantity;
-    
+
     });
 
 
 
     // 1️⃣ CREATE CHECKOUT SESSION
   req.db.query(
+<<<<<<< HEAD
   `
   INSERT INTO checkout_sessions
   (
@@ -1004,6 +1052,36 @@ router.post("/create-checkout", (req, res) => {
       console.error("CHECKOUT INSERT ERROR 👉", err);
       return res.send("Checkout failed"); // ⛔ return is MUST
     }
+=======
+`
+INSERT INTO checkout_sessions
+(
+  checkout_id,
+  user_id,
+  session_id,
+  mode,
+  status,
+  total_amount,
+  total_items
+)
+VALUES (?, ?, ?, ?, 'ACTIVE', ?, ?)
+`,
+[
+  checkoutId,
+  userId,
+  sessionId,
+  productId ? "BUY_NOW" : "CART",
+  totalAmount,
+  totalItems
+],
+
+
+      err => {
+        if (err) {
+  console.error("CHECKOUT INSERT ERROR 👉", err);
+  return res.send("Checkout failed");
+}
+>>>>>>> edb3a2e1f3f6a60376acf325fd6c2703b28f067c
 
 
         // 2️⃣ INSERT CHECKOUT ITEMS
@@ -1032,20 +1110,6 @@ router.post("/create-checkout", (req, res) => {
     /* =====================================================
    🔧 SAVE TOTALS INTO CHECKOUT SESSION (CRITICAL)
 ===================================================== */
-req.db.query(
-  `
-  UPDATE checkout_sessions
-  SET total_amount = ?, total_items = ?
-  WHERE checkout_id = ?
-  `,
-  [totalAmount, totalItems, checkoutId],
-  err => {
-    if (err) {
-      console.error("❌ CHECKOUT TOTAL UPDATE ERROR:", err);
-      return res.send("Checkout failed");
-    }
-  }
-);
 
             // 3️⃣ REDIRECT TO CHECKOUT PAGE
             res.redirect(`/checkout?checkout_id=${checkoutId}`);
@@ -1125,7 +1189,7 @@ router.get("/checkout", (req, res) => {
         FROM user_addresses
         WHERE user_id = ?
         ORDER BY created_at DESC
-        
+
       `;
 
       req.db.query(addressSql, [userId], (addrErr, addressRows) => {
@@ -1334,7 +1398,7 @@ req.db.query(addressSql, params, (addrErr, addrRows) => {
 `;
 
 
-    
+
    req.db.query(
   orderSql,
   [
@@ -1405,10 +1469,11 @@ req.db.query(addressSql, params, (addrErr, addrRows) => {
               /* =====================================================
                  6️⃣ CLEAR CART
               ===================================================== */
-              req.db.query(
-                "DELETE FROM cart WHERE session_id = ?",
-                [sessionId, userId],
-                err => {
+             req.db.query(
+  "DELETE FROM cart WHERE session_id = ?",
+  [sessionId],
+  err => {
+
                   if (err) {
                     console.error("❌ CART CLEAR ERROR:", err);
                   }
@@ -1417,7 +1482,7 @@ req.db.query(addressSql, params, (addrErr, addrRows) => {
                   console.log("✅ ORDER PLACED SUCCESSFULLY:", orderId);
 
                   return res.redirect("/payment-success?method=COD");
-                
+
               }
               );
             });
@@ -1600,6 +1665,7 @@ router.post("/dealer/register", (req, res) => {
         return res.send("Mobile already registered");
       }
 
+ feature-tushar
       
       db.query(
         `
@@ -1622,3 +1688,6 @@ router.post("/dealer/register", (req, res) => {
   );
 });
 module.exports = router;
+=======
+module.exports = router;
+ master
