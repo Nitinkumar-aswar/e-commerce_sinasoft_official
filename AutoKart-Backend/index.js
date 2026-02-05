@@ -22,11 +22,10 @@ app.set("trust proxy", 1);
 ========================= */
 const sessionDB = mysql.createPool({
   host: "localhost",
-  user: "autokart",
-  password: "AutoKart@123",
+  user: "root",
+  password: "",
   database: "autokart_db"
 });
-
 
 /* =========================
    SESSION STORE
@@ -68,6 +67,7 @@ app.use(
   })
 );
 
+
 /* =========================
    MIDDLEWARE
 ========================= */
@@ -91,8 +91,8 @@ app.set("views", path.join(__dirname, "../AutoKart-Frontend/views"));
 
 const db = mysql.createPool({
   host: "localhost",
-  user: "autokart",
-  password: "AutoKart@123",
+  user: "root",
+  password: "",
   database: "autokart_db"
 });
 
@@ -153,6 +153,18 @@ app.use((req, res, next) => {
       next();
     });
   });
+});
+
+
+
+app.use((req, res, next) => {
+  res.locals.contact = {
+    phone: "+91 9876543210",
+    email: "support@autokart.com",
+    whatsapp: "919876543210",
+    address: "Baner,Pune"
+  };
+  next();
 });
 
 /* =========================
