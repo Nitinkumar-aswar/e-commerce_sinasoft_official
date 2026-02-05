@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title><%= product.product_name %> | AutoKart</title>
+
+  <style>
+    /* ===== TOP CENTER TOAST ===== */
+.cart-toast {
+  position: fixed;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #323232;
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 99999;
+  transition: top 0.4s ease;
+}
+
+.cart-toast.show {
+  top: 20px;
+}
+
+  /* cart ch ahe  */
+#cart-count.cart-bounce {
+    transform: scale(1.5);
+    transition: transform 0.3s ease;
+}
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f1f3f6;
+    }
+
+    /* MAIN WRAPPER */
+    .product-page {
+  max-width: 100%;
+  margin: 20px auto;
+  background: #ffffff;
+  padding: 24px 40px;
+  display: flex;
+  gap: 40px;
+}
+
+    /* LEFT SIDE */
+    .product-left {
+      width: 45%;
+    }
+
+    .product-image-box {
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .product-image-box img {
+      width: 100%;
+      max-height: 100px;
+      object-fit: contain;
+    }
+
+   .action-buttons {
+  margin-top: 16px;
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+.add-cart-btn,
+.buy-now-btn {
+  display: inline-flex;          /* 🔥 behaves like button */
+  align-items: center;
+  justify-content: center;
+
+  width: 160px;
+  height: 44px;
+
+  background: #fb641b;
+  color: #fff;
+
+  border: none;
+  border-radius: 4px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+  text-decoration: none;         /* 🔥 removes underline */
+}
+
+.buy-now-btn:hover {
+  background: #e85c17;
+}
+
+
+.add-cart-btn {
+  background: #ff9f00;
+  color: #fff;
+}
+
+.buy-now-btn {
+  background: #fb641b;
+  color: #fff;
+}
+
+    
+    /* RIGHT SIDE */
+    .product-right {
+      width: 60%;
+    }
+
+    .product-title {
+      font-size: 22px;
+      font-weight: 500; /* NOT too bold */
+      color: #212121;
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+
+    .product-price {
+      font-size: 26px;
+      font-weight: 600;
+      color: #388e3c;
+      margin: 15px 0;
+    }
+
+    .product-description-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 25px;
+      margin-bottom: 10px;
+      color: #212121;
+    }
+
+    .product-description {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.6;
+    }
+
+/* IMAGE GALLERY */
+.image-gallery {
+  display: flex;
+  gap: 15px;
+}
+
+/* LEFT SMALL IMAGES */
+.thumbnail-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.thumbnail-column img {
+  width: 88px;
+  height: 68px;
+  object-fit: contain;   /* 👈 KEY FIX */
+  background: #fff;
+}
+
+
+
+.thumbnail-placeholder {
+  width: 80px;
+  height: 80px;
+  border: 1px solid #ccc;
+  object-fit: cover;
+  cursor: pointer;
+  background: #f5f5f5;
+}
+
+.thumbnail-column img:hover {
+  border: 2px solid #2874f0;
+}
+
+/* MAIN IMAGE */
+.main-image img {
+  width: 100%;
+  max-height: 420px;
+  object-fit: contain;
+}
+.image-zoom-container {
+  display: flex;
+  gap: 20px;
+  position: relative;
+  width: 100%;
+}
+
+
+/* Main image */
+.image-wrapper {
+  position: relative;
+  width: 420px;
+  height: 420px;
+  border: 1px solid #e0e0e0;
+  overflow: hidden;
+  background: #fff;
+}
+
+.image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Lens */
+#lens {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  background: rgba(0, 0, 0, 0.15);
+  display: none;
+  cursor: crosshair;
+
+  pointer-events: none; /* 🔥 KEY FIX */
+}
+
+
+/* Zoom preview */
+.zoom-preview {
+  position: absolute;
+  top: 0;
+  left: calc(100% + 20px);
+  width: 150%;
+  height: 150%;
+
+  border: 1px solid #e0e0e0;
+  background-repeat: no-repeat;
+  background-size: 350%;        /* 🔥 CLARITY BOOST */
+  image-rendering: auto;        /* 🔥 SHARPER ZOOM */
+  background-color: #fff;
+
+  display: none;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* ================= RESPONSIVE ================= */
+
+/* Mobile ≤480px */
+@media (max-width: 480px) {
+  .product-page {
+    flex-direction: column;
+    padding: 15px;
+   
+    gap: 20px;
+  }
+
+  .image-wrapper {
+    max-width: 100%;
+    height: 300px;
+    
+  }
+
+  .thumbnail-column {
+    flex-direction: row;
+    gap: 8px;
+    overflow-x: auto;
+    margin-bottom: 10px;
+  }
+
+  .thumbnail-column img {
+    width: 60px;
+    height: 50px;
+  }
+
+  .product-title { font-size: 18px; }
+  .product-price { font-size: 22px; }
+  .product-description-title { font-size: 15px; }
+  .product-description { font-size: 13px; }
+
+  .add-cart-btn, .buy-now-btn {
+    width: 48%;
+    font-size: 13px;
+  }
+
+  .zoom-preview { display: none !important; } /* hide zoom on mobile */
+}
+
+/* Tablet 481px – 768px */
+@media (min-width: 481px) and (max-width: 768px) {
+  .product-page {
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .image-wrapper { max-width: 100%; height: 350px; }
+
+  .thumbnail-column {
+    flex-direction: row;
+    gap: 8px;
+    overflow-x: auto;
+    margin-bottom: 15px;
+  }
+
+  .add-cart-btn, .buy-now-btn { width: 45%; }
+}
+
+/* Laptop ≥769px */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .image-wrapper { max-width: 380px; height: 380px; }
+}
+
+/* Desktop ≥1025px */
+@media (min-width: 1025px) {
+  .image-wrapper { max-width: 420px; height: 420px; }
+}
+
+/* =========================
+   MOBILE PRODUCT PAGE FIX
+========================= */
+@media (max-width: 768px) {
+
+  body {
+    background: #f1f3f6;
+  }
+
+  .product-page {
+    margin: 0;
+    padding: 12px;
+    gap: 16px;
+    background: #ffffff;
+  }
+
+  .product-left,
+  .product-right {
+    width: 100%;
+  }
+
+  /* IMAGE AREA */
+  .image-gallery {
+    flex-direction: column;
+  }
+
+  .image-wrapper {
+    width: 100%;
+    height: 280px;
+  }
+
+  .image-wrapper img {
+    object-fit: contain;
+  }
+
+  /* THUMBNAILS */
+  .thumbnail-column {
+    flex-direction: row;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+  }
+
+  .thumbnail-column img {
+    width: 60px;
+    height: 60px;
+  }
+
+  /* BUTTONS — FULL WIDTH LIKE FLIPKART */
+  .action-buttons {
+    flex-direction: row;
+    gap: 10px;
+  }
+
+  .add-cart-btn,
+  .buy-now-btn {
+    width: 50%;
+    height: 44px;
+    font-size: 14px;
+  }
+
+  /* TEXT */
+  .product-title {
+    font-size: 18px;
+    line-height: 1.4;
+  }
+
+  .product-price {
+    font-size: 22px;
+  }
+
+  .product-description {
+    font-size: 13px;
+  }
+
+  /* DISABLE ZOOM ON MOBILE */
+  #lens,
+  .zoom-preview {
+    display: none !important;
+  }
+}
+/* cccccccccccccccccccccccccccccccccccccccccccccccccccccc */
+/* ===== MODAL ALERT ===== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.modal-box {
+  background: #fff;
+  padding: 25px 35px;
+  border-radius: 10px;
+  text-align: center;
+  min-width: 300px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  animation: pop 0.3s ease;
+}
+
+.modal-box h3 {
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.modal-box button {
+  padding: 8px 22px;
+  border: none;
+  background: #2874f0;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+
+  </style>
+</head>
+
+
+<body>
+
+<%- include('partials/header') %>
+  <div id="cart-toast" class="cart-toast">Added to cart</div>
+<div class="product-page">
+
+  <!-- LEFT SIDE -->
+  <div class="product-left">
+
+    <!-- IMAGE GALLERY -->
+    <div class="image-gallery">
+
+      <!-- THUMBNAILS -->
+      <div class="thumbnail-column">
+        <% for (let i = 0; i < 5; i++) { %>
+          <% if (images && images[i]) { %>
+            <img
+              src="/uploads/<%= images[i].image %>"
+              onclick="changeImage('/uploads/<%= images[i].image %>')"
+            >
+          <% } else { %>
+            <div class="thumbnail-placeholder"></div>
+          <% } %>
+        <% } %>
+      </div>
+
+      <!-- MAIN IMAGE -->
+      <div class="image-zoom-container">
+        <div class="image-wrapper">
+          <img
+            id="mainImage"
+            src="/uploads/<%= product.image %>"
+            alt="<%= product.product_name %>"
+          >
+          <div id="lens"></div>
+        </div>
+        <div class="zoom-preview" id="zoomPreview"></div>
+      </div>
+
+    </div>
+
+    <!-- BUTTONS -->
+    <div class="action-buttons">
+      <button
+        class="add-cart-btn"
+        data-product-id="<%= product.id %>"
+      >
+        ADD TO CART
+      </button>
+
+     <form action="/create-checkout" method="POST">
+  <input type="hidden" name="product_id" value="<%= product.id %>">
+  <button type="submit" class="buy-now-btn">
+    BUY NOW
+  </button>
+</form>
+
+
+                
+
+    </div>
+
+  </div>
+
+  <!-- RIGHT SIDE -->
+  <div class="product-right">
+
+    <div class="product-title">
+      <%= product.product_name %>
+    </div>
+
+    <div class="product-price">
+      ₹ <%= product.price %>
+    </div>
+
+    <div class="product-description-title">
+      Description
+    </div>
+
+    <div class="product-description">
+      <%= product.product_description || "No description available." %>
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- Custom Alert Modal -->
+<!-- <div id="cart-modal" class="modal-overlay">
+  <div class="modal-box">
+    <h3>Added to cart</h3>
+    <button onclick="closeCartModal()">OK</button>
+  </div>
+</div> -->
+
+  <script>
+const mainImage = document.getElementById("mainImage");
+const lens = document.getElementById("lens");
+const zoomPreview = document.getElementById("zoomPreview");
+
+const zoomLevel = 2.5;
+
+
+
+function moveLens(e) {
+  e.preventDefault();
+
+  const rect = mainImage.getBoundingClientRect();
+  let x = e.clientX - rect.left - lens.offsetWidth / 2;
+  let y = e.clientY - rect.top - lens.offsetHeight / 2;
+
+  if (x < 0) x = 0;
+  if (y < 0) y = 0;
+  if (x > rect.width - lens.offsetWidth)
+    x = rect.width - lens.offsetWidth;
+  if (y > rect.height - lens.offsetHeight)
+    y = rect.height - lens.offsetHeight;
+
+  lens.style.left = x + "px";
+  lens.style.top = y + "px";
+
+  const fx = (x / rect.width) * 100;
+  const fy = (y / rect.height) * 100;
+
+  zoomPreview.style.backgroundPosition = `${fx}% ${fy}%`;
+  zoomPreview.style.backgroundSize =
+    rect.width * zoomLevel + "px " +
+    rect.height * zoomLevel + "px";
+}
+
+mainImage.addEventListener("mouseenter", () => {
+  lens.style.display = "block";
+  zoomPreview.style.display = "block";
+  zoomPreview.style.backgroundImage = `url(${mainImage.src})`;
+});
+
+
+mainImage.addEventListener("mouseleave", () => {
+  lens.style.display = "none";
+  zoomPreview.style.display = "none";
+});
+
+mainImage.addEventListener("mousemove", moveLens);
+lens.addEventListener("mousemove", moveLens);
+</script>
+
+<script>
+function changeImage(src) {
+  const mainImage = document.getElementById("mainImage");
+  const zoomPreview = document.getElementById("zoomPreview");
+
+  mainImage.src = src;
+  zoomPreview.style.backgroundImage = `url(${src})`;
+}
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  /* ================= IMAGE ZOOM ================= */
+  const mainImage = document.getElementById("mainImage");
+  const lens = document.getElementById("lens");
+  const zoomPreview = document.getElementById("zoomPreview");
+  const zoomLevel = 2.5;
+
+  function moveLens(e) {
+    const rect = mainImage.getBoundingClientRect();
+    let x = e.clientX - rect.left - lens.offsetWidth / 2;
+    let y = e.clientY - rect.top - lens.offsetHeight / 2;
+
+    x = Math.max(0, Math.min(x, rect.width - lens.offsetWidth));
+    y = Math.max(0, Math.min(y, rect.height - lens.offsetHeight));
+
+    lens.style.left = x + "px";
+    lens.style.top = y + "px";
+
+    const fx = (x / rect.width) * 100;
+    const fy = (y / rect.height) * 100;
+
+    zoomPreview.style.backgroundPosition = `${fx}% ${fy}%`;
+    zoomPreview.style.backgroundSize =
+      rect.width * zoomLevel + "px " +
+      rect.height * zoomLevel + "px";
+  }
+
+  if (mainImage) {
+    mainImage.addEventListener("mouseenter", () => {
+      lens.style.display = "block";
+      zoomPreview.style.display = "block";
+      zoomPreview.style.backgroundImage = `url(${mainImage.src})`;
+    });
+
+    mainImage.addEventListener("mouseleave", () => {
+      lens.style.display = "none";
+      zoomPreview.style.display = "none";
+    });
+
+    mainImage.addEventListener("mousemove", moveLens);
+    lens.addEventListener("mousemove", moveLens);
+  }
+
+  /* ================= THUMB CHANGE ================= */
+  window.changeImage = function (src) {
+    mainImage.src = src;
+    zoomPreview.style.backgroundImage = `url(${src})`;
+  };
+
+  /* ================= TOP TOAST ================= */
+  function showToast(msg) {
+    const toast = document.getElementById("cart-toast");
+    if (!toast) return;
+
+    toast.innerText = msg;
+    toast.classList.add("show");
+
+    setTimeout(() => {
+      toast.classList.remove("show");
+    }, 2000);
+  }
+
+  /* ================= ADD TO CART ================= */
+  const addCartBtn = document.querySelector(".add-cart-btn");
+
+  if (addCartBtn) {
+    addCartBtn.addEventListener("click", function () {
+
+      const productId = this.dataset.productId;
+
+      fetch("/add-to-cart", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productId, qty: 1 })
+      })
+      .then(res => res.json())
+      .then(data => {
+
+        if (data.success) {
+
+          /* CART COUNT */
+          const cartCountEl = document.getElementById("cart-count");
+          if (cartCountEl) {
+            let count = parseInt(cartCountEl.innerText) || 0;
+            cartCountEl.innerText = count + 1;
+            cartCountEl.style.display = "inline-block";
+            cartCountEl.classList.add("cart-bounce");
+            setTimeout(() => cartCountEl.classList.remove("cart-bounce"), 300);
+          }
+
+          /* 🔥 TOP CENTER POP */
+          showToast("✅ Product added to cart");
+
+        } else {
+          showToast("❌ Failed to add product");
+        }
+
+      })
+      .catch(() => showToast("⚠️ Server error"));
+    });
+  }
+
+});
+</script>
+
+
+
+
+
+
+
+</body>
+</html>
