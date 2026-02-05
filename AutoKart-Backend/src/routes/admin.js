@@ -482,33 +482,33 @@ router.get("/orders", (req, res) => {
   const search = req.query.search || "";
 
   const ordersQuery = `
-    SELECT
-      o.order_id,
-      o.order_status,
-      o.payment_method,
-      o.payment_status,
+  SELECT
+    o.order_id,
 
-      u.user_first_name,
-      u.user_last_name,
-      u.user_mobile,
+    MAX(o.order_status)    AS order_status,
+    MAX(o.payment_method)  AS payment_method,
+    MAX(o.payment_status)  AS payment_status,
 
-      COUNT(oi.id) AS total_items
+    MAX(u.user_first_name) AS user_first_name,
+    MAX(u.user_last_name)  AS user_last_name,
+    MAX(u.user_mobile)     AS user_mobile,
 
-    FROM orders o
-    JOIN user_create_account u 
-      ON o.user_id = u.user_id
-    LEFT JOIN order_items oi 
-      ON o.order_id = oi.order_id
+    COUNT(oi.id)           AS total_items
 
-    WHERE
-      o.order_id LIKE ?
-      OR u.user_mobile LIKE ?
-      OR LOWER(CONCAT(u.user_first_name, ' ', u.user_last_name)) LIKE ?
+  FROM orders o
+  JOIN user_create_account u 
+    ON o.user_id = u.user_id
+  LEFT JOIN order_items oi 
+    ON o.order_id = oi.order_id
 
-    GROUP BY o.order_id
-    ORDER BY o.id DESC
-  `;
+  WHERE
+    o.order_id LIKE ?
+    OR u.user_mobile LIKE ?
+    OR LOWER(CONCAT(u.user_first_name, ' ', u.user_last_name)) LIKE ?
 
+  GROUP BY o.order_id
+  ORDER BY MAX(o.id) DESC
+`;
   const likeSearch = `%${search.toLowerCase().trim()}%`;
 
   db.query(
@@ -824,7 +824,7 @@ router.get("/dealer/status_result", (req, res) => {
     });
   }
 
-  // ✅ rejection_reason pan gheto
+  // ✅ rejection_reason 
   db.query(
     "SELECT full_name, status, rejection_reason FROM dealers WHERE mobile = ?",
     [mobile],
@@ -866,5 +866,160 @@ router.get("/dealer/status_result", (req, res) => {
     }
   );
 });
+
+
+// router.get("/user", (req, res) => {
+//   res.render("admin/user_details");
+// });
+// USER LIST
+router.get("/user", (req, res) => {
+  const sql = `
+    SELECT 
+      user_id,
+      user_first_name,
+      user_last_name,
+      user_mobile,
+      user_email,
+      user_user_name,
+      user_password
+    FROM user_create_account
+  `;
+
+  req.db.query(sql, (err, users) => {
+    if (err) {
+      console.log(err);
+      return res.send("DB Error");
+    }
+
+    res.render("admin/dashboard", {
+      page: "user_details",
+      users
+    });
+  });
+});
+// vew session starat 
+
+// router.get("/user/:id", (req, res) => {
+//   const userId = req.params.id;
+
+//   const sql = `
+// SELECT 
+//   u.user_id,
+//   u.user_first_name,
+//   u.user_last_name,
+//   u.user_user_name,
+//   u.user_email,
+
+//   -- 🛒 CART DATA
+//   c.product_id AS cart_product_id,
+//   cp.product_name AS cart_product_name,
+//   cp.price AS cart_price,
+//   c.quantity AS cart_qty,
+
+//   -- 📦 ORDER DATA
+//   oi.product_id AS order_product_id,
+//   p.product_name AS order_product_name,
+//   oi.price AS order_price,
+//   oi.quantity AS order_qty,
+//   o.created_at AS order_date
+
+// FROM user_create_account u
+
+// LEFT JOIN cart c 
+//   ON c.user_id = u.user_id
+
+// LEFT JOIN products cp 
+//   ON cp.id = c.product_id
+
+// LEFT JOIN orders o 
+//   ON o.user_id = u.user_id
+
+// LEFT JOIN order_items oi 
+//   ON oi.order_id = o.order_id   -- ✅ FIX HERE
+
+// LEFT JOIN products p 
+//   ON p.id = oi.product_id
+
+// WHERE u.user_id = ?
+// ORDER BY o.created_at DESC
+// `;
+
+
+//   req.db.query(sql, [userId], (err, rows) => {
+//     if (err) {
+//       console.log(err);
+//       return res.send("DB Error");
+//     }
+
+//     res.render("admin/dashboard", {
+//       page: "user_view",
+//       data: rows
+//     });
+//   });
+// });
+
+
+router.get("/user/:id", (req, res) => {
+  const userId = req.params.id;
+
+  const sql = `
+SELECT 
+  u.user_id,
+  u.user_first_name,
+  u.user_last_name,
+  u.user_user_name,
+  u.user_email,
+
+  -- 🛒 CART DATA
+  c.product_id AS cart_product_id,
+  cp.product_name AS cart_product_name,
+  cp.price AS cart_price,
+  c.quantity AS cart_qty,
+
+  -- 📦 ORDER DATA
+  oi.product_id AS order_product_id,
+  p.product_name AS order_product_name,
+  oi.price AS order_price,
+  oi.quantity AS order_qty,
+  o.created_at AS order_date,
+
+  -- 💳 PAYMENT DATA
+  o.payment_method,
+  o.payment_status
+
+FROM user_create_account u
+
+LEFT JOIN cart c 
+  ON c.user_id = u.user_id
+
+LEFT JOIN products cp 
+  ON cp.id = c.product_id
+
+LEFT JOIN orders o 
+  ON o.user_id = u.user_id
+
+LEFT JOIN order_items oi 
+  ON oi.order_id = o.order_id
+
+LEFT JOIN products p 
+  ON p.id = oi.product_id
+
+WHERE u.user_id = ?
+ORDER BY o.created_at DESC
+`;
+
+  req.db.query(sql, [userId], (err, rows) => {
+    if (err) {
+      console.log(err);
+      return res.send("DB Error");
+    }
+
+    res.render("admin/dashboard", {
+      page: "user_view",
+      data: rows
+    });
+  });
+});
+
 
 module.exports = router;

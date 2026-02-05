@@ -367,55 +367,83 @@ router.get("/orders/:orderId", (req, res) => {
    DOWNLOAD INVOICE
 ========================= */
 router.get("/orders/:orderId/invoice", (req, res) => {
-  if (!req.session.user) {
-    return res.redirect("/customer_login");
+
+  // 🔐 login required (admin OR user)
+  if (!req.session.user && !req.session.admin) {
+    return res.status(403).send("Access denied");
   }
 
-  const userId = req.session.user.user_id;
   const orderId = req.params.orderId;
+  const isAdmin = !!req.session.admin;
+  const userId = req.session.user?.user_id;
+
+  // 🛡️ extra safety
+  if (!isAdmin && !userId) {
+    return res.status(403).send("Access denied");
+  }
 
   /* 1️⃣ Fetch order */
- const orderSql = `
-  SELECT 
-    o.order_id,
-    o.created_at,
-    o.payment_method,
-    a.full_name,
-    a.mobile,
-    a.address_type,
-    a.address_line,
-    a.city,
-    a.state,
-    a.pincode
-  FROM orders o
-  JOIN user_addresses a 
-    ON o.address_id = a.address_id
-  WHERE o.order_id = ?
-    AND o.user_id = ?
-  LIMIT 1
-`;
+  let orderSql = `
+    SELECT 
+      o.order_id,
+      o.created_at,
+      o.payment_method,
+      a.full_name,
+      a.mobile,
+      a.address_type,
+      a.address_line,
+      a.city,
+      a.state,
+      a.pincode
+    FROM orders o
+    JOIN user_addresses a 
+      ON o.address_id = a.address_id
+    WHERE o.order_id = ?
+  `;
 
+  const orderParams = [orderId];
 
-  req.db.query(orderSql, [orderId, userId], (err, orderRows) => {
-    if (err || orderRows.length === 0) {
+  // 👤 user ho to sirf apna order
+  if (!isAdmin) {
+    orderSql += " AND o.user_id = ?";
+    orderParams.push(userId);
+  }
+
+  orderSql += " LIMIT 1";
+
+  req.db.query(orderSql, orderParams, (err, orderRows) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send("Database error");
+    }
+
+    if (orderRows.length === 0) {
       return res.status(404).send("Order not found");
     }
 
     const order = orderRows[0];
 
-    /* 2️⃣ Fetch order items */
-    const itemsSql = `
-      SELECT
-        product_name,
-        price,
-        quantity
+    /* 2️⃣ Fetch items */
+    let itemsSql = `
+      SELECT product_name, price, quantity
       FROM order_items
       WHERE order_id = ?
-        AND user_id = ?
     `;
 
-    req.db.query(itemsSql, [orderId, userId], (err, items) => {
-      if (err || items.length === 0) {
+    const itemParams = [orderId];
+
+    if (!isAdmin) {
+      itemsSql += " AND user_id = ?";
+      itemParams.push(userId);
+    }
+
+    req.db.query(itemsSql, itemParams, (err, items) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send("Database error");
+      }
+
+      if (items.length === 0) {
         return res.status(404).send("No items found");
       }
 
@@ -425,15 +453,18 @@ router.get("/orders/:orderId/invoice", (req, res) => {
         totalAmount += i.price * i.quantity;
       });
 
-      /* 4️⃣ GENERATE PDF */
+      /* 4️⃣ Generate PDF */
       generateInvoicePDF(res, order, items, totalAmount);
     });
   });
 });
 
 
-
+/* =========================
+   CANCEL ORDER (USER ONLY)
+========================= */
 router.post("/orders/:orderId/cancel", (req, res) => {
+
   if (!req.session.user) {
     return res.redirect("/customer_login");
   }
@@ -441,9 +472,7 @@ router.post("/orders/:orderId/cancel", (req, res) => {
   const userId = req.session.user.user_id;
   const orderId = req.params.orderId;
 
-  /* =========================
-     1️⃣ VERIFY ORDER
-  ========================= */
+  /* 1️⃣ Verify order */
   const checkSql = `
     SELECT order_status
     FROM orders
@@ -453,16 +482,39 @@ router.post("/orders/:orderId/cancel", (req, res) => {
   `;
 
   req.db.query(checkSql, [orderId, userId], (err, rows) => {
-    if (err || rows.length === 0) {
-      return res.send("Order not found");
+    if (err) {
+      console.error(err);
+      return res.status(500).send("Database error");
+    }
+
+    if (rows.length === 0) {
+      return res.status(404).send("Order not found");
     }
 
     const status = rows[0].order_status;
 
-    // ❌ BLOCK IF ALREADY SHIPPED
+    // ❌ already shipped / delivered
     if (!["PLACED", "CONFIRMED"].includes(status)) {
       return res.send("Order cannot be cancelled at this stage");
     }
+
+    /* 2️⃣ Cancel order */
+    const cancelSql = `
+      UPDATE orders
+      SET order_status = 'CANCELLED'
+      WHERE order_id = ?
+    `;
+
+    req.db.query(cancelSql, [orderId], (err) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send("Failed to cancel order");
+      }
+
+      res.redirect("/orders");
+    });
+  });
+
 
     /* =========================
        2️⃣ DELETE ORDER ITEMS
@@ -496,7 +548,7 @@ router.post("/orders/:orderId/cancel", (req, res) => {
       }
     );
   });
-});
+
 
 function generateInvoicePDF(res, order, items, totalAmount) {
   const doc = new PDFDocument({ margin: 40 });
@@ -928,21 +980,30 @@ router.post("/create-checkout", (req, res) => {
   req.db.query(
   `
   INSERT INTO checkout_sessions
-  (checkout_id, user_id, session_id, mode, status)
-  VALUES (?, ?, ?, ?, 'ACTIVE')
+  (
+    checkout_id,
+    user_id,
+    session_id,
+    mode,
+    status,
+    total_amount,
+    total_items
+  )
+  VALUES (?, ?, ?, ?, 'ACTIVE', ?, ?)
   `,
   [
     checkoutId,
     userId,
     sessionId,
-    productId ? "BUY_NOW" : "CART"
+    productId ? "BUY_NOW" : "CART",
+    totalAmount,
+    totalItems
   ],
-
-      err => {
-        if (err) {
-  console.error("CHECKOUT INSERT ERROR 👉", err);
-  return res.send("Checkout failed");
-}
+  err => {
+    if (err) {
+      console.error("CHECKOUT INSERT ERROR 👉", err);
+      return res.send("Checkout failed"); // ⛔ return is MUST
+    }
 
 
         // 2️⃣ INSERT CHECKOUT ITEMS
@@ -1508,7 +1569,7 @@ router.get("/payment_cycle", (req, res) => {
 });
 
 
-
+// become dealer
 router.post("/dealer/register", (req, res) => {
   const db = req.db;
 
@@ -1520,7 +1581,7 @@ router.post("/dealer/register", (req, res) => {
     dealer_type
   } = req.body;
 
-  // ✅ basic validation (NO password)
+  // ✅ basic validation 
   if (!full_name || !mobile || !email || !city || !dealer_type) {
     return res.send("All fields required");
   }
@@ -1553,7 +1614,8 @@ router.post("/dealer/register", (req, res) => {
             return res.send("Registration failed");
           }
 
-          res.send(" registered successfully");
+          // res.send(" registered successfully");
+          return res.render("become_dealer/dealer_success");
         }
       );
     }

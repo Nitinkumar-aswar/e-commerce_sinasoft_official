@@ -137,10 +137,10 @@
       <a href="/admin/sliders">Sliders</a>
       <a href="/admin/products">Products</a>
       <a href="#">Categories</a>
-      <a href="/admin/dealer_requests">Become Dealers</a>
+      <a href="/admin/dealer_requests">Dealers</a>
       <a href="/admin/orders">Orders</a>
 
-      <a href="#">Users</a>
+      <a href="/admin/user">Users</a>
       <a href="/">Go to Website</a>
     </div>
 
@@ -170,6 +170,17 @@
     <% } %>
     <% if (page === "order-view") { %>
   <%- include("order-view") %>
+<% } %>
+<% if (page === "user_details") { %>
+  <%- include("./user_details") %>
+<% } %>
+<% if (page === "user_view") { %>
+  <%- include("user_view") %>
+<% } %>
+
+
+<% if (page === "user_orders") { %>
+  <%- include("user_orders") %>
 <% } %>
 
   </div>

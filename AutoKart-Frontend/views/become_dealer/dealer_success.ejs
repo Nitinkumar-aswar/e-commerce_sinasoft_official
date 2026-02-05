@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Registration Successful</title>
+
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #1d976c, #93f9b9);
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.success-box {
+  background: #ffffff;
+  padding: 40px 60px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+  animation: popUp 0.8s ease;
+}
+
+.checkmark {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: #2ecc71;
+  margin: 0 auto 20px;
+  position: relative;
+  animation: scaleIn 0.6s ease;
+}
+
+.checkmark::after {
+  content: "";
+  position: absolute;
+  width: 25px;
+  height: 50px;
+  border: solid #fff;
+  border-width: 0 6px 6px 0;
+  transform: rotate(45deg);
+  left: 32px;
+  top: 18px;
+}
+
+h1 {
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+p {
+  color: #555;
+  font-size: 16px;
+}
+
+.welcome {
+  margin-top: 10px;
+  font-size: 18px;
+  color: #1d976c;
+  font-weight: bold;
+  animation: glow 1.5s infinite alternate;
+}
+
+@keyframes popUp {
+  from { transform: scale(0.6); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0); }
+  to { transform: scale(1); }
+}
+
+@keyframes glow {
+  from { opacity: 0.6; }
+  to { opacity: 1; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="success-box">
+  <div class="checkmark"></div>
+  <h1>Registration Successful 🎉</h1>
+  <p>Dealer registration completed successfully</p>
+  <div class="welcome">आपलं स्वागत आहे 🙏</div>
+</div>
+
+</body>
+</html>

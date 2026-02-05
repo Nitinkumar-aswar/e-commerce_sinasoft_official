@@ -1,0 +1,197 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>User List</title>
+
+  <!-- ✅ FONT AWESOME (Eye Icons) -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  />
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .card {
+      background: #fff;
+      padding: 20px;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    h2 {
+      margin-bottom: 15px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    thead {
+      background-color: blue;
+      color: #fff;
+    }
+
+    th, td {
+      padding: 15px;
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+/* 
+    tr:hover {
+      background: #eef3f7;
+    } */
+
+    .btn-view {
+      padding: 6px 12px;
+      background: #3498db;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+
+    .btn-view:hover {
+      background: #217dbb;
+    }
+
+    .password {
+      color: #555;
+      letter-spacing: 2px;
+    }
+
+    .toggle-icon {
+      margin-left: 10px;
+      cursor: pointer;
+      color: #2980b9;
+      font-size: 15px;
+    }
+
+    .toggle-icon:hover {
+      color: #1f5f8b;
+    }
+
+    .no-data {
+      text-align: center;
+      padding: 20px;
+      color: #666;
+    }
+
+
+table {
+  border-collapse: collapse;
+  font-family: Arial;
+}
+td, th {
+  border: 1px solid #ddd;
+  text-align: center;
+}
+tr:nth-child(even) {
+  background: #f7f9fb;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+  <h2>👤 User List</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Mobile</th>
+        <th>Email</th>
+        <th>Username</th>
+        <th>Password</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% if (users && users.length > 0) { %>
+        <% users.forEach(user => { %>
+          <tr>
+            <td><%= user.user_id %></td>
+
+            <td>
+              <%= user.user_first_name %> <%= user.user_last_name %>
+            </td>
+
+            <td><%= user.user_mobile %></td>
+
+            <td><%= user.user_email %></td>
+
+            <td><%= user.user_user_name %></td>
+
+            <!-- 🔐 PASSWORD SHOW / HIDE -->
+            <td>
+              <span 
+                class="password"
+                data-password="<%= user.user_password %>"
+              >
+                ••••••••
+              </span>
+
+              <i
+                class="fa-solid fa-eye toggle-icon"
+                title="Show / Hide Password"
+                onclick="togglePassword(this)"
+              ></i>
+            </td>
+
+            <td>
+              <a class="btn-view" href="/admin/user/<%= user.user_id %>">
+                View
+              </a>
+            </td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr>
+          <td colspan="7" class="no-data">
+            No users found
+          </td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+<script>
+  function togglePassword(icon) {
+    const span = icon.previousElementSibling;
+    const realPassword = span.getAttribute("data-password");
+
+    if (icon.classList.contains("fa-eye")) {
+      span.innerText = realPassword;
+      span.style.letterSpacing = "0";
+      icon.classList.remove("fa-eye");
+      icon.classList.add("fa-eye-slash");
+    } else {
+      span.innerText = "••••••••";
+      span.style.letterSpacing = "2px";
+      icon.classList.remove("fa-eye-slash");
+      icon.classList.add("fa-eye");
+    }
+  }
+</script>
+
+</body>
+</html>
