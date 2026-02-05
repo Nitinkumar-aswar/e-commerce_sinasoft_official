@@ -13,7 +13,10 @@ const router = express.Router();
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) =>
-    cb(null, path.join(__dirname, "../public/uploads")),
+    cb(
+  null,
+  path.join(__dirname, "../../../AutoKart-Frontend/public/uploads")),
+
   filename: (req, file, cb) =>
     cb(null, Date.now() + "-" + file.originalname)
 });
@@ -32,7 +35,7 @@ const upload = multer({
 
 const sliderStorage = multer.diskStorage({
   destination: (req, file, cb) =>
-    cb(null, path.join(__dirname, "../public/uploads/sliders")),
+    cb(null, path.join(__dirname, "../../../AutoKart-Frontend/public/uploads/sliders")),
   filename: (req, file, cb) =>
     cb(null, Date.now() + "-" + file.originalname)
 });
@@ -132,11 +135,12 @@ router.get("/sliders/delete/:id", (req, res) => {
     (err, result) => {
       if (err || !result.length) return res.redirect("/admin/sliders");
 
-      const imagePath = path.join(
-        __dirname,
-        "../public/uploads/sliders",
-        result[0].image
-      );
+     const imagePath = path.join(
+  __dirname,
+  "../../../AutoKart-Frontend/public/uploads/sliders",
+  result[0].image
+);
+
 
       db.query(
         "DELETE FROM sliders WHERE id = ?",
@@ -439,10 +443,11 @@ router.get("/products/delete/:id", (req, res) => {
         return res.send("Product not found");
 
       const imagePath = path.join(
-        __dirname,
-        "../public/uploads",
-        result[0].image
-      );
+  __dirname,
+  "../../../AutoKart-Frontend/public/uploads",
+  result[0].image
+);
+
 
       db.query(
         "DELETE FROM products WHERE id = ?",
