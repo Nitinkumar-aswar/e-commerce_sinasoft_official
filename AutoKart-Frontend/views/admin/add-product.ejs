@@ -113,12 +113,48 @@
         <textarea name="product_description"></textarea>
 
         <label>Price (₹)</label>
-        <input type="number" name="price" step="0.01">
+        <input type="number" id="price" name="price" step="0.01">
+
+        <!-- OPTIONAL: Original Price + Discount -->
+        <label>Original Price (₹) <span style="font-weight: normal;color:#888;">(optional)</span></label>
+        <input type="number" id="original_price" name="original_price" step="0.01" placeholder="e.g. 1000">
+
+        <label>Discount (%) <span style="font-weight: normal;color:#888;">(optional)</span></label>
+        <input type="number" id="discount" name="discount" step="0.01" placeholder="e.g. 10">
+
+        <small style="display:block;margin-top:5px;color:#666;">
+          If you fill Original Price and Discount, the <strong>Price</strong> will be auto-calculated.
+        </small>
 
         <button type="submit">Save Product</button>
       </form>
     </div>
   </div>
+
+
+  <script>
+    (function () {
+      const originalInput = document.getElementById("original_price");
+      const discountInput = document.getElementById("discount");
+      const priceInput = document.getElementById("price");
+
+      function recalcPrice() {
+        const original = parseFloat(originalInput.value);
+        const discount = parseFloat(discountInput.value);
+
+        if (!isNaN(original) && !isNaN(discount)) {
+          const discountAmount = (original * discount) / 100;
+          const finalPrice = original - discountAmount;
+          if (!isNaN(finalPrice)) {
+            priceInput.value = finalPrice.toFixed(2);
+          }
+        }
+      }
+
+      originalInput.addEventListener("input", recalcPrice);
+      discountInput.addEventListener("input", recalcPrice);
+    })();
+  </script>
 
 </body>
 </html>

@@ -161,7 +161,12 @@ a, i {
       <div class="col-lg col-md-4 col-6 mb-4">
         <h6 class="footer-title">About</h6>
         <ul class="footer-list">
-          <li><a href="#"><i class="bi bi-telephone"></i> Contact Us</a></li>
+         <li>
+  <a href="/contact">
+    <i class="bi bi-telephone"></i> Contact Us
+  </a>
+</li>
+
           <li><a href="#"><i class="bi bi-info-circle"></i> About Us</a></li>
           <li><a href="#"><i class="bi bi-briefcase"></i> Careers</a></li>
           <li><a href="#"><i class="bi bi-newspaper"></i> Press</a></li>
@@ -169,37 +174,88 @@ a, i {
       </div>
 
       <!-- QUICK LINKS -->
-      <div class="col-lg col-md-4 col-6 mb-4">
-        <h6 class="footer-title">Quick Links</h6>
-        <ul class="footer-list">
-          <li><a href="#"><i class="bi bi-house-door"></i> Home</a></li>
-          <li><a href="#"><i class="bi bi-bag"></i> Shop</a></li>
-          <li><a href="#"><i class="bi bi-truck-front"></i> Vehicle Type</a></li>
-          <li><a href="#"><i class="bi bi-grid"></i> Categories</a></li>
-        </ul>
-      </div>
+<div class="col-lg col-md-4 col-6 mb-4">
+  <h6 class="footer-title">Quick Links</h6>
+  <ul class="footer-list">
 
-      <!-- SERVICES -->
-      <div class="col-lg col-md-4 col-6 mb-4">
-        <h6 class="footer-title">Services</h6>
-        <ul class="footer-list">
-          <li><a href="#"><i class="bi bi-cpu"></i> Electronics</a></li>
-          <li><a href="#"><i class="bi bi-box-seam"></i> Track Order</a></li>
-          <li><a href="#"><i class="bi bi-images"></i> Gallery</a></li>
-          <li><a href="#"><i class="bi bi-person-badge"></i> Become Dealer</a></li>
-        </ul>
-      </div>
+    <li>
+      <a href="/">
+        <i class="bi bi-house-door"></i> Home
+      </a>
+    </li>
 
-      <!-- POLICY -->
-      <div class="col-lg col-md-4 col-6 mb-4">
-        <h6 class="footer-title">Policy</h6>
-        <ul class="footer-list">
-          <li><a href="#"><i class="bi bi-arrow-repeat"></i> Returns</a></li>
-          <li><a href="#"><i class="bi bi-file-text"></i> Terms</a></li>
-          <li><a href="#"><i class="bi bi-shield-lock"></i> Security</a></li>
-          <li><a href="#"><i class="bi bi-lock"></i> Privacy</a></li>
-        </ul>
-      </div>
+    <li>
+      <a href="/section/1-shop">
+        <i class="bi bi-bag"></i> Shop
+      </a>
+    </li>
+
+    <li>
+      <a href="/section/2-vehicle-type">
+        <i class="bi bi-truck-front"></i> Vehicle Type
+      </a>
+    </li>
+
+    <li>
+      <a href="/section/3-categories">
+        <i class="bi bi-grid"></i> Categories
+      </a>
+    </li>
+
+  </ul>
+</div>
+
+
+<!-- SERVICES -->
+<div class="col-lg col-md-4 col-6 mb-4">
+  <h6 class="footer-title">Services</h6>
+
+  <ul class="footer-list">
+
+    <!-- ELECTRONICS -->
+    <li>
+      <a href="section/4-electronics">
+        <i class="bi bi-cpu"></i> Electronics
+      </a>
+    </li>
+
+    <!-- TRACK ORDER (LOGIN REQUIRED) -->
+    <li>
+      <a href="/orders">
+        <i class="bi bi-box-seam"></i> Track Order
+      </a>
+    </li>
+
+    <!-- GALLERY -->
+    <li>
+      <a href="section/5-gallery">
+        <i class="bi bi-images"></i> Gallery
+      </a>
+    </li>
+
+    <!-- CUSTOMER SUPPORT -->
+    <li>
+      <a href="/contact">
+        <i class="bi bi-headset"></i> Customer Support
+      </a>
+    </li>
+
+  </ul>
+</div>
+
+
+
+
+         <!-- POLICY -->
+<div class="col-lg col-md-4 col-6 mb-4"> <h6 class="footer-title">Policy</h6>
+  <ul class="footer-list">
+    <li><a href="/returns"> <i class="bi bi-arrow-repeat"></i> Returns</a> </li>
+    <li> <a href="/terms"><i class="bi bi-file-text"></i> Terms</a></li>
+    <li> <a href="/security"><i class="bi bi-shield-lock"></i> Security</a></li>
+    <li> <a href="/privacy"> <i class="bi bi-lock"></i> Privacy </a>
+    </li>
+  </ul>
+</div>
 
       <!-- MAIL US -->
       <div class="col-lg col-md-4 col-6 mb-4">
@@ -208,19 +264,47 @@ a, i {
           <li><a href="#"><i class="bi bi-building"></i> AutoKart Pvt Ltd</a></li>
           <li><a href="#"><i class="bi bi-geo-alt"></i> Ahmednagar</a></li>
           <li><a href="#"><i class="bi bi-flag"></i> Maharashtra, India</a></li>
-          
-          <li><a href="/dealer">Become Seller</a></li>
+          <li>
+      <a href="admin/become_dealer">
+        <i class="bi bi-person-badge"></i> Become Dealer
+      </a>
+    </li>
+         
         </ul>
       </div>
 
       <!-- CONTACT -->
-      <div class="col-lg col-md-4 col-6 mb-4">
-        <h6 class="footer-title">Contact</h6>
-        <ul class="footer-list">
-          <li><a href="#"><i class="bi bi-phone"></i> +91 9876543210</a></li>
-          <li><a href="#"><i class="bi bi-envelope"></i> support@autokart.com</a></li>
-        </ul>
-      </div>
+<div class="col-lg col-md-4 col-6 mb-4">
+  <h6 class="footer-title">Contact</h6>
+
+  <ul class="footer-list">
+
+    <!-- PHONE -->
+    <li>
+      <a href="tel:<%= contact.phone %>">
+        <i class="bi bi-phone"></i>
+        <span><%= contact.phone %></span>
+      </a>
+    </li>
+
+    <!-- EMAIL -->
+    <li>
+      <a href="mailto:<%= contact.email %>">
+        <i class="bi bi-envelope"></i>
+        <span><%= contact.email %></span>
+      </a>
+    </li>
+
+    <!-- WHATSAPP -->
+    <li>
+      <a href="https://wa.me/<%= contact.whatsapp %>" target="_blank">
+        <i class="bi bi-whatsapp"></i>
+        <span>Chat on WhatsApp</span>
+      </a>
+    </li>
+
+  </ul>
+</div>
 
     </div>
 

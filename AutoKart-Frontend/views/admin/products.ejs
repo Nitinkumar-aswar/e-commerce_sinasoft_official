@@ -54,33 +54,70 @@
 
     .form-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px 20px;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      width: 100%;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      width: 100%;
     }
 
     label {
-      font-size: 13px;
-      font-weight: bold;
-      margin-bottom: 5px;
       display: block;
-    }
-
-    input, select, textarea {
-      width: 100%;
-      padding: 9px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #333;
       font-size: 14px;
     }
 
+    input, select, .form-control {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+      box-sizing: border-box;
+      transition: border-color 0.3s ease;
+    }
+
+    input:focus, select:focus, .form-control:focus {
+      border-color: #2874f0;
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(40, 116, 240, 0.1);
+    }
+    
+    /* Style for read-only price field */
+    #editPrice, #price {
+      background-color: #f8f9fa;
+      cursor: not-allowed;
+    }
+
+    #editPrice:focus {
+      outline: none;
+      border-color: #ddd;
+      box-shadow: none;
+    }
+
     textarea {
-      min-height: 90px;
+      min-height: 120px;
       resize: vertical;
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 14px;
+      box-sizing: border-box;
     }
 
     .form-actions {
       grid-column: 1 / -1;
       text-align: right;
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 1px solid #eee;
     }
 
     button {
@@ -330,9 +367,9 @@
       <form method="POST" action="/admin/products" enctype="multipart/form-data">
         <div class="form-grid">
 
-          <div>
-            <label>Section</label>
-            <select id="sectionSelect" name="section_id" required>
+          <div class="form-group">
+            <label for="sectionSelect">Section</label>
+            <select id="sectionSelect" name="section_id" class="form-control" required>
               <option value="">Select Section</option>
               <% sections.forEach(section => { %>
                 <option value="<%= section.id %>"><%= section.name %></option>
@@ -340,42 +377,80 @@
             </select>
           </div>
 
-          <div>
-            <label>Sub Section</label>
-            <select id="subSectionSelect" name="sub_section_id" required>
+          <div class="form-group">
+            <label for="subSectionSelect">Sub Section</label>
+            <select id="subSectionSelect" name="sub_section_id" class="form-control" required>
               <option value="">Select Sub Section</option>
             </select>
           </div>
 
-          <div>
-            <label>Product Name</label>
-            <input type="text" name="product_name" required>
+          <div class="form-group">
+            <label for="productName">Product Name</label>
+            <input type="text" id="productName" name="product_name" class="form-control" required>
           </div>
 
-          <div>
-            <label>Price (₹)</label>
-            <input type="number" name="price" required>
+          <div class="form-group">
+            <label for="originalPrice">Original Price (₹)</label>
+            <input type="number" id="originalPrice" name="original_price" class="form-control" step="0.01" required>
           </div>
 
-          <div>
-            <label>Quantity</label>
-            <input type="number" name="quantity" required>
+          <div class="form-group">
+            <label for="discount">Discount (%)</label>
+            <input type="number" id="discount" name="discount" class="form-control" min="0" max="100" step="0.01" required>
           </div>
 
-          <div>
-            <label>Product Image</label>
-            <input type="file" name="product_image" required>
+          <div class="form-group">
+            <label for="price">Price (₹)</label>
+            <input type="number" id="price" name="price" class="form-control" step="0.01" required readonly>
           </div>
-            <div>
-  <label>Gallery Images (Max 5)</label>
-<input type="file" name="gallery_images[]" multiple accept="image/*">
 
+          <script>
+            const originalPriceInput = document.getElementById('originalPrice');
+            const discountInput = document.getElementById('discount');
+            const priceInput = document.getElementById('price');
 
-</div>
+            function calculatePrice() {
+              const originalPrice = parseFloat(originalPriceInput.value);
+              const discount = parseFloat(discountInput.value);
 
-          <div>
-            <label>Product Description</label>
-            <textarea name="product_description"></textarea>
+              if (!isNaN(originalPrice) && !isNaN(discount)) {
+                const discountAmount = (originalPrice * discount) / 100;
+                const finalPrice = originalPrice - discountAmount;
+                priceInput.value = finalPrice.toFixed(2);
+              }
+            }
+
+            originalPriceInput.addEventListener('input', calculatePrice);
+            discountInput.addEventListener('input', calculatePrice);
+          </script>
+          
+          <div class="form-group">
+            <label for="quantity">Quantity</label>
+            <input type="number" id="quantity" name="quantity" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label for="productImage">Main Product Image</label>
+            <input type="file" id="productImage" name="product_image" class="form-control" required>
+            <p class="help-text">This will be the main display image</p>
+          </div>
+
+          <div class="form-group">
+            <label for="galleryImages">Gallery Images (Max 5)</label>
+            <input type="file" id="galleryImages" name="gallery_images[]" class="form-control" multiple accept="image/*">
+            <p class="help-text">Additional product images (optional)</p>
+          </div>
+
+          <div class="form-group" style="grid-column: 1 / -1;">
+            <label for="addProductDesc">Product Description</label>
+            <textarea 
+              name="product_description" 
+              id="addProductDesc" 
+              class="form-control"
+              rows="4"
+              placeholder="Enter product description..."
+              required
+            ></textarea>
           </div>
 
           <div class="form-actions">
@@ -408,6 +483,8 @@
             <th>Name</th>
             <th>Section</th>
             <th>Price</th>
+            <th>Original Price</th>
+            <th>Discount %</th>
             <th>Qty</th>
             <th>Actions</th>
           </tr>
@@ -418,9 +495,17 @@
             <tr data-name="<%= p.product_name.toLowerCase() %>">
               <td><%= i + 1 %></td>
               <td><img src="/uploads/<%= p.image %>"></td>
-              <td><%= p.product_name %></td>
+              <td title="<%= p.product_name %>">
+                <% 
+                const words = p.product_name.split(' ');
+                const displayName = words.slice(0, 4).join(' ') + (words.length > 4 ? '...' : '');
+                %>
+                <%= displayName %>
+              </td>
               <td><%= p.section_name %></td>
-              <td>₹ <%= p.price %></td>
+              <td>₹<%= p.price %></td>
+              <td>₹<%= p.original_price || p.price %></td>
+              <td><%= p.discount ? p.discount + '%' : '0%' %></td>
               <td><%= p.quantity %></td>
               <td>
                 <button
@@ -429,6 +514,8 @@
                   data-id="<%= p.id %>"
                   data-name="<%= p.product_name %>"
                   data-price="<%= p.price %>"
+                  data-original-price="<%= p.original_price || p.price %>"
+                  data-discount="<%= p.discount || 0 %>"
                   data-quantity="<%= p.quantity %>"
                   data-desc="<%= p.product_description || '' %>"
                   data-section="<%= p.section_id %>"
@@ -457,11 +544,11 @@
   </div>
 </div>
 
-<!-- EDIT MODAL (UNCHANGED) -->
+<!-- EDIT MODAL -->
 <div class="modal" id="editModal">
   <div class="modal-box">
     <h3>Edit Product</h3>
-    <form id="editForm" method="POST" enctype="multipart/form-data">
+    <form id="editForm" method="POST" enctype="multipart/form-data" action="">
 
       <label>Section</label>
       <select name="section_id" id="editSection">
@@ -482,8 +569,18 @@
 
       <br><br>
 
-      <label>Price</label>
-      <input type="number" name="price" id="editPrice">
+      <label>Original Price (₹)</label>
+      <input type="number" id="editOriginalPrice" name="original_price" step="0.01" required>
+
+      <br><br>
+
+      <label>Discount (%)</label>
+      <input type="number" id="editDiscount" name="discount" min="0" max="100" step="0.01" required>
+
+      <br><br>
+
+      <label>Price (₹)</label>
+      <input type="number" id="editPrice" name="price" step="0.01" required readonly>
 
       <br><br>
 
@@ -492,10 +589,19 @@
 
       <br><br>
 
-      <label>Description</label>
-      <textarea name="product_description" id="editDesc"></textarea>
+      <div class="form-group">
+        <label for="editDesc">Description</label>
+        <textarea 
+          name="product_description" 
+          id="editDesc" 
+          class="form-control"
+          rows="4"
+          style="min-height: 100px; resize: vertical; padding: 10px; border: 1px solid #ddd; border-radius: 4px;"
+          placeholder="Enter product description..."
+        ></textarea>
+      </div>
 
-      <br><br>
+      <br>
 
       <label>Change Image (optional)</label>
       <input type="file" name="product_image">
@@ -546,18 +652,249 @@
   const editForm = document.getElementById("editForm");
   const editSection = document.getElementById("editSection");
   const editSubSection = document.getElementById("editSubSection");
+  
+  // Price calculation function
+  function calculateEditPrice() {
+    const originalPrice = parseFloat(document.getElementById('editOriginalPrice').value) || 0;
+    const discount = parseFloat(document.getElementById('editDiscount').value) || 0;
+    const priceField = document.getElementById('editPrice');
+    
+    if (originalPrice > 0) {
+      if (discount > 0) {
+        const discountAmount = (originalPrice * discount) / 100;
+        const finalPrice = originalPrice - discountAmount;
+        priceField.value = finalPrice.toFixed(2);
+      } else {
+        priceField.value = originalPrice.toFixed(2);
+      }
+    } else {
+      priceField.value = '';
+    }
+  }
+  
+  // Initialize event listeners
+  function initializePriceCalculation() {
+    const originalPriceInput = document.getElementById('editOriginalPrice');
+    const discountInput = document.getElementById('editDiscount');
+    const priceField = document.getElementById('editPrice');
+    
+    if (originalPriceInput && discountInput) {
+      // Clone inputs to remove any existing event listeners
+      const newOriginalPrice = originalPriceInput.cloneNode(true);
+      const newDiscount = discountInput.cloneNode(true);
+      
+      originalPriceInput.parentNode.replaceChild(newOriginalPrice, originalPriceInput);
+      discountInput.parentNode.replaceChild(newDiscount, discountInput);
+      
+      // Add new event listeners
+      newOriginalPrice.addEventListener('input', calculateEditPrice);
+      newDiscount.addEventListener('input', calculateEditPrice);
+      
+      // Make price field read-only
+      if (priceField) {
+        priceField.readOnly = true;
+      }
+    }
+  }
+  
+  // Price calculation function
+  function calculateEditPrice() {
+    try {
+      const originalPrice = parseFloat(document.getElementById('editOriginalPrice').value) || 0;
+      let discount = parseFloat(document.getElementById('editDiscount').value) || 0;
+      const priceField = document.getElementById('editPrice');
+      
+      // Ensure discount is between 0 and 100
+      discount = Math.min(100, Math.max(0, discount));
+      
+      if (originalPrice > 0) {
+        const discountAmount = (originalPrice * discount) / 100;
+        const finalPrice = originalPrice - discountAmount;
+        priceField.value = finalPrice.toFixed(2);
+      } else {
+        priceField.value = '';
+      }
+      
+      // Update the discount input to ensure it's within bounds
+      if (document.getElementById('editDiscount').value !== discount.toString()) {
+        document.getElementById('editDiscount').value = discount;
+      }
+      
+      return true;
+    } catch (error) {
+      console.error('Error in price calculation:', error);
+      return false;
+    }
+  }
 
+  // Initialize price calculation when the DOM is loaded
+  document.addEventListener('DOMContentLoaded', function() {
+    // Get the input elements
+    const originalPriceInput = document.getElementById('editOriginalPrice');
+    const discountInput = document.getElementById('editDiscount');
+    
+    // Add event listeners for real-time calculation
+    if (originalPriceInput && discountInput) {
+      // Function to handle input events with debounce
+      const handlePriceInput = () => {
+        calculateEditPrice();
+      };
+      
+      // Add event listeners
+      originalPriceInput.addEventListener('input', handlePriceInput);
+      discountInput.addEventListener('input', handlePriceInput);
+      
+      // Initial calculation
+      calculateEditPrice();
+    }
+  });
+
+  // Form submission handler
+  if (editForm) {
+    editForm.addEventListener("submit", function(e) {
+      e.preventDefault();
+      
+      // Ensure price is calculated before submission
+      calculateEditPrice();
+      
+      // Create FormData object
+      const formData = new FormData(this);
+      
+      // Get all form values
+      const originalPrice = document.getElementById('editOriginalPrice').value || '0';
+      const discount = document.getElementById('editDiscount').value || '0';
+      const price = document.getElementById('editPrice').value || originalPrice;
+      
+      // Ensure all required fields are set
+      formData.set('original_price', originalPrice);
+      formData.set('discount', discount);
+      formData.set('price', price);
+      
+      // Log form data for debugging
+      console.log('Submitting form with:', {
+        original_price: originalPrice,
+        discount: discount,
+        price: price
+      });
+      
+      // Submit the form using fetch
+      fetch(this.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          // Don't set Content-Type header when using FormData with files
+          // The browser will set it with the correct boundary
+        }
+      })
+      .then(response => {
+        if (response.redirected) {
+          window.location.href = response.url;
+        } else {
+          return response.text().then(text => {
+            console.error('Unexpected response:', text);
+            alert('Error updating product. Please check console for details.');
+          });
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Error updating product: ' + error.message);
+      });
+    });
+  }
+
+  // Function to show modal
+  function showEditModal() {
+    editModal.style.display = 'block';
+    document.body.style.overflow = 'hidden'; // Prevent scrolling
+  }
+
+  // Function to hide modal
+  function hideEditModal() {
+    editModal.style.display = 'none';
+    document.body.style.overflow = 'auto'; // Re-enable scrolling
+  }
+
+  // Close modal when clicking outside of it
+  editModal.addEventListener('click', (e) => {
+    if (e.target === editModal) {
+      hideEditModal();
+    }
+  });
+
+  // Close button
+  const closeButton = editModal.querySelector('button[type="button"]');
+  if (closeButton) {
+    closeButton.addEventListener('click', hideEditModal);
+  }
+
+  // Set up event listeners for price calculation
+  if (editOriginalPrice && editDiscount) {
+    // Remove any existing listeners to prevent duplicates
+    const newOriginalPrice = editOriginalPrice.cloneNode(true);
+    const newDiscount = editDiscount.cloneNode(true);
+    
+    editOriginalPrice.parentNode.replaceChild(newOriginalPrice, editOriginalPrice);
+    editDiscount.parentNode.replaceChild(newDiscount, editDiscount);
+    
+    // Add new event listeners
+    newOriginalPrice.addEventListener('input', calculateEditPrice);
+    newDiscount.addEventListener('input', calculateEditPrice);
+  }
+
+  // Edit button click handler
   document.querySelectorAll(".edit-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-
-      editForm.action = "/admin/products/edit/" + btn.dataset.id;
-
-      document.getElementById("editName").value = btn.dataset.name;
-      document.getElementById("editPrice").value = btn.dataset.price;
-      document.getElementById("editQuantity").value = btn.dataset.quantity;
-      document.getElementById("editDesc").value = btn.dataset.desc || "";
-
-      editSection.value = btn.dataset.section;
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      
+      // Show the modal
+      showEditModal();
+      
+      // Set form action
+      const productId = btn.getAttribute('data-id');
+      editForm.action = "/admin/products/edit/" + productId;
+      
+      // Get all data attributes
+      const name = btn.getAttribute('data-name') || '';
+      const originalPrice = btn.getAttribute('data-original-price') || btn.getAttribute('data-price') || '';
+      const discount = btn.getAttribute('data-discount') || '0';
+      const price = btn.getAttribute('data-price') || '';
+      const quantity = btn.getAttribute('data-quantity') || '';
+      const desc = btn.getAttribute('data-desc') || '';
+      const section = btn.getAttribute('data-section') || '';
+      const subsection = btn.getAttribute('data-subsection') || '';
+      
+      // Set form field values
+      document.getElementById("editName").value = name;
+      document.getElementById("editOriginalPrice").value = originalPrice;
+      document.getElementById("editDiscount").value = discount;
+      document.getElementById("editPrice").value = price;
+      document.getElementById("editQuantity").value = quantity;
+      
+      // Handle description - properly escape HTML entities
+      const descTextarea = document.getElementById("editDesc");
+      descTextarea.value = desc.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+      
+      // Set section and trigger change to load subsections
+      if (editSection) {
+        editSection.value = section;
+        // Trigger change event to load subsections
+        const event = new Event('change');
+        editSection.dispatchEvent(event);
+        
+        // Set subsection after a small delay to ensure subsections are loaded
+        setTimeout(() => {
+          if (editSubSection && subsection) {
+            editSubSection.value = subsection;
+          }
+        }, 100);
+      }
+      
+      // Re-initialize price calculation
+      initializePriceCalculation();
+      
+      // Calculate initial price
+      setTimeout(calculateEditPrice, 100);
 
       editSubSection.innerHTML = "";
 

@@ -56,6 +56,8 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
 
+
+    
     /* TABLET 481px – 768px */
 @media (min-width: 481px) and (max-width: 768px) {
   .admin-container {
@@ -134,46 +136,69 @@
     <!-- ===== SIDEBAR ===== -->
     <div class="sidebar">
       <a href="/admin">Dashboard</a>
-      <a href="/admin/sliders">Sliders</a>
       <a href="/admin/products">Products</a>
-      
-      <a href="/admin/dealer_requests">Dealers Requests</a>
       <a href="/admin/orders">Orders</a>
-
-      <a href="#">Users</a>
-      <a href="/">Go to Website</a>
-    </div>
+      <a href="/admin/user">Users</a>
+      <a href="/admin/sliders">Sliders</a>
+      <a href="/admin/dealer_requests">Dealers Requests</a>
+    <!--<a href="/">Go to Website</a> -->
+      </div>
 
     <!-- ===== CONTENT AREA ===== -->
-    <div class="content">
+    
+<div class="content">
 
-    <div class="content">
+  <% 
+    const fullWidthPages = [
+      "products",
+      "user_view",
+      "user_details",
+      "user_orders"
+    ];
+  %>
 
-  <!-- ===== CARD (WHITE AREA) ===== -->
-  <div class="card">
+  <% if (fullWidthPages.includes(page)) { %>
 
-    <% if (page === "dashboard") { %>
-      <h2>Welcome to Admin Dashboard</h2>
-      <p>Select an option from the sidebar.</p>
-    <% } %>
+    <!-- =========================
+         FULL WIDTH PAGES
+         (NO CARD WRAPPER)
+    ========================== -->
+    <%- include(page) %>
 
-    <% if (page === "sliders") { %>
-      <%- include("sliders") %>
-    <% } %>
+  <% } else { %>
 
-    <% if (page === "products") { %>
-      <%- include("products") %>
-    <% } %>
+    <!-- =========================
+         CARD WRAPPED PAGES
+    ========================== -->
+    <div class="card">
 
-    <% if (page === "orders") { %>
-      <%- include("orders") %>
-    <% } %>
-    <% if (page === "order-view") { %>
-  <%- include("order-view") %>
-<% } %>
+      <% if (page === "dashboard") { %>
+        <h2>Welcome to Admin Dashboard</h2>
+        <p>Select an option from the sidebar.</p>
+      <% } %>
 
-  </div>
+      <% if (page === "orders") { %>
+        <%- include("orders") %>
+      <% } %>
+
+      <% if (page === "order-view") { %>
+        <%- include("order-view") %>
+      <% } %>
+
+      <% if (page === "dealers") { %>
+        <%- include("dealers") %>
+      <% } %>
+
+      <% if (page === "sliders") { %>
+        <%- include("sliders") %>
+      <% } %>
+
+    </div>
+
+  <% } %>
+
 </div>
+
 
     <!-- ===== END CONTENT ===== -->
 
