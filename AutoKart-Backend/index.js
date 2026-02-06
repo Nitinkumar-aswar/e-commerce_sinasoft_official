@@ -105,9 +105,6 @@ const db = mysql.createPool({
   password: "mac@4562B",
   database: "Autokart"
 });
-
-console.log("✅ MySQL Pool ready");
-
 /* =========================
    MAKE DB AVAILABLE
 ========================= */
