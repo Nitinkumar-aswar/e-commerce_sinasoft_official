@@ -23,7 +23,7 @@ app.set("trust proxy", 1);
 const sessionDB = mysql.createPool({
  host: "localhost",
   user: "root",
-  password: "darshan@9356",
+  password: "",
   database: "autokart_db"
 
 });
@@ -93,7 +93,7 @@ app.set("views", path.join(__dirname, "../AutoKart-Frontend/views"));
 const db = mysql.createPool({
  host: "localhost",
   user: "root",
-  password: "darshan@9356",
+  password: "",
   database: "autokart_db"
 
 });
