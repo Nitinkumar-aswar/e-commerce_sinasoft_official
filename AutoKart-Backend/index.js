@@ -21,10 +21,12 @@ app.set("trust proxy", 1);
    SESSION DATABASE (POOL)
 ========================= */
 const sessionDB = mysql.createPool({
-  host: "localhost",
-  user: "autokart",
-  password: "AutoKart@123",
-  database: "autokart_db"
+ host: "autokart-rds.cvuye2wsa31.ap-south-1.rds.amazonaws.com",
+user: "autokart",
+password: "autokart9356",
+database: "autokart_db",
+port: 3306
+
 });
 
 /* =========================
@@ -90,10 +92,12 @@ app.set("views", path.join(__dirname, "../AutoKart-Frontend/views"));
 ========================= */
 
 const db = mysql.createPool({
-  host: "localhost",
-  user: "autokart",
-  password: "AutoKart@123",
-  database: "autokart_db"
+  host: "autokart-rds.cvuye2wsa31.ap-south-1.rds.amazonaws.com",
+user: "autokart",
+password: "autokart9356",
+database: "autokart_db",
+port: 3306
+
 });
 
 console.log("✅ MySQL Pool ready");
