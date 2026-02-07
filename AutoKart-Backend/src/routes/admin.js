@@ -13,14 +13,9 @@ const router = express.Router();
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) =>
-<<<<<<< HEAD
-    cb(null, path.join(__dirname, "../public/uploads")),
-=======
-    cb(
+    
   null,
-  path.join(__dirname, "../../../AutoKart-Frontend/public/uploads")),
-
->>>>>>> master
+  
   filename: (req, file, cb) =>
     cb(null, Date.now() + "-" + file.originalname)
 });
@@ -39,12 +34,7 @@ const upload = multer({
 
 const sliderStorage = multer.diskStorage({
   destination: (req, file, cb) =>
-<<<<<<< HEAD
-    cb(null, path.join(__dirname, "../public/uploads/sliders")),
-=======
-    cb(null, path.join(__dirname, "../../../AutoKart-Frontend/public/uploads/sliders")),
->>>>>>> master
-  filename: (req, file, cb) =>
+    
     cb(null, Date.now() + "-" + file.originalname)
 });
 
@@ -143,22 +133,12 @@ router.get("/sliders/delete/:id", (req, res) => {
     (err, result) => {
       if (err || !result.length) return res.redirect("/admin/sliders");
 
-<<<<<<< HEAD
-      const imagePath = path.join(
-        __dirname,
-        "../public/uploads/sliders",
-        result[0].image
-      );
-=======
      const imagePath = path.join(
   __dirname,
-  "../../../AutoKart-Frontend/public/uploads/sliders",
+  
   result[0].image
 );
-
->>>>>>> master
-
-      db.query(
+ db.query(
         "DELETE FROM sliders WHERE id = ?",
         [sliderId],
         err => {
@@ -210,22 +190,7 @@ router.get("/products", (req, res) => {
       const successMessage = req.session.successMessage;
 req.session.successMessage = null;
 
-<<<<<<< HEAD
-res.render("admin/products", {
-=======
-res.render("admin/dashboard", {
-  page: "products",
->>>>>>> master
-  sections,
-  products,
-  successMessage
-});
 
-
-<<<<<<< HEAD
-=======
-
->>>>>>> master
 req.session.successMessage = null; // clear after use
 
       });
@@ -468,20 +433,10 @@ router.get("/products/delete/:id", (req, res) => {
         return res.send("Product not found");
 
       const imagePath = path.join(
-<<<<<<< HEAD
-        __dirname,
-        "../public/uploads",
-        result[0].image
-      );
-=======
-  __dirname,
-  "../../../AutoKart-Frontend/public/uploads",
+  
   result[0].image
 );
-
->>>>>>> master
-
-      db.query(
+ db.query(
         "DELETE FROM products WHERE id = ?",
         [productId],
         err => {
@@ -521,37 +476,32 @@ router.get("/orders", (req, res) => {
   const search = req.query.search || "";
 
   const ordersQuery = `
-  SELECT
-    o.order_id,
+    SELECT
+      o.order_id,
+      o.order_status,
+      o.payment_method,
+      o.payment_status,
 
-    MAX(o.order_status)    AS order_status,
-    MAX(o.payment_method)  AS payment_method,
-    MAX(o.payment_status)  AS payment_status,
+      u.user_first_name,
+      u.user_last_name,
+      u.user_mobile,
 
-    MAX(u.user_first_name) AS user_first_name,
-    MAX(u.user_last_name)  AS user_last_name,
-    MAX(u.user_mobile)     AS user_mobile,
+      COUNT(oi.id) AS total_items
 
-    COUNT(oi.id)           AS total_items
+    FROM orders o
+    JOIN user_create_account u 
+      ON o.user_id = u.user_id
+    LEFT JOIN order_items oi 
+      ON o.order_id = oi.order_id
 
-  FROM orders o
-  JOIN user_create_account u 
-    ON o.user_id = u.user_id
-  LEFT JOIN order_items oi 
-    ON o.order_id = oi.order_id
+    WHERE
+      o.order_id LIKE ?
+      OR u.user_mobile LIKE ?
+      OR LOWER(CONCAT(u.user_first_name, ' ', u.user_last_name)) LIKE ?
 
-  WHERE
-    o.order_id LIKE ?
-    OR u.user_mobile LIKE ?
-    OR LOWER(CONCAT(u.user_first_name, ' ', u.user_last_name)) LIKE ?
-
-  GROUP BY o.order_id
-  ORDER BY MAX(o.id) DESC
-`;
-<<<<<<< HEAD
-
-=======
->>>>>>> master
+    GROUP BY o.order_id
+    ORDER BY o.id DESC
+  `;
   const likeSearch = `%${search.toLowerCase().trim()}%`;
 
   db.query(
@@ -888,26 +838,16 @@ router.get("/dealer_requests", (req, res) => {
 
     db.query(summaryQuery, (err, result) => {
       if (err) return res.send("Error loading summary");
-
-<<<<<<< HEAD
-      res.render("admin/dealers", {
-        dealers,
-        summary: result[0]   // 👈 summary dashboard data
-=======
-      res.render("admin/dashboard", {
+     res.render("admin/dashboard", {
         page: "dealers",
         dealers,
         summary: result[0]
->>>>>>> master
       });
     });
   });
 });
 
-<<<<<<< HEAD
-=======
 
->>>>>>> master
 /* =========================
    ADMIN → DEALER APPROVE
 ========================= */
@@ -1064,9 +1004,6 @@ router.get("/dealer/status_result", (req, res) => {
   );
 });
 
-<<<<<<< HEAD
-=======
-
 // USER LIST
 router.get("/user", (req, res) => {
   const sql = `
@@ -1157,6 +1094,4 @@ ORDER BY o.created_at DESC
     });
   });
 });
-
->>>>>>> master
 module.exports = router;
