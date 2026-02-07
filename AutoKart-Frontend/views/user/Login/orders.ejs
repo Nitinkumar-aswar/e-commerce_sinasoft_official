@@ -171,6 +171,45 @@
       color: #777;
       border-radius: 4px;
     }
+
+
+    /* =================================================
+   🔥 MOBILE – FILTERS NICHE + BUTTON SMALL
+================================================= */
+@media (max-width: 768px) {
+
+  /* layout column */
+  .orders-page {
+    flex-direction: column;
+  }
+
+  /* orders upar */
+  .orders-content {
+    order: 1;
+    width: 100%;
+  }
+
+  /* filters niche */
+  .orders-filters {
+    order: 2;
+    width: 100%;
+    margin-top: 16px;
+    padding: 14px;
+    border-radius: 8px;
+  }
+
+  /* 🔵 ONLY CHANGE: BLUE BUTTON SMALL */
+  .orders-search button {
+    width: 110px;      /* ⬅ smaller */
+    height: 36px;      /* ⬅ shorter */
+    font-size: 13px;   /* ⬅ text small */
+  }
+
+  .orders-search input {
+    height: 36px;
+    font-size: 14px;
+  }
+}
   </style>
 </head>
 

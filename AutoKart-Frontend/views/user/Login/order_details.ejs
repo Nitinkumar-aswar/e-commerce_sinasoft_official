@@ -218,7 +218,122 @@
 .cancel-btn:hover {
   background: #fff5f5;
 }
+/* =================================================
+   🔥 MOBILE RESPONSIVE – NO CUT (FINAL)
+================================================= */
+@media (max-width: 768px) {
 
+  /* 🔥 GLOBAL SAFETY */
+  html, body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  /* 🔥 HEADER SAFE SPACE (iPhone notch fix) */
+  body {
+    padding-top: 8px;
+  }
+
+  .order-wrapper {
+    padding: 14px 10px;
+    width: 100%;
+  }
+
+  .order-container {
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .order-left {
+    padding: 14px;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* ======================
+     PRODUCT ROW FIX
+  ====================== */
+  .product-row {
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    max-width: 100%;
+    padding-bottom: 34px; /* 🔥 cancel button space */
+    overflow: visible;
+  }
+
+  .product-row img {
+    width: 120px;
+    height: 120px;
+    max-width: 100%;
+  }
+
+  .product-info {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* ======================
+     CANCEL BUTTON FIX
+  ====================== */
+  .cancel-order-box {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    max-width: 100%;
+  }
+
+  .cancel-btn {
+    font-size: 12px;
+    padding: 6px 10px;
+    white-space: nowrap;
+  }
+
+  /* ======================
+     TRACKING FIX
+  ====================== */
+  .tracking {
+    width: 100%;
+    overflow: visible;
+  }
+
+  /* ======================
+     RIGHT SECTION
+  ====================== */
+  .order-right {
+    width: 100%;
+    max-width: 100%;
+    position: static;
+  }
+
+  .info-box {
+    padding: 14px;
+  }
+
+  .info-box h3 {
+    font-size: 15px;
+  }
+
+  .price-row {
+    font-size: 13px;
+  }
+
+  .price-total {
+    font-size: 15px;
+  }
+
+  .invoice-btn {
+    width: 100%;
+    font-size: 14px;
+  }
+}
 
 </style>
 </head>
