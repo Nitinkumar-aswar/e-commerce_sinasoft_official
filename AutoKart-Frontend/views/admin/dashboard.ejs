@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+<<<<<<< HEAD
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+=======
+>>>>>>> master
   <title>AutoKart Admin Panel</title>
 
   <!-- ===== BASIC STYLES ===== -->
@@ -57,6 +60,11 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
 
+<<<<<<< HEAD
+=======
+
+    
+>>>>>>> master
     /* TABLET 481px – 768px */
 @media (min-width: 481px) and (max-width: 768px) {
   .admin-container {
@@ -135,6 +143,7 @@
     <!-- ===== SIDEBAR ===== -->
     <div class="sidebar">
       <a href="/admin">Dashboard</a>
+<<<<<<< HEAD
       <a href="/admin/sliders">Sliders</a>
       <a href="/admin/products">Products</a>
       
@@ -176,6 +185,72 @@
   </div>
 </div>
 
+=======
+      <a href="/admin/products">Products</a>
+      <a href="/admin/orders">Orders</a>
+      <a href="/admin/user">Users</a>
+      <a href="/admin/sliders">Sliders</a>
+      <a href="/admin/dealer_requests">Dealers Requests</a>
+    <!--<a href="/">Go to Website</a> -->
+      </div>
+
+    <!-- ===== CONTENT AREA ===== -->
+    
+<div class="content">
+
+  <% 
+    const fullWidthPages = [
+      "products",
+      "user_view",
+      "user_details",
+      "user_orders"
+    ];
+  %>
+
+  <% if (fullWidthPages.includes(page)) { %>
+
+    <!-- =========================
+         FULL WIDTH PAGES
+         (NO CARD WRAPPER)
+    ========================== -->
+    <%- include(page) %>
+
+  <% } else { %>
+
+    <!-- =========================
+         CARD WRAPPED PAGES
+    ========================== -->
+    <div class="card">
+
+      <% if (page === "dashboard") { %>
+        <h2>Welcome to Admin Dashboard</h2>
+        <p>Select an option from the sidebar.</p>
+      <% } %>
+
+      <% if (page === "orders") { %>
+        <%- include("orders") %>
+      <% } %>
+
+      <% if (page === "order-view") { %>
+        <%- include("order-view") %>
+      <% } %>
+
+      <% if (page === "dealers") { %>
+        <%- include("dealers") %>
+      <% } %>
+
+      <% if (page === "sliders") { %>
+        <%- include("sliders") %>
+      <% } %>
+
+    </div>
+
+  <% } %>
+
+</div>
+
+
+>>>>>>> master
     <!-- ===== END CONTENT ===== -->
 
   </div>

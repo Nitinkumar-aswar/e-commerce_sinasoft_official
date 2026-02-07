@@ -13,7 +13,14 @@ const router = express.Router();
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) =>
+<<<<<<< HEAD
     cb(null, path.join(__dirname, "../public/uploads")),
+=======
+    cb(
+  null,
+  path.join(__dirname, "../../../AutoKart-Frontend/public/uploads")),
+
+>>>>>>> master
   filename: (req, file, cb) =>
     cb(null, Date.now() + "-" + file.originalname)
 });
@@ -32,7 +39,11 @@ const upload = multer({
 
 const sliderStorage = multer.diskStorage({
   destination: (req, file, cb) =>
+<<<<<<< HEAD
     cb(null, path.join(__dirname, "../public/uploads/sliders")),
+=======
+    cb(null, path.join(__dirname, "../../../AutoKart-Frontend/public/uploads/sliders")),
+>>>>>>> master
   filename: (req, file, cb) =>
     cb(null, Date.now() + "-" + file.originalname)
 });
@@ -132,11 +143,20 @@ router.get("/sliders/delete/:id", (req, res) => {
     (err, result) => {
       if (err || !result.length) return res.redirect("/admin/sliders");
 
+<<<<<<< HEAD
       const imagePath = path.join(
         __dirname,
         "../public/uploads/sliders",
         result[0].image
       );
+=======
+     const imagePath = path.join(
+  __dirname,
+  "../../../AutoKart-Frontend/public/uploads/sliders",
+  result[0].image
+);
+
+>>>>>>> master
 
       db.query(
         "DELETE FROM sliders WHERE id = ?",
@@ -190,13 +210,22 @@ router.get("/products", (req, res) => {
       const successMessage = req.session.successMessage;
 req.session.successMessage = null;
 
+<<<<<<< HEAD
 res.render("admin/products", {
+=======
+res.render("admin/dashboard", {
+  page: "products",
+>>>>>>> master
   sections,
   products,
   successMessage
 });
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 req.session.successMessage = null; // clear after use
 
       });
@@ -439,10 +468,18 @@ router.get("/products/delete/:id", (req, res) => {
         return res.send("Product not found");
 
       const imagePath = path.join(
+<<<<<<< HEAD
         __dirname,
         "../public/uploads",
         result[0].image
       );
+=======
+  __dirname,
+  "../../../AutoKart-Frontend/public/uploads",
+  result[0].image
+);
+
+>>>>>>> master
 
       db.query(
         "DELETE FROM products WHERE id = ?",
@@ -511,7 +548,10 @@ router.get("/orders", (req, res) => {
   GROUP BY o.order_id
   ORDER BY MAX(o.id) DESC
 `;
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
   const likeSearch = `%${search.toLowerCase().trim()}%`;
 
   db.query(
@@ -849,14 +889,25 @@ router.get("/dealer_requests", (req, res) => {
     db.query(summaryQuery, (err, result) => {
       if (err) return res.send("Error loading summary");
 
+<<<<<<< HEAD
       res.render("admin/dealers", {
         dealers,
         summary: result[0]   // 👈 summary dashboard data
+=======
+      res.render("admin/dashboard", {
+        page: "dealers",
+        dealers,
+        summary: result[0]
+>>>>>>> master
       });
     });
   });
 });
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 /* =========================
    ADMIN → DEALER APPROVE
 ========================= */
@@ -1013,4 +1064,99 @@ router.get("/dealer/status_result", (req, res) => {
   );
 });
 
+<<<<<<< HEAD
+=======
+
+// USER LIST
+router.get("/user", (req, res) => {
+  const sql = `
+    SELECT 
+      user_id,
+      user_first_name,
+      user_last_name,
+      user_mobile,
+      user_email,
+      user_user_name,
+      user_password
+    FROM user_create_account
+  `;
+
+  req.db.query(sql, (err, users) => {
+    if (err) {
+      console.log(err);
+      return res.send("DB Error");
+    }
+
+    res.render("admin/dashboard", {
+      page: "user_details",
+      users
+    });
+  });
+});
+
+
+
+router.get("/user/:id", (req, res) => {
+  const userId = req.params.id;
+
+  const sql = `
+SELECT 
+  u.user_id,
+  u.user_first_name,
+  u.user_last_name,
+  u.user_user_name,
+  u.user_email,
+
+  -- 🛒 CART DATA
+  c.product_id AS cart_product_id,
+  cp.product_name AS cart_product_name,
+  cp.price AS cart_price,
+  c.quantity AS cart_qty,
+
+  -- 📦 ORDER DATA
+  oi.product_id AS order_product_id,
+  p.product_name AS order_product_name,
+  oi.price AS order_price,
+  oi.quantity AS order_qty,
+  o.created_at AS order_date,
+
+  -- 💳 PAYMENT DATA
+  o.payment_method,
+  o.payment_status
+
+FROM user_create_account u
+
+LEFT JOIN cart c 
+  ON c.user_id = u.user_id
+
+LEFT JOIN products cp 
+  ON cp.id = c.product_id
+
+LEFT JOIN orders o 
+  ON o.user_id = u.user_id
+
+LEFT JOIN order_items oi 
+  ON oi.order_id = o.order_id
+
+LEFT JOIN products p 
+  ON p.id = oi.product_id
+
+WHERE u.user_id = ?
+ORDER BY o.created_at DESC
+`;
+
+  req.db.query(sql, [userId], (err, rows) => {
+    if (err) {
+      console.log(err);
+      return res.send("DB Error");
+    }
+
+    res.render("admin/dashboard", {
+      page: "user_view",
+      data: rows
+    });
+  });
+});
+
+>>>>>>> master
 module.exports = router;

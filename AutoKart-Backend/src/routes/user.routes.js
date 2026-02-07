@@ -1521,8 +1521,11 @@ router.post("/dealer/register", (req, res) => {
   );
 });
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> master
 //contact//
 router.get("/contact", (req, res) => {
   res.render("user/contact");
@@ -1545,6 +1548,9 @@ router.get("/returns", (req, res) => {
 router.get("/security", (req, res) => {
   res.render("policy/security");
 });
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> master
 module.exports = router;

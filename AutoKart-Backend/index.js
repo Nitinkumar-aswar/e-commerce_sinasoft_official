@@ -67,6 +67,7 @@ app.use(
   })
 );
 
+<<<<<<< HEAD
 //---------------------//
 const contactDetails = {
   phone: "+91 9322611301",
@@ -77,6 +78,8 @@ const contactDetails = {
 };
 
 
+=======
+>>>>>>> master
 
 /* =========================
    MIDDLEWARE
@@ -123,6 +126,7 @@ app.use((req, res, next) => {
   next();
 });
 
+<<<<<<< HEAD
 
 /* =========================
    GLOBAL CONTACT DETAILS
@@ -133,6 +137,8 @@ app.use((req, res, next) => {
 });
 
 
+=======
+>>>>>>> master
 /* =========================
    GLOBAL NAVBAR DATA
 ========================= */
@@ -150,12 +156,17 @@ app.use((req, res, next) => {
 
   req.db.query(sectionQuery, (err, sections) => {
     if (err) {
+<<<<<<< HEAD
+=======
+      console.error("Section query failed:", err);
+>>>>>>> master
       res.locals.sections = [];
       res.locals.subSectionsBySection = {};
       return next();
     }
 
     req.db.query(subSectionQuery, (err, subSections) => {
+<<<<<<< HEAD
       const grouped = {};
 
       if (!err && subSections.length) {
@@ -165,6 +176,21 @@ app.use((req, res, next) => {
         });
       }
 
+=======
+      if (err) {
+        console.error("Sub-section query failed:", err);
+        res.locals.sections = sections || [];
+        res.locals.subSectionsBySection = {};
+        return next();
+      }
+
+      const grouped = {};
+      subSections.forEach(s => {
+        if (!grouped[s.section_id]) grouped[s.section_id] = [];
+        grouped[s.section_id].push(s);
+      });
+
+>>>>>>> master
       res.locals.sections = sections;
       res.locals.subSectionsBySection = grouped;
       next();
@@ -172,6 +198,21 @@ app.use((req, res, next) => {
   });
 });
 
+<<<<<<< HEAD
+=======
+
+
+app.use((req, res, next) => {
+  res.locals.contact = {
+    phone: "+91 9876543210",
+    email: "support@autokart.com",
+    whatsapp: "919876543210",
+    address: "Baner,Pune"
+  };
+  next();
+});
+
+>>>>>>> master
 /* =========================
    ROUTES
 ========================= */
@@ -182,7 +223,18 @@ app.use("/admin", adminRoutes);
 /* =========================
    SERVER
 ========================= */
+<<<<<<< HEAD
 
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 AutoKart running on port ${PORT}`);
 });
+=======
+app.use((err, req, res, next) => {
+  console.error("🔥 GLOBAL ERROR:", err);
+  res.status(500).send("Internal Server Error");
+});
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`🚀 AutoKart running on port ${PORT}`);
+});
+>>>>>>> master

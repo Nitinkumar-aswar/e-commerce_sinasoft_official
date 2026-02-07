@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 
+
 <style>
 /* ================= FOOTER BACKGROUND ================= */
 .footer-dark {
@@ -22,6 +23,7 @@
   padding-top: 50px;
   padding-bottom: 30px;
 }
+
 
 /* ================= FOOTER ROW ================= */
 .footer-dark .row {
@@ -80,7 +82,9 @@
 
 .footer-list li a:hover i {
   color: #ffcc00;
+
   transform: scale(1.2);
+
 }
 
 /* ================= FOOTER TEXT ================= */
@@ -91,6 +95,8 @@
 }
 
 /* ================= DIVIDER ================= */
+/* ================= BOTTOM BORDER ================= */
+
 .footer-hr {
   border-top: 1px solid rgba(255,255,255,0.2);
   margin: 30px 0;
@@ -100,13 +106,21 @@
 .social-icons {
   display: flex;
   flex-wrap: wrap;
+
   justify-content: flex-end;
+
+  justify-content: end;
+
   align-items: center;
   gap: 15px;
 }
 
 .social-icons i {
+
   font-size: 26px;
+
+  font-size: 24px;
+
   cursor: pointer;
   color: #ffffff;
   transition: all 0.3s ease;
@@ -114,7 +128,42 @@
 
 .social-icons i:hover {
   color: #ffcc00;
-  transform: translateY(-4px) scale(1.15);
+
+  transform: translateY(-4px) scale(1.2);
+}
+
+/* Payment icons slightly bigger */
+.social-icons i.fa-brands,
+.social-icons i.fa-solid {
+  font-size: 28px;
+}
+
+/* ================= FOOTER ROW ================= */
+.footer-dark .row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+}
+
+/* Each column width */
+.footer-dark .col-lg {
+  flex: 1;
+  min-width: 180px;
+  padding: 0 10px;
+}
+
+/* ================= MOBILE RESPONSIVE ================= */
+@media (max-width: 768px) {
+  .footer-dark .col-lg {
+    flex: 1 1 45%;
+    margin-bottom: 20px;
+  }
+
+  .social-icons {
+    justify-content: center;
+    margin-top: 15px;
+  }
+
 }
 
 /* ================= FOOTER BOTTOM ================= */
@@ -123,6 +172,7 @@
   color: #cccccc;
   margin-top: 15px;
 }
+
 
 /* ================= MOBILE RESPONSIVE ================= */
 @media (max-width: 768px) {
@@ -179,10 +229,14 @@
 }
 
 /* Smooth hover effects */
+
+/* Smooth hover effects for icons */
+
 a, i {
   transition: all 0.3s ease;
 }
 </style>
+
 
 </head>
 <body>
@@ -198,7 +252,15 @@ a, i {
       <div class="col-lg col-md-4 col-6 mb-4">
         <h6 class="footer-title">About</h6>
         <ul class="footer-list">
+
           <li><a href="#"><i class="bi bi-telephone"></i> Contact Us</a></li>
+         <li>
+  <a href="/contact">
+    <i class="bi bi-telephone"></i> Contact Us
+  </a>
+</li>
+
+
           <li><a href="#"><i class="bi bi-info-circle"></i> About Us</a></li>
           <li><a href="#"><i class="bi bi-briefcase"></i> Careers</a></li>
           <li><a href="#"><i class="bi bi-newspaper"></i> Press</a></li>
@@ -236,8 +298,6 @@ a, i {
 
   </ul>
 </div>
-
-
       <!-- SERVICES -->
       <div class="col-lg col-md-4 col-6 mb-4">
         <h6 class="footer-title">Services</h6>
@@ -255,6 +315,49 @@ a, i {
       </div>
 
       <!-- POLICY -->
+
+<!-- SERVICES -->
+<div class="col-lg col-md-4 col-6 mb-4">
+  <h6 class="footer-title">Services</h6>
+
+  <ul class="footer-list">
+
+    <!-- ELECTRONICS -->
+    <li>
+      <a href="section/4-electronics">
+        <i class="bi bi-cpu"></i> Electronics
+      </a>
+    </li>
+
+    <!-- TRACK ORDER (LOGIN REQUIRED) -->
+    <li>
+      <a href="/orders">
+        <i class="bi bi-box-seam"></i> Track Order
+      </a>
+    </li>
+
+    <!-- GALLERY -->
+    <li>
+      <a href="section/5-gallery">
+        <i class="bi bi-images"></i> Gallery
+      </a>
+    </li>
+
+    <!-- CUSTOMER SUPPORT -->
+    <li>
+      <a href="/contact">
+        <i class="bi bi-headset"></i> Customer Support
+      </a>
+    </li>
+
+  </ul>
+</div>
+
+
+
+
+         <!-- POLICY -->
+
 <div class="col-lg col-md-4 col-6 mb-4"> <h6 class="footer-title">Policy</h6>
   <ul class="footer-list">
     <li><a href="/returns"> <i class="bi bi-arrow-repeat"></i> Returns</a> </li>
@@ -272,8 +375,17 @@ a, i {
           <li><a href="#"><i class="bi bi-building"></i> AutoKart Pvt Ltd</a></li>
           <li><a href="#"><i class="bi bi-geo-alt"></i> Ahmednagar</a></li>
           <li><a href="#"><i class="bi bi-flag"></i> Maharashtra, India</a></li>
+
           
           <li><a href="/dealer">Become Seller</a></li>
+
+          <li>
+      <a href="admin/become_dealer">
+        <i class="bi bi-person-badge"></i> Become Dealer
+      </a>
+    </li>
+         
+
         </ul>
       </div>
 
