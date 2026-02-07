@@ -4,6 +4,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User List</title>
 
   <!-- ✅ FONT AWESOME (Eye Icons) -->
@@ -33,10 +34,19 @@ h2 {
 }
 
 /* =========================
+   TABLE WRAPPER (MOBILE SCROLL)
+========================= */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;          /* 🔥 mobile scroll */
+}
+
+/* =========================
    TABLE BASE
 ========================= */
 table {
   width: 100%;
+  min-width: 650px;          /* 🔥 prevents break */
   border-collapse: collapse;
   font-family: Arial, sans-serif;
   font-size: 14px;
@@ -44,18 +54,18 @@ table {
 }
 
 /* =========================
-   TABLE HEADER (ORDERS STYLE)
+   TABLE HEADER
 ========================= */
 thead {
-  background: #e8e8e8; /* same blue as Orders page */
+  background: #e8e8e8;
 }
 
 thead th {
   color: #000000;
   font-weight: 600;
   padding: 14px 16px;
-  
   text-align: left;
+  white-space: nowrap;
 }
 
 /* =========================
@@ -66,6 +76,7 @@ tbody td {
   border-bottom: 1px solid #e5e7eb;
   color: #111827;
   vertical-align: middle;
+  white-space: nowrap;
 }
 
 /* Zebra rows */
@@ -73,7 +84,7 @@ tbody tr:nth-child(even) {
   background: #f9fafb;
 }
 
-/* Row hover */
+/* Hover */
 tbody tr:hover {
   background: #f1f5f9;
 }
@@ -89,7 +100,7 @@ tbody tr:hover {
   border-radius: 6px;
   font-size: 13px;
   font-weight: 600;
-  transition: background 0.2s ease;
+  display: inline-block;
 }
 
 .btn-view:hover {
@@ -126,6 +137,41 @@ tbody tr:hover {
   padding: 25px;
   color: #6b7280;
   font-size: 14px;
+}
+
+/* =========================
+   MOBILE RESPONSIVE
+========================= */
+@media (max-width: 768px) {
+
+  .card {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  h2 {
+    font-size: 18px;
+    margin-bottom: 14px;
+  }
+
+  table {
+    font-size: 13px;
+  }
+
+  thead th,
+  tbody td {
+    padding: 10px 12px;
+  }
+
+  .btn-view {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+
+  .no-data {
+    font-size: 13px;
+    padding: 20px;
+  }
 }
 </style>
 

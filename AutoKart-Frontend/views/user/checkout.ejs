@@ -9,77 +9,103 @@
 
   <style>
    
-    body {
-      margin: 0;
-      background: #eaeded;
-      font-family: Arial, sans-serif;
-    }
+body {
+  margin: 0;
+  background: #eaeded;
+  font-family: Arial, sans-serif;
+}
 
-  
+/* =============================
+   MAIN LAYOUT
+============================= */
 
-    .checkout-left {
-      flex: 3;
-      background: #fff;
-      padding: 20px;
-    }
+.page-wrapper {
+  max-width: 1400px;
+  margin: auto;
+  padding: 18px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  flex-wrap: wrap; /* 🔥 MOBILE FIX */
+}
 
-    .section {
-      border-bottom: 1px solid #ddd;
-      padding-bottom: 20px;
-      margin-bottom: 20px;
-    }
+/* =============================
+   LEFT SECTION
+============================= */
 
-    .section h2 {
-      font-size: 18px;
-      margin-bottom: 10px;
-    }
+.checkout-left {
+  flex: 3;
+  background: #fff;
+  padding: 20px;
+  width: 100%;
+}
 
-    .address-box {
-      font-size: 14px;
-      line-height: 1.6;
-    }
+.section {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+}
 
-    .address-actions a {
-      font-size: 13px;
-      color: #007185;
-      margin-right: 15px;
-      text-decoration: none;
-    }
+.section h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
 
-    .payment-method {
-      padding: 14px;
-      border-top: 1px solid #eee;
-      font-size: 14px;
-      cursor: pointer;
-    }
+.address-box {
+  font-size: 14px;
+  line-height: 1.6;
+}
 
-    .payment-method.active {
-      background: #fff8f0;
-      border-left: 3px solid #ff9900;
-    }
+.address-actions a {
+  font-size: 13px;
+  color: #007185;
+  margin-right: 15px;
+  text-decoration: none;
+}
 
-   
+/* =============================
+   PAYMENT
+============================= */
 
-    select, input[type="text"] {
-      padding: 6px;
-      width: 260px;
-      margin-top: 8px;
-    }
+.payment-method {
+  padding: 14px;
+  border-top: 1px solid #eee;
+  font-size: 14px;
+  cursor: pointer;
+}
 
-  
+.payment-method.active {
+  background: #fff8f0;
+  border-left: 3px solid #ff9900;
+}
 
-    .muted {
-      color: #555;
-      font-size: 12px;
-      margin-top: 6px;
-    }
+/* =============================
+   INPUTS
+============================= */
 
+select,
+input[type="text"] {
+  padding: 8px;
+  width: 260px;
+  max-width: 100%; /* 🔥 MOBILE FIX */
+  margin-top: 8px;
+}
 
-  .place-btn {
+.muted {
+  color: #555;
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+/* =============================
+   PLACE ORDER
+============================= */
+
+.place-btn {
   width: 100%;
   background: #ffd814;
   border: 1px solid #fcd200;
-  padding: 11px;
+  padding: 12px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
@@ -91,40 +117,43 @@
   background: #f7ca00;
 }
 
+/* =============================
+   ORDER SUMMARY
+============================= */
 
-    .summary-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 14px;
-      margin-bottom: 8px;
-    }
+.checkout-right-wrapper {
+  width: 350px;
+  max-width: 100%; /* 🔥 MOBILE FIX */
+  flex-shrink: 0;
+}
 
-    .summary-total {
-      font-weight: bold;
-      border-top: 1px solid #ddd;
-      padding-top: 10px;
-    }
+.checkout-right {
+  width: 100%;
+  box-sizing: border-box;
+  background: #fff;
+  padding: 20px;
+  border: 1px solid #ddd;
+  position: sticky;
+  top: 20px;
+}
 
-    .mini-product {
-      display: flex;
-      gap: 12px;
-      margin-top: 15px;
-    }
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
 
-    .mini-product img {
-      width: 80px;
-      height: 80px;
-      object-fit: contain;
-      border: 1px solid #e0e0e0;
-      background: #fff;
-    }
+.summary-total {
+  font-weight: bold;
+  border-top: 1px solid #ddd;
+  padding-top: 10px;
+}
 
-    .mini-product-name {
-      font-size: 13px;
-      line-height: 1.4;
-      max-width: 240px;
-    }
-    
+/* =============================
+   MINI CART
+============================= */
+
 .mini-cart-list {
   display: flex;
   flex-direction: column;
@@ -134,7 +163,7 @@
 .mini-cart-item {
   display: flex;
   gap: 12px;
-  align-items: flex-start;
+  align-items: center;
 }
 
 .mini-cart-item img {
@@ -150,21 +179,18 @@
   line-height: 1.4;
 }
 
-
-
-/* ============================
-   ADDRESS MODAL – PERFECT CENTER
-============================ */
+/* =============================
+   ADDRESS MODAL
+============================= */
 
 .address-modal {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.55);
   z-index: 9999;
-
-  display: none;              /* hidden by default */
-  align-items: center;        /* vertical center */
-  justify-content: center;    /* horizontal center */
+  display: none;
+  align-items: center;
+  justify-content: center;
 }
 
 .address-modal-box {
@@ -176,7 +202,6 @@
   box-shadow: 0 10px 30px rgba(0,0,0,0.25);
 }
 
-/* Grid layout */
 .address-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -192,76 +217,10 @@
   border-radius: 4px;
 }
 
-/* Full width fields */
 .address-grid input[name="address_line"],
 .address-grid input[name="pincode"] {
   grid-column: span 2;
 }
-
-/* Buttons */
-.address-actions {
-  display: flex;
-  gap: 12px;
-  margin-top: 18px;
-}
-
-.btn-primary {
-  flex: 1;
-  background: #ffd814;
-  border: 1px solid #fcd200;
-  padding: 10px;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.btn-secondary {
-  flex: 1;
-  background: #f1f1f1;
-  border: 1px solid #ccc;
-  padding: 10px;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-
-/* =============================
-   CHECKOUT DESKTOP LAYOUT
-============================= */
-
-.page-wrapper {
-  max-width: 1400px;   /* 🔥 tighter */
-  margin: auto;
-  padding: 18px;        /* 🔥 less grey */
-  display: flex;
-  gap: 14px;           /* 🔥 closer columns */
-  align-items: flex-start;
-}
-
-
-.checkout-left {
-  flex: 1;
-  max-width: none;
-  background: #fff;
-  padding: 20px;
-}
-
-
-.checkout-right-wrapper {
-  width: 350px;
-  flex-shrink: 0;
-}
-
-.checkout-right {
-  width: 100%;
-  box-sizing: border-box;   /* 🔥 FIX */
-  background: #fff;
-  padding: 20px;
-  border: 1px solid #ddd;
-  position: sticky;
-  top: 20px;
-}
-
-
 
 /* =============================
    RESPONSIVE BREAKPOINTS
@@ -332,8 +291,8 @@
   }
 }
 
+</style>
 
-  </style>
 </head>
 
 <body>

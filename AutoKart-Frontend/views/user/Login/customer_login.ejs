@@ -4,6 +4,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Create Account | Flipkart</title>
   <link rel="stylesheet" href="user_cdn/css/register.css">
   <style>
@@ -105,6 +106,35 @@ body {
   color: #2874f0;
   font-size: 14px;
   text-decoration: none;
+}
+
+
+/* ===============================
+   MOBILE RESPONSIVE FIX
+   Blue (left-box) hide on mobile
+================================ */
+@media (max-width: 768px) {
+
+  .main-container {
+    width: 95%;
+    height: auto;
+    flex-direction: column;
+  }
+
+  /* BLUE LEFT SECTION HIDE */
+  .left-box {
+    display: none;
+  }
+
+  /* RIGHT BOX FULL WIDTH */
+  .right-box {
+    width: 100%;
+    padding: 25px 20px;
+  }
+
+  .auth-wrapper {
+    padding: 20px 0;
+  }
 }
 
   </style>

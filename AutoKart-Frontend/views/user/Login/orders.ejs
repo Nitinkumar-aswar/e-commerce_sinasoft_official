@@ -4,176 +4,203 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Orders | AutoKart</title>
 
   <style>
-    body {
-      background: #f1f3f6;
-      font-family: Arial, Helvetica, sans-serif;
-    }
+/* ===============================
+   BASE
+=============================== */
+html, body {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  background: #f1f3f6;
+  font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+}
 
-    /* ===============================
-       PAGE WRAPPER
-    ================================ */
-    .orders-page {
-      max-width: 1300px;
-      margin: 20px auto;
-      display: flex;
-      gap: 20px;
-    }
+* {
+  box-sizing: border-box;
+}
 
-    /* ===============================
-       LEFT FILTER PANEL
-    ================================ */
-    .orders-filters {
-      width: 260px;
-      background: #ffffff;
-      padding: 15px;
-      border-radius: 4px;
-      height: fit-content;
-    }
+/* ===============================
+   PAGE WRAPPER
+=============================== */
+.orders-page {
+  max-width: 1300px;
+  margin: 20px auto;
+  display: flex;
+  gap: 20px;
+  width: 100%;
+}
 
-    .orders-filters h3 {
-      font-size: 16px;
-      margin-bottom: 15px;
-      color: #212121;
-    }
+/* ===============================
+   LEFT FILTER PANEL
+=============================== */
+.orders-filters {
+  width: 260px;
+  background: #ffffff;
+  padding: 15px;
+  border-radius: 4px;
+  height: fit-content;
+}
 
-    .filter-group {
-      margin-bottom: 20px;
-    }
+.orders-filters h3 {
+  font-size: 16px;
+  margin-bottom: 15px;
+  color: #212121;
+}
 
-    .filter-group h4 {
-      font-size: 14px;
-      margin-bottom: 10px;
-      color: #333;
-    }
+.filter-group {
+  margin-bottom: 20px;
+}
 
-    .filter-group label {
-      display: block;
-      font-size: 13px;
-      margin-bottom: 6px;
-      color: #555;
-      cursor: pointer;
-    }
+.filter-group h4 {
+  font-size: 14px;
+  margin-bottom: 10px;
+  color: #333;
+}
 
-    .filter-group input {
-      margin-right: 6px;
-    }
+.filter-group label {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 6px;
+  color: #555;
+  cursor: pointer;
+}
 
-    /* ===============================
-       RIGHT CONTENT
-    ================================ */
-    .orders-content {
-      flex: 1;
-    }
+.filter-group input {
+  margin-right: 6px;
+}
 
-    /* ===============================
-       ORDERS SEARCH (SCOPED)
-    ================================ */
-    .orders-search {
-      display: flex;
-      margin-bottom: 15px;
-    }
+/* ===============================
+   RIGHT CONTENT
+=============================== */
+.orders-content {
+  flex: 1;
+  width: 100%;
+}
 
-    .orders-search input {
-      flex: 1;
-      height: 40px;
-      padding: 0 12px;
-      border: 1px solid #ccc;
-      border-right: none;
-      border-radius: 2px 0 0 2px;
-      font-size: 14px;
-      outline: none;
-    }
+/* ===============================
+   ORDERS SEARCH
+=============================== */
+.orders-search {
+  display: flex;
+  margin-bottom: 15px;
+  width: 100%;
+}
 
-    .orders-search button {
-      width: 150px;
-      height: 40px;
-      border: none;
-      background: #2874f0;
-      color: #ffffff;
-      font-size: 14px;
-      cursor: pointer;
-      border-radius: 0 2px 2px 0;
-    }
+.orders-search input {
+  flex: 1;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid #ccc;
+  border-right: none;
+  border-radius: 4px 0 0 4px;
+  font-size: 14px;
+  outline: none;
+}
 
-    /* ===============================
-       ORDER CARD
-    ================================ */
-    .order-card {
-      background: #ffffff;
-      border-radius: 4px;
-      padding: 15px;
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      margin-bottom: 12px;
-    }
+.orders-search button {
+  width: 150px;
+  height: 40px;
+  border: none;
+  background: #2874f0;
+  color: #ffffff;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 0 4px 4px 0;
+}
 
-    .order-card img {
-      width: 90px;
-      height: 90px;
-      object-fit: contain;
-    }
+/* ===============================
+   ORDER CARD
+=============================== */
+.order-card {
+  background: #ffffff;
+  border-radius: 6px;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 12px;
+  width: 100%;
+}
 
-    .order-info {
-      flex: 1;
-    }
+.order-card img {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+}
 
-    .order-info h4 {
-      font-size: 14px;
-      margin-bottom: 6px;
-      color: #212121;
-    }
+.order-info {
+  flex: 1;
+}
 
-    .order-info p {
-      font-size: 12px;
-      color: #666;
-      margin-bottom: 4px;
-    }
+.order-info h4 {
+  font-size: 14px;
+  margin-bottom: 6px;
+  color: #212121;
+}
 
-    .order-price {
-      font-size: 14px;
-      font-weight: bold;
-      color: #212121;
-      margin-right: 40px;
-    }
+.order-info p {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 4px;
+}
 
-    .order-status {
-      font-size: 13px;
-      font-weight: bold;
-      margin-top: 5px;
-    }
+.order-price {
+  font-size: 14px;
+  font-weight: bold;
+  color: #212121;
+  white-space: nowrap;
+}
 
-    .status-delivered {
-      color: green;
-    }
+/* ===============================
+   STATUS BADGE
+=============================== */
+.order-status {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 6px;
+}
 
-    .status-cancelled {
-      color: red;
-    }
+.status-delivered {
+  background: #e6f4ea;
+  color: #137333;
+}
 
-    .review-link {
-      font-size: 13px;
-      color: #2874f0;
-      cursor: pointer;
-      margin-top: 6px;
-    }
+.status-cancelled {
+  background: #fee2e2;
+  color: #991b1b;
+}
 
-    /* ===============================
-       EMPTY STATE
-    ================================ */
-    .no-orders {
-      background: #ffffff;
-      padding: 40px;
-      text-align: center;
-      color: #777;
-      border-radius: 4px;
-    }
+/* ===============================
+   REVIEW LINK
+=============================== */
+.review-link {
+  font-size: 13px;
+  color: #2874f0;
+  cursor: pointer;
+  margin-top: 6px;
+  display: inline-block;
+}
 
+/* ===============================
+   EMPTY STATE
+=============================== */
+.no-orders {
+  background: #ffffff;
+  padding: 40px;
+  text-align: center;
+  color: #777;
+  border-radius: 4px;
+}
 
-    /* =================================================
+/* =================================================
    🔥 MOBILE – FILTERS NICHE + BUTTON SMALL
 ================================================= */
 @media (max-width: 768px) {
@@ -210,7 +237,8 @@
     font-size: 14px;
   }
 }
-  </style>
+</style>
+
 </head>
 
 <body>
