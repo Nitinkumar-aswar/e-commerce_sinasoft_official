@@ -491,33 +491,33 @@ router.get("/orders", (req, res) => {
   const search = req.query.search || "";
 
   const ordersQuery = `
-    SELECT
-      o.order_id,
-      o.order_status,
-      o.payment_method,
-      o.payment_status,
+  SELECT
+    o.order_id,
 
-      u.user_first_name,
-      u.user_last_name,
-      u.user_mobile,
+    MAX(o.order_status)    AS order_status,
+    MAX(o.payment_method)  AS payment_method,
+    MAX(o.payment_status)  AS payment_status,
 
-      COUNT(oi.id) AS total_items
+    MAX(u.user_first_name) AS user_first_name,
+    MAX(u.user_last_name)  AS user_last_name,
+    MAX(u.user_mobile)     AS user_mobile,
 
-    FROM orders o
-    JOIN user_create_account u 
-      ON o.user_id = u.user_id
-    LEFT JOIN order_items oi 
-      ON o.order_id = oi.order_id
+    COUNT(oi.id)           AS total_items
 
-    WHERE
-      o.order_id LIKE ?
-      OR u.user_mobile LIKE ?
-      OR LOWER(CONCAT(u.user_first_name, ' ', u.user_last_name)) LIKE ?
+  FROM orders o
+  JOIN user_create_account u 
+    ON o.user_id = u.user_id
+  LEFT JOIN order_items oi 
+    ON o.order_id = oi.order_id
 
-    GROUP BY o.order_id
-    ORDER BY o.id DESC
-  `;
+  WHERE
+    o.order_id LIKE ?
+    OR u.user_mobile LIKE ?
+    OR LOWER(CONCAT(u.user_first_name, ' ', u.user_last_name)) LIKE ?
 
+  GROUP BY o.order_id
+  ORDER BY MAX(o.id) DESC
+`;
   const likeSearch = `%${search.toLowerCase().trim()}%`;
 
   db.query(

@@ -10,7 +10,7 @@ const adminRoutes = require("./src/routes/admin");
 const userRoutes = require("./src/routes/user.routes");
 
 const app = express();
-const PORT = 5000;
+const PORT = 4000;
 
 /* =========================
    TRUST PROXY (IMPORTANT)
@@ -21,11 +21,10 @@ app.set("trust proxy", 1);
    SESSION DATABASE (POOL)
 ========================= */
 const sessionDB = mysql.createPool({
-host: process.env.DB_HOST,
-user: process.env.DB_USER,
-password: process.env.DB_PASSWORD,
-database: process.env.DB_NAME,
-port: process.env.DB_PORT
+  host: "localhost",
+  user: "root",
+  password: "mac@4562B",
+  database: "Autokart"
 });
 
 /* =========================
@@ -91,15 +90,11 @@ app.set("views", path.join(__dirname, "../AutoKart-Frontend/views"));
 ========================= */
 
 const db = mysql.createPool({
-host: process.env.DB_HOST,
-user: process.env.DB_USER,
-password: process.env.DB_PASSWORD,
-database: process.env.DB_NAME,
-port: process.env.DB_PORT
+  host: "localhost",
+  user: "root",
+  password: "mac@4562B",
+  database: "Autokart"
 });
-
-console.log("✅ MySQL Pool ready");
-
 /* =========================
    MAKE DB AVAILABLE
 ========================= */
