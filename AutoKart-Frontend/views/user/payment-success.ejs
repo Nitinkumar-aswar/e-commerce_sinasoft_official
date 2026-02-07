@@ -104,6 +104,31 @@
     .btn:hover {
       opacity: 0.9;
     }
+    
+  /* ================= MOBILE FIX ================= */
+  @media (max-width: 480px) {
+
+    h2 {
+      font-size: 20px;
+    }
+
+    .success-icon {
+      font-size: 42px;
+    }
+
+    .details p {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .actions {
+      flex-direction: column; /* 🔥 buttons stack */
+    }
+
+    .btn {
+      width: 100%;
+    }
+  }
   </style>
 </head>
 

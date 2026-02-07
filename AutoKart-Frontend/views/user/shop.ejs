@@ -61,6 +61,51 @@
       text-decoration: none;
       color: inherit;
     }
+
+    
+  /* =========================
+     MOBILE RESPONSIVE
+  ========================== */
+  @media (max-width: 768px) {
+
+    h1 {
+      padding: 15px;
+      font-size: 18px;
+    }
+
+    .product-grid {
+      grid-template-columns: repeat(2, 1fr); /* 🔥 2 items per row */
+      gap: 12px;
+      padding: 12px;
+    }
+
+    .product-card {
+      padding: 8px;
+    }
+
+    .product-card img {
+      height: 150px;
+      object-fit: contain;
+      margin-bottom: 8px;
+    }
+
+    .product-name {
+      font-size: 13px;
+    }
+
+    .product-price {
+      font-size: 14px;
+    }
+  }
+
+  /* =========================
+     SMALL MOBILE
+  ========================== */
+  @media (max-width: 480px) {
+    .product-card img {
+      height: 130px;
+    }
+  }
   </style>
 </head>
 

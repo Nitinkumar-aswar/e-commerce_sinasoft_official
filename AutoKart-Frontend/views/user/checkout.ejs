@@ -223,35 +223,6 @@
   cursor: pointer;
 }
 
-/* Mobile fix */
-@media (max-width: 520px) {
-  .address-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .address-grid input,
-  .address-grid select {
-    grid-column: span 1;
-  }
-}
-
-@media (min-width: 601px) {
-  .page-wrapper {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-  }
-
-  .checkout-left {
-    flex: 3;
-  }
-
-  .checkout-right {
-    flex: 1.2;
-    position: sticky;
-    top: 20px;
-  }
-}
 
 /* =============================
    CHECKOUT DESKTOP LAYOUT
@@ -290,6 +261,76 @@
   top: 20px;
 }
 
+
+
+/* =============================
+   RESPONSIVE BREAKPOINTS
+============================= */
+
+/* Tablet */
+@media (max-width: 992px) {
+  .page-wrapper {
+    flex-direction: column;
+    padding: 12px;
+  }
+
+  .checkout-right {
+    position: static; /* 🔥 STOP STICKY */
+    margin-top: 16px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 576px) {
+
+  .page-wrapper {
+    padding: 8px;
+    gap: 12px;
+  }
+
+  .checkout-left,
+  .checkout-right {
+    padding: 14px;
+  }
+
+  .section h2 {
+    font-size: 15px;
+  }
+
+  .address-box {
+    font-size: 13px;
+  }
+
+  .payment-method {
+    font-size: 13px;
+    padding: 12px;
+  }
+
+  .summary-row {
+    font-size: 13px;
+  }
+
+  .summary-total {
+    font-size: 14px;
+  }
+
+  .place-btn {
+    font-size: 15px;
+    padding: 14px;
+  }
+}
+
+/* Address modal mobile */
+@media (max-width: 520px) {
+  .address-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .address-grid input,
+  .address-grid select {
+    grid-column: span 1;
+  }
+}
 
 
   </style>

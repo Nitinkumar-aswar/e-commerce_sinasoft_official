@@ -243,158 +243,6 @@
   z-index: 10;
 }
 
-/* ================= RESPONSIVE ================= */
-
-/* Mobile ≤480px */
-@media (max-width: 480px) {
-  .product-page {
-    flex-direction: column;
-    padding: 15px;
-   
-    gap: 20px;
-  }
-
-  .image-wrapper {
-    max-width: 100%;
-    height: 300px;
-    
-  }
-
-  .thumbnail-column {
-    flex-direction: row;
-    gap: 8px;
-    overflow-x: auto;
-    margin-bottom: 10px;
-  }
-
-  .thumbnail-column img {
-    width: 60px;
-    height: 50px;
-  }
-
-  .product-title { font-size: 18px; }
-  .product-price { font-size: 22px; }
-  .product-description-title { font-size: 15px; }
-  .product-description { font-size: 13px; }
-
-  .add-cart-btn, .buy-now-btn {
-    width: 48%;
-    font-size: 13px;
-  }
-
-  .zoom-preview { display: none !important; } /* hide zoom on mobile */
-}
-
-/* Tablet 481px – 768px */
-@media (min-width: 481px) and (max-width: 768px) {
-  .product-page {
-    flex-direction: column;
-    padding: 20px;
-  }
-
-  .image-wrapper { max-width: 100%; height: 350px; }
-
-  .thumbnail-column {
-    flex-direction: row;
-    gap: 8px;
-    overflow-x: auto;
-    margin-bottom: 15px;
-  }
-
-  .add-cart-btn, .buy-now-btn { width: 45%; }
-}
-
-/* Laptop ≥769px */
-@media (min-width: 769px) and (max-width: 1024px) {
-  .image-wrapper { max-width: 380px; height: 380px; }
-}
-
-/* Desktop ≥1025px */
-@media (min-width: 1025px) {
-  .image-wrapper { max-width: 420px; height: 420px; }
-}
-
-/* =========================
-   MOBILE PRODUCT PAGE FIX
-========================= */
-@media (max-width: 768px) {
-
-  body {
-    background: #f1f3f6;
-  }
-
-  .product-page {
-    margin: 0;
-    padding: 12px;
-    gap: 16px;
-    background: #ffffff;
-  }
-
-  .product-left,
-  .product-right {
-    width: 100%;
-  }
-
-  /* IMAGE AREA */
-  .image-gallery {
-    flex-direction: column;
-  }
-
-  .image-wrapper {
-    width: 100%;
-    height: 280px;
-  }
-
-  .image-wrapper img {
-    object-fit: contain;
-  }
-
-  /* THUMBNAILS */
-  .thumbnail-column {
-    flex-direction: row;
-    gap: 8px;
-    overflow-x: auto;
-    padding-bottom: 6px;
-  }
-
-  .thumbnail-column img {
-    width: 60px;
-    height: 60px;
-  }
-
-  /* BUTTONS — FULL WIDTH LIKE FLIPKART */
-  .action-buttons {
-    flex-direction: row;
-    gap: 10px;
-  }
-
-  .add-cart-btn,
-  .buy-now-btn {
-    width: 50%;
-    height: 44px;
-    font-size: 14px;
-  }
-
-  /* TEXT */
-  .product-title {
-    font-size: 18px;
-    line-height: 1.4;
-  }
-
-  .product-price {
-    font-size: 22px;
-  }
-
-  .product-description {
-    font-size: 13px;
-  }
-
-  /* DISABLE ZOOM ON MOBILE */
-  #lens,
-  .zoom-preview {
-    display: none !important;
-  }
-}
 /* cccccccccccccccccccccccccccccccccccccccccccccccccccccc */
 /* ===== MODAL ALERT ===== */
 .modal-overlay {
@@ -436,17 +284,91 @@
   font-weight: 600;
 }
 
-@keyframes pop {
-  from {
-    transform: scale(0.8);
-    opacity: 0;
+
+/* =========================
+   MOBILE ONLY
+========================= */
+@media (max-width: 768px) {
+
+  .product-page {
+    max-width: 100%;
+    margin: 0;
+    padding: 12px;
+    gap: 16px;
+    flex-direction: column;
   }
-  to {
-    transform: scale(1);
-    opacity: 1;
+
+  .product-left,
+  .product-right {
+    width: 100%;
+  }
+
+  .image-gallery {
+    flex-direction: column;
+  }
+
+  .image-wrapper {
+    width: 100%;
+    height: 280px;
+  }
+
+  .thumbnail-column {
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 8px;
+  }
+
+  .thumbnail-column img {
+    width: 60px;
+    height: 60px;
+  }
+
+  /* 🔥 STICKY BOTTOM BAR */
+  .action-buttons {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    padding: 10px 12px;
+    gap: 12px;
+    border-top: 1px solid #e0e0e0;
+    z-index: 9999;
+  }
+
+  .add-cart-btn {
+    width: 50%;
+    height: 46px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    background: #ff9f00; /* SAME DARK */
+  }
+
+  .buy-now-form { width: 50%; }
+
+  .buy-now-form button {
+    width: 100%;
+    height: 46px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    background: #fb641b; /* SAME DARK */
+    color: #fff;
+    border: none;
+  }
+
+  /* space for sticky bar */
+  .product-page {
+    padding-bottom: 90px;
+  }
+
+  /* disable zoom */
+  #lens,
+  .zoom-preview {
+    display: none !important;
   }
 }
-
 
   </style>
 </head>
