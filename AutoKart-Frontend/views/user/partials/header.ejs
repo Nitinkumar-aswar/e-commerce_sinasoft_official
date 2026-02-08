@@ -1,0 +1,185 @@
+
+
+<link rel="stylesheet" href="/css/navbar.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<!-- ================= TOP NAVBAR ================= -->
+<div class="top-navbar">
+
+  <!-- LOGO -->
+  <div class="logo">
+    <a href="/">
+      <img src="/uploads/autokart_logo.jpeg" alt="Autokart Logo">
+    </a>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="search-box">
+    <input
+      id="searchInput"
+      type="text"
+      placeholder="Search Decoration Products"
+      autocomplete="off"
+    >
+    <button type="button">
+      <i class="fa fa-search"></i>
+    </button>
+    <div id="searchDropdown" class="search-dropdown"></div>
+  </div>
+<div class="top-actions" style="display:flex; align-items:center; gap:15px;">
+
+  <!-- LOGIN / USER DROPDOWN -->
+  <div class="dropdown">
+    <div class="action-item">
+      <i class="fa fa-user"></i>
+
+      <% if (currentUser) { %>
+        <span><%= currentUser.user_user_name %></span>
+      <% } else { %>
+        <span>Login</span>
+      <% } %>
+
+      <i class="fa fa-caret-down"></i>
+    </div>
+
+    <div class="dropdown-menu">
+      <% if (!currentUser) { %>
+        <a href="/customer_login">Customer Login</a>
+      <% } %>
+
+      <% if (currentUser) { %>
+        <a href="/my_profile">My Profile</a>
+        <a href="/orders">Orders</a>
+        <a href="/logout">Logout</a>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- CART -->
+  <!-- <div class="action-item">
+    <a href="/cart" class="cart-link">
+      <i class="fa fa-shopping-cart"></i>
+      <span>Cart</span>
+    </a>
+  </div> -->
+<!-- CART -->
+<div class="action-item" style="position:relative;">
+  <a href="/cart" class="cart-link">
+    <i class="fa fa-shopping-cart"></i>
+    <span>Cart</span>
+
+    <!-- ✅ CART COUNT BADGE -->
+    <span id="cart-count"
+      style="
+        position:absolute;
+        top:-9px;
+        left: 5px;
+        /* right:-5px; */
+        background:red;
+        color:white;
+        font-size:11px;
+        padding:2px 6px;
+        border-radius:50%;
+        display:none;
+      ">
+      0
+    </span>
+  </a>
+</div>
+
+</div>
+
+</div>
+
+<!-- ================= MAIN MENU ================= -->
+<div class="menu-navbar">
+  <ul>
+
+    <!-- HOME -->
+    <li class="active">
+      <a href="/">Home</a>
+    </li>
+
+    <!-- DYNAMIC SECTIONS -->
+    <% if (typeof sections !== "undefined") { %>
+      <% sections.forEach(section => { %>
+
+        <li class="nav-dropdown">
+          <a href="/section/<%= section.display_slug %>">
+            <%= section.name %>
+          </a>
+
+          <% if (subSectionsBySection && subSectionsBySection[section.id]) { %>
+            <div class="nav-dropdown-menu">
+              <% subSectionsBySection[section.id].forEach(sub => { %>
+                <a href="/sub-section/<%= sub.display_slug %>">
+                  <%= sub.name %>
+                </a>
+              <% }) %>
+            </div>
+          <% } %>
+        </li>
+
+      <% }) %>
+    <% } %>
+
+    <!-- STATIC LINKS -->
+   
+
+    <li>
+      <a href="/admin/become_dealer">Become Dealer</a>
+    </li>
+
+    <li>
+      <a href="/contact">Contact</a>
+    </li>
+
+  </ul>
+</div>
+
+<script>
+console.log("SEARCH JS LOADED");
+
+const input = document.getElementById("searchInput");
+const dropdown = document.getElementById("searchDropdown");
+
+input.addEventListener("keyup", async () => {
+  const q = input.value.trim();
+
+  if (q.length < 2) {
+    dropdown.style.display = "none";
+    dropdown.innerHTML = "";
+    return;
+  }
+
+  const res = await fetch(`/api/search?q=${q}`);
+  const data = await res.json();
+
+  dropdown.innerHTML = "";
+  dropdown.style.display = "block";
+
+  data.forEach(item => {
+    dropdown.innerHTML += `
+      <a href="/product/${item.display_slug}" class="search-item">
+        <img src="/uploads/${item.image}">
+        <div>
+          <div class="name">${item.product_name}</div>
+          <div class="price">₹ ${item.price}</div>
+        </div>
+      </a>
+    `;
+  });
+});
+</script>
+<!-- cart chi js ahe start -->
+ <script>
+fetch("/cart-count")
+    .then(res => res.json())
+    .then(data => {
+        const cartCountEl = document.getElementById("cart-count");
+        if (data.count > 0) {
+            cartCountEl.innerText = data.count;
+            cartCountEl.style.display = "inline-block";
+        }
+    });
+</script>
