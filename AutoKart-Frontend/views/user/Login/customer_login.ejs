@@ -108,6 +108,35 @@ body {
   text-decoration: none;
 }
 
+
+/* ===============================
+   MOBILE RESPONSIVE FIX
+   Blue (left-box) hide on mobile
+================================ */
+@media (max-width: 768px) {
+
+  .main-container {
+    width: 95%;
+    height: auto;
+    flex-direction: column;
+  }
+
+  /* BLUE LEFT SECTION HIDE */
+  .left-box {
+    display: none;
+  }
+
+  /* RIGHT BOX FULL WIDTH */
+  .right-box {
+    width: 100%;
+    padding: 25px 20px;
+  }
+
+  .auth-wrapper {
+    padding: 20px 0;
+  }
+}
+
   </style>
   
 </head>

@@ -46,15 +46,6 @@ body {
    SECTION HEADINGS
 ========================= */
 .policy-container h2 {
-<<<<<<< HEAD
-  font-size: 18px;          
-  font-weight: 600;        
-  color: #1f2937;
-  margin-top: 32px;
-  margin-bottom: 10px;
-  padding-left: 0;         
-  border-left: none;       
-=======
   font-size: 18px;          /* chhota & normal */
   font-weight: 600;        /* over-bold nahi */
   color: #1f2937;
@@ -62,7 +53,6 @@ body {
   margin-bottom: 10px;
   padding-left: 0;         /* left bar hataya */
   border-left: none;       /* blue line hatayi */
->>>>>>> master
 }
 /* =========================
    PARAGRAPHS

@@ -11,8 +11,6 @@
 <!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-
-
 <style>
 /* ================= FOOTER BACKGROUND ================= */
 .footer-dark {
@@ -22,21 +20,6 @@
   font-size: 14px;
   padding-top: 50px;
   padding-bottom: 30px;
-}
-
-
-/* ================= FOOTER ROW ================= */
-.footer-dark .row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 40px;
-}
-
-/* Each column */
-.footer-dark .col-lg {
-  flex: 1;
-  min-width: 180px;
-  padding: 0 10px;
 }
 
 /* ================= FOOTER TITLE ================= */
@@ -82,9 +65,7 @@
 
 .footer-list li a:hover i {
   color: #ffcc00;
-
-  transform: scale(1.2);
-
+  transform: scale(1.3);
 }
 
 /* ================= FOOTER TEXT ================= */
@@ -94,9 +75,7 @@
   color: #dcdcdc;
 }
 
-/* ================= DIVIDER ================= */
 /* ================= BOTTOM BORDER ================= */
-
 .footer-hr {
   border-top: 1px solid rgba(255,255,255,0.2);
   margin: 30px 0;
@@ -106,21 +85,13 @@
 .social-icons {
   display: flex;
   flex-wrap: wrap;
-
-  justify-content: flex-end;
-
   justify-content: end;
-
   align-items: center;
   gap: 15px;
 }
 
 .social-icons i {
-
-  font-size: 26px;
-
   font-size: 24px;
-
   cursor: pointer;
   color: #ffffff;
   transition: all 0.3s ease;
@@ -128,7 +99,6 @@
 
 .social-icons i:hover {
   color: #ffcc00;
-
   transform: translateY(-4px) scale(1.2);
 }
 
@@ -163,7 +133,6 @@
     justify-content: center;
     margin-top: 15px;
   }
-
 }
 
 /* ================= FOOTER BOTTOM ================= */
@@ -173,71 +142,11 @@
   margin-top: 15px;
 }
 
-
-/* ================= MOBILE RESPONSIVE ================= */
-@media (max-width: 768px) {
-
-  .footer-dark {
-    padding-top: 35px;
-    padding-bottom: 25px;
-    text-align: center;
-  }
-
-  .footer-dark .row {
-    gap: 25px;
-  }
-
-  /* 2 columns on medium mobile */
-  .footer-dark .col-lg {
-    flex: 1 1 45%;
-    padding: 0;
-  }
-
-  .footer-list li a {
-    justify-content: center;
-  }
-
-  .footer-list li a:hover {
-    transform: none;
-  }
-
-  .social-icons {
-    justify-content: center;
-    margin-top: 20px;
-  }
-}
-
-/* ================= SMALL MOBILE ================= */
-@media (max-width: 480px) {
-
-  /* 1 column layout */
-  .footer-dark .col-lg {
-    flex: 1 1 100%;
-  }
-
-  .footer-title {
-    margin-bottom: 12px;
-  }
-
-  .footer-text {
-    font-size: 13px;
-  }
-
-  .social-icons i {
-    font-size: 24px;
-  }
-}
-
-/* Smooth hover effects */
-
 /* Smooth hover effects for icons */
-
 a, i {
   transition: all 0.3s ease;
 }
 </style>
-
-
 </head>
 <body>
 
@@ -252,14 +161,11 @@ a, i {
       <div class="col-lg col-md-4 col-6 mb-4">
         <h6 class="footer-title">About</h6>
         <ul class="footer-list">
-
-          <li><a href="#"><i class="bi bi-telephone"></i> Contact Us</a></li>
          <li>
   <a href="/contact">
     <i class="bi bi-telephone"></i> Contact Us
   </a>
 </li>
-
 
           <li><a href="#"><i class="bi bi-info-circle"></i> About Us</a></li>
           <li><a href="#"><i class="bi bi-briefcase"></i> Careers</a></li>
@@ -298,23 +204,7 @@ a, i {
 
   </ul>
 </div>
-      <!-- SERVICES -->
-      <div class="col-lg col-md-4 col-6 mb-4">
-        <h6 class="footer-title">Services</h6>
-        <ul class="footer-list">
-          <li><a href="#"><i class="bi bi-cpu"></i> Electronics</a></li>
-          <li><a href="#"><i class="bi bi-box-seam"></i> Track Order</a></li>
-          <li><a href="#"><i class="bi bi-images"></i> Gallery</a></li>
-          <ul class="footer-list">
-  <li><a href="/admin/become_dealer"><i class="bi bi-person-badge"></i> Become Dealer
-    </a>
-  </li>
-</ul>
 
-        </ul>
-      </div>
-
-      <!-- POLICY -->
 
 <!-- SERVICES -->
 <div class="col-lg col-md-4 col-6 mb-4">
@@ -357,7 +247,6 @@ a, i {
 
 
          <!-- POLICY -->
-
 <div class="col-lg col-md-4 col-6 mb-4"> <h6 class="footer-title">Policy</h6>
   <ul class="footer-list">
     <li><a href="/returns"> <i class="bi bi-arrow-repeat"></i> Returns</a> </li>
@@ -375,17 +264,12 @@ a, i {
           <li><a href="#"><i class="bi bi-building"></i> AutoKart Pvt Ltd</a></li>
           <li><a href="#"><i class="bi bi-geo-alt"></i> Ahmednagar</a></li>
           <li><a href="#"><i class="bi bi-flag"></i> Maharashtra, India</a></li>
-
-          
-          <li><a href="/dealer">Become Seller</a></li>
-
           <li>
       <a href="admin/become_dealer">
         <i class="bi bi-person-badge"></i> Become Dealer
       </a>
     </li>
          
-
         </ul>
       </div>
 

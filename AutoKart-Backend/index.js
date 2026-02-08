@@ -26,7 +26,6 @@ const sessionDB = mysql.createPool({
   password: "mac@4562B",
   database: "Autokart"
 });
-
 /* =========================
    SESSION STORE
 ========================= */
@@ -68,18 +67,6 @@ app.use(
 );
 
 
-//---------------------//
-const contactDetails = {
-  phone: "+91 9322611301",
-  email: "support@autokart.com",
-  address: "AutoKart Store, Pune, Maharashtra",
-  whatsapp: "7620505965",
-  
-};
-
-
-
-
 /* =========================
    MIDDLEWARE
 ========================= */
@@ -107,6 +94,9 @@ const db = mysql.createPool({
   password: "mac@4562B",
   database: "Autokart"
 });
+
+console.log("✅ MySQL Pool ready");
+
 /* =========================
    MAKE DB AVAILABLE
 ========================= */
@@ -124,18 +114,6 @@ app.use((req, res, next) => {
   res.locals.currentUser = req.session.user || null;
   next();
 });
-
-
-
-/* =========================
-   GLOBAL CONTACT DETAILS
-========================= */
-app.use((req, res, next) => {
-  res.locals.contact = contactDetails;
-  next();
-});
-
-
 
 /* =========================
    GLOBAL NAVBAR DATA
@@ -161,7 +139,6 @@ app.use((req, res, next) => {
     }
 
     req.db.query(subSectionQuery, (err, subSections) => {
-
       if (err) {
         console.error("Sub-section query failed:", err);
         res.locals.sections = sections || [];
@@ -174,7 +151,6 @@ app.use((req, res, next) => {
         if (!grouped[s.section_id]) grouped[s.section_id] = [];
         grouped[s.section_id].push(s);
       });
-
 
       res.locals.sections = sections;
       res.locals.subSectionsBySection = grouped;
@@ -195,8 +171,7 @@ app.use((req, res, next) => {
   next();
 });
 
-
-/* ========================
+/* =========================
    ROUTES
 ========================= */
 
@@ -206,12 +181,6 @@ app.use("/admin", adminRoutes);
 /* =========================
    SERVER
 ========================= */
-
-
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`🚀 AutoKart running on port ${PORT}`);
-});
-
 app.use((err, req, res, next) => {
   console.error("🔥 GLOBAL ERROR:", err);
   res.status(500).send("Internal Server Error");
@@ -220,4 +189,3 @@ app.use((err, req, res, next) => {
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 AutoKart running on port ${PORT}`);
 });
-

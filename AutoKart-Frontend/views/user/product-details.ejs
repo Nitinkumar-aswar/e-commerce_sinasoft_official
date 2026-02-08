@@ -7,16 +7,7 @@
   <title><%= product.product_name %> | AutoKart</title>
 
   <style>
-/* =========================
-   BASE
-========================= */
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f1f3f6;
-}
-
-/* ===== TOP CENTER TOAST ===== */
+    /* ===== TOP CENTER TOAST ===== */
 .cart-toast {
   position: fixed;
   top: -60px;
@@ -31,48 +22,159 @@ body {
   z-index: 99999;
   transition: top 0.4s ease;
 }
-.cart-toast.show { top: 20px; }
 
-/* CART COUNT */
+.cart-toast.show {
+  top: 20px;
+}
+
+  /* cart ch ahe  */
 #cart-count.cart-bounce {
-  transform: scale(1.5);
-  transition: transform 0.3s ease;
+    transform: scale(1.5);
+    transition: transform 0.3s ease;
 }
 
-/* =========================
-   DESKTOP LAYOUT (DEFAULT)
-========================= */
-.product-page {
-  max-width: 1200px;
-  margin: 30px auto;
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f1f3f6;
+    }
+
+    /* MAIN WRAPPER */
+    .product-page {
+  max-width: 100%;
+  margin: 20px auto;
   background: #ffffff;
-  padding: 24px 32px;
+  padding: 24px 40px;
   display: flex;
-  gap: 48px;
+  gap: 40px;
 }
 
-.product-left { width: 45%; }
-.product-right { width: 55%; }
+    /* LEFT SIDE */
+    .product-left {
+      width: 45%;
+    }
+
+    .product-image-box {
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .product-image-box img {
+      width: 100%;
+      max-height: 100px;
+      object-fit: contain;
+    }
+
+   .action-buttons {
+  margin-top: 16px;
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+.add-cart-btn,
+.buy-now-btn {
+  display: inline-flex;          /* 🔥 behaves like button */
+  align-items: center;
+  justify-content: center;
+
+  width: 160px;
+  height: 44px;
+
+  background: #fb641b;
+  color: #fff;
+
+  border: none;
+  border-radius: 4px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+  text-decoration: none;         /* 🔥 removes underline */
+}
+
+.buy-now-btn:hover {
+  background: #e85c17;
+}
+
+
+.add-cart-btn {
+  background: #ff9f00;
+  color: #fff;
+}
+
+.buy-now-btn {
+  background: #fb641b;
+  color: #fff;
+}
+
+    
+    /* RIGHT SIDE */
+    .product-right {
+      width: 60%;
+    }
+
+    .product-title {
+      font-size: 22px;
+      font-weight: 500; /* NOT too bold */
+      color: #212121;
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+
+    .product-price {
+      font-size: 26px;
+      font-weight: 600;
+      color: #388e3c;
+      margin: 15px 0;
+    }
+
+    .product-description-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 25px;
+      margin-bottom: 10px;
+      color: #212121;
+    }
+
+    .product-description {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.6;
+    }
 
 /* IMAGE GALLERY */
 .image-gallery {
   display: flex;
-  gap: 16px;
+  gap: 15px;
 }
 
+/* LEFT SMALL IMAGES */
 .thumbnail-column {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 1px;
 }
 
 .thumbnail-column img {
-  width: 72px;
-  height: 72px;
-  object-fit: contain;
-  border: 1px solid #e0e0e0;
-  cursor: pointer;
+  width: 88px;
+  height: 68px;
+  object-fit: contain;   /* 👈 KEY FIX */
   background: #fff;
+}
+
+
+
+.thumbnail-placeholder {
+  width: 80px;
+  height: 80px;
+  border: 1px solid #ccc;
+  object-fit: cover;
+  cursor: pointer;
+  background: #f5f5f5;
 }
 
 .thumbnail-column img:hover {
@@ -80,66 +182,108 @@ body {
 }
 
 /* MAIN IMAGE */
+.main-image img {
+  width: 100%;
+  max-height: 420px;
+  object-fit: contain;
+}
+.image-zoom-container {
+  display: flex;
+  gap: 20px;
+  position: relative;
+  width: 100%;
+}
+
+
+/* Main image */
 .image-wrapper {
+  position: relative;
   width: 420px;
   height: 420px;
   border: 1px solid #e0e0e0;
+  overflow: hidden;
   background: #fff;
 }
+
 .image-wrapper img {
   width: 100%;
   height: 100%;
   object-fit: contain;
 }
 
-/* PRODUCT INFO */
-.product-title {
-  font-size: 22px;
+/* Lens */
+#lens {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  background: rgba(0, 0, 0, 0.15);
+  display: none;
+  cursor: crosshair;
+
+  pointer-events: none; /* 🔥 KEY FIX */
+}
+
+
+/* Zoom preview */
+.zoom-preview {
+  position: absolute;
+  top: 0;
+  left: calc(100% + 20px);
+  width: 150%;
+  height: 150%;
+
+  border: 1px solid #e0e0e0;
+  background-repeat: no-repeat;
+  background-size: 350%;        /* 🔥 CLARITY BOOST */
+  image-rendering: auto;        /* 🔥 SHARPER ZOOM */
+  background-color: #fff;
+
+  display: none;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* cccccccccccccccccccccccccccccccccccccccccccccccccccccc */
+/* ===== MODAL ALERT ===== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.modal-box {
+  background: #fff;
+  padding: 25px 35px;
+  border-radius: 10px;
+  text-align: center;
+  min-width: 300px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  animation: pop 0.3s ease;
+}
+
+.modal-box h3 {
+  margin-bottom: 20px;
+  font-size: 18px;
   font-weight: 500;
-  color: #212121;
-  margin-bottom: 10px;
 }
 
-.product-price {
-  font-size: 26px;
-  font-weight: 600;
-  color: #388e3c;
-  margin: 12px 0;
-}
-
-.product-description-title {
-  font-size: 16px;
-  font-weight: 600;
-  margin-top: 24px;
-}
-
-.product-description {
-  font-size: 14px;
-  color: #555;
-  line-height: 1.6;
-}
-
-/* DESKTOP BUTTONS */
-.action-buttons {
-  margin-top: 18px;
-  display: flex;
-  gap: 14px;
-}
-
-.add-cart-btn,
-.buy-now-btn {
-  width: 180px;
-  height: 48px;
-  font-size: 14px;
-  font-weight: 600;
-  border-radius: 4px;
+.modal-box button {
+  padding: 8px 22px;
   border: none;
+  background: #2874f0;
+  color: white;
+  border-radius: 6px;
   cursor: pointer;
-  color: #fff;
+  font-weight: 600;
 }
 
-.add-cart-btn { background: #ff9f00; }
-.buy-now-btn { background: #fb641b; }
 
 /* =========================
    MOBILE ONLY
@@ -225,8 +369,8 @@ body {
     display: none !important;
   }
 }
-</style>
 
+  </style>
 </head>
 
 
@@ -280,13 +424,12 @@ body {
         ADD TO CART
       </button>
 
-     <form action="/create-checkout" method="POST" class="buy-now-form">
+     <form action="/create-checkout" method="POST">
   <input type="hidden" name="product_id" value="<%= product.id %>">
   <button type="submit" class="buy-now-btn">
     BUY NOW
   </button>
 </form>
-
 
 
                 
